@@ -2,6 +2,12 @@
 using UnityEngine.SceneManagement;
 using Utils.GenericSingletons;
 
+public enum GameScenes
+{
+    MainMenu,
+    Game,
+}
+
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {
 
@@ -32,5 +38,21 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     public void ExitGame()
     {
         Application.Quit();
+    }
+
+
+    public void SwitchToScene(GameScenes scene)
+    {
+        switch (scene)
+        {
+            case GameScenes.MainMenu:
+                SceneManager.LoadScene("MainMenu");
+                break;
+            case GameScenes.Game:
+                SceneManager.LoadScene("MainScene");
+                break;
+            default:
+                break;
+        }
     }
 }
