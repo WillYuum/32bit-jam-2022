@@ -2,9 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Turret : MonoBehaviour
+public class Turret : MonoBehaviour, ITurretActions
 {
     public HitPoint _hitPoints;
+    [SerializeField] private float _speed = 5.0f;
+
+    public void UpdatePosition(Vector2 position)
+    {
+        transform.position = position;
+    }
+
+    public void HandleShoot()
+    {
+        throw new System.NotImplementedException();
+    }
 
     public void TakeDamage(int amount)
     {
@@ -15,6 +26,7 @@ public class Turret : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
 
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -47,4 +59,11 @@ public class HitPoint
     {
         return hitPoint <= 0;
     }
+}
+
+
+public interface ITurretActions
+{
+    void HandleShoot();
+    void UpdatePosition(Vector2 position);
 }
