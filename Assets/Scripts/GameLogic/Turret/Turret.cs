@@ -6,6 +6,12 @@ public class Turret : MonoBehaviour, ITurretActions
 {
     public HitPoint _hitPoints;
     [SerializeField] private float _speed = 5.0f;
+    public TurretMoveDirection MoveDirection { get; private set; }
+
+    public void SetTurretMoveDirection(TurretMoveDirection direction)
+    {
+        MoveDirection = direction;
+    }
 
     public void UpdatePosition(Vector2 position)
     {
@@ -65,5 +71,6 @@ public class HitPoint
 public interface ITurretActions
 {
     void HandleShoot();
+    void SetTurretMoveDirection(TurretMoveDirection direction);
     void UpdatePosition(Vector2 position);
 }

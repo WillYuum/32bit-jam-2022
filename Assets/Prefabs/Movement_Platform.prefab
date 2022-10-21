@@ -41,7 +41,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8875913387878605233}
   m_Layer: 0
-  m_Name: Right_Point
+  m_Name: AntiClockWise_Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -72,7 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8073457492058079784}
   m_Layer: 0
-  m_Name: Left_Point
+  m_Name: ClockWise_Direction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

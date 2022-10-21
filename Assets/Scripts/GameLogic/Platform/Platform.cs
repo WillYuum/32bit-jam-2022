@@ -7,13 +7,13 @@ public class Platform : MonoBehaviour
 
     [SerializeField] private Transform[] _connectingPoints;
 
-    private Platform[] _connectedPlatforms;
+    private ConnectedPlatforms _connectedPlatforms;
 
     [SerializeField] public Transform TurretIndicatorPosition;
 
     private void Awake()
     {
-        _connectedPlatforms = new Platform[2];
+        _connectedPlatforms = new ConnectedPlatforms();
 
         // foreach (var endPoint in _endPoints)
         // {
@@ -28,22 +28,7 @@ public class Platform : MonoBehaviour
     public void KeepTurruetPerpendicularyAligned(Transform turret)
     {
         turret.up = transform.up;
-        // Vector3 turretPosition = turret.position;
-        // Vector3 platformPosition = transform.position;
-        // Vector3 direction = turretPosition - platformPosition;
-        // direction.y = 0;
-        // turret.rotation = Quaternion.LookRotation(direction);
     }
-
-    // private void OnEndPointTriggerEnter(Collider2D other)
-    // {
-    //     //enable switching to another platform
-    // }
-
-    // private void OnEndPointTriggerExit(Collider2D other)
-    // {
-    //     //disable to switch to another platform
-    // }
 
 
     private void ConnectToNeighborPlatforms()
@@ -56,43 +41,20 @@ public class Platform : MonoBehaviour
                 Platform platform = collider.GetComponent<Platform>();
                 if (platform != null && platform != this)
                 {
-                    bool isOnRigthSide = connectingPoint.position.x > transform.position.x;
-                    if (isOnRigthSide)
-                    {
-                        Debug.Log("isRight? " + connectingPoint.name);
-                        _connectedPlatforms[0] = platform;
-                    }
-                    else
-                    {
-                        _connectedPlatforms[1] = platform;
-                    }
+                    RotationDirection direction = connectingPoint.localPosition.x > 0 ? RotationDirection.AntiClockWise : RotationDirection.ClockWise;
+                    Debug.Log("CONNECTING PLATFORM " + platform.name + " TO " + this.name + " IN DIRECTION " + direction);
+                    _connectedPlatforms.SetPlatform(direction, platform);
 
-                    // if (_connectedPlatforms[0] == null)
-                    // {
-                    //     Debug.Log(gameObject.name + " Connected to platform 0 with" + platform.name);
-                    //     _connectedPlatforms[0] = platform;
-                    // }
-                    // else if (_connectedPlatforms[1] == null)
-                    // {
-                    //     Debug.Log(gameObject.name + " Connected to platform 1 with" + platform.name);
-                    //     _connectedPlatforms[1] = platform;
-                    // }
                 }
             }
         }
     }
 
 
-    public Platform GetConnectingPlatform(TurretMovement side)
+    public Platform GetConnectingPlatform(RotationDirection side)
     {
-        if (side == TurretMovement.ClockWise)
-        {
-            return _connectedPlatforms[0];
-        }
-        else
-        {
-            return _connectedPlatforms[1];
-        }
+        var platform = _connectedPlatforms.GetPlatform(side);
+        return platform != null ? platform : null;
     }
 
 
@@ -106,4 +68,40 @@ public class Platform : MonoBehaviour
         return _connectingPoints[1].transform;
     }
 
+}
+
+public class ConnectedPlatforms
+{
+    public Platform LeftPlatform { get; private set; }
+    public Platform RightPlatform { get; private set; }
+
+
+    public void SetPlatform(RotationDirection side, Platform platform)
+    {
+        switch (side)
+        {
+            case RotationDirection.ClockWise:
+                LeftPlatform = platform;
+                break;
+            case RotationDirection.AntiClockWise:
+                RightPlatform = platform;
+                break;
+            default:
+                Debug.LogError("INVALID SIDE");
+                break;
+        }
+    }
+
+    public Platform GetPlatform(RotationDirection side)
+    {
+        switch (side)
+        {
+            case RotationDirection.ClockWise:
+                return LeftPlatform;
+            case RotationDirection.AntiClockWise:
+                return RightPlatform;
+            default:
+                return null;
+        }
+    }
 }

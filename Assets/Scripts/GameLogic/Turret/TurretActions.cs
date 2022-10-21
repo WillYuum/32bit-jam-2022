@@ -2,8 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum TurretMovement
+public enum RotationDirection
 {
+    ClockWise,
+    AntiClockWise,
+}
+
+public enum TurretMoveDirection
+{
+    None,
     ClockWise,
     AntiClockWise,
 }
@@ -22,11 +29,17 @@ public class TurretActions : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.A))
         {
-            Move(TurretMovement.ClockWise);
+            Move(RotationDirection.ClockWise);
+            _turretActions.SetTurretMoveDirection(TurretMoveDirection.ClockWise);
         }
         else if (Input.GetKey(KeyCode.D))
         {
-            Move(TurretMovement.AntiClockWise);
+            Move(RotationDirection.AntiClockWise);
+            _turretActions.SetTurretMoveDirection(TurretMoveDirection.AntiClockWise);
+        }
+        else
+        {
+            _turretActions.SetTurretMoveDirection(TurretMoveDirection.None);
         }
     }
 
@@ -35,7 +48,7 @@ public class TurretActions : MonoBehaviour
         _turretActions.HandleShoot();
     }
 
-    public void Move(TurretMovement movement)
+    public void Move(RotationDirection movement)
     {
         Vector2 newPos = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(movement);
         _turretActions.UpdatePosition(newPos);

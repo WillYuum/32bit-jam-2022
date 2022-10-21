@@ -26,23 +26,46 @@ public class TurretPlatfromTracker
 
     public void TrackTurretOnPlatform()
     {
-        Vector2 turretPosition = _platfromTrackData.TurretIndicatorPosition.position;
-        Vector2 maxLeftPoint = _platfromTrackData.MaxLeftPoint.position;
-        Vector2 maxRightPoint = _platfromTrackData.MaxLeftPoint.position;
+        Vector2 turretPositionIndicator = _platfromTrackData.TurretIndicatorPosition.localPosition;
+        Vector2 maxLeftPoint = _platfromTrackData.MaxLeftPoint.localPosition;
+        Vector2 maxRightPoint = _platfromTrackData.MaxRightPoint.localPosition;
 
-        turretPosition.y = maxLeftPoint.y;
+        turretPositionIndicator.y = maxLeftPoint.y;
 
-        // Debug.Log("Turret position " + Vector2.Distance(maxRightPoint, turretPosition));
-        Debug.Log("turretPosition " + turretPosition.x);
-        if (Mathf.Abs(maxLeftPoint.x - turretPosition.x) < 0.1f)
+        switch (_turret.MoveDirection)
         {
-            // _currentPlatform = _currentPlatform.GetConnectedPlatform(0);
-            SwitchToPlatform(_currentPlatform.GetConnectingPlatform(TurretMovement.ClockWise));
+            case TurretMoveDirection.ClockWise:
+                if (Mathf.Abs(maxLeftPoint.x - turretPositionIndicator.x) < 0.1f)
+                {
+                    var platform = _currentPlatform.GetConnectingPlatform(RotationDirection.ClockWise);
+                    if (platform != null)
+                    {
+                        SwitchToPlatform(platform);
+                        Transform newMaxRightPoint = platform.GetMaxRightPoint();
+                        _platfromTrackData.TurretIndicatorPosition.position = newMaxRightPoint.position;
+                    }
+                }
+                break;
+
+            case TurretMoveDirection.AntiClockWise:
+                if (Mathf.Abs(maxRightPoint.x - turretPositionIndicator.x) < 0.1f)
+                {
+                    var platform = _currentPlatform.GetConnectingPlatform(RotationDirection.AntiClockWise);
+                    if (platform != null)
+                    {
+                        SwitchToPlatform(platform);
+                        Transform newMaxLeftPoint = platform.GetMaxLeftPoint();
+                        _platfromTrackData.TurretIndicatorPosition.position = newMaxLeftPoint.position;
+
+                    }
+                }
+                break;
+
+            default:
+                break;
         }
-        else if (Mathf.Abs(maxRightPoint.x - turretPosition.x) < 0.1f)
-        {
-            SwitchToPlatform(_currentPlatform.GetConnectingPlatform(TurretMovement.AntiClockWise));
-        }
+
+
     }
 
     private void SwitchToPlatform(Platform platform)
@@ -57,22 +80,23 @@ public class TurretPlatfromTracker
         Transform maxRightPoint = platform.GetMaxRightPoint();
         Transform turretIndicatorPosition = platform.TurretIndicatorPosition;
 
+
         _platfromTrackData.SetPoints(maxLeftPoint, maxRightPoint, turretIndicatorPosition);
 
         //Make turrent face the platform
         platform.KeepTurruetPerpendicularyAligned(_turret.transform);
     }
 
-    public Vector2 MoveIndicator(TurretMovement direction)
+    public Vector2 MoveIndicator(RotationDirection direction)
     {
         Transform turretIndicatorPosition = _platfromTrackData.TurretIndicatorPosition;
         Vector2 newPos = turretIndicatorPosition.localPosition;
         switch (direction)
         {
-            case TurretMovement.ClockWise:
+            case RotationDirection.ClockWise:
                 newPos.x -= moveSpeed * Time.deltaTime;
                 break;
-            case TurretMovement.AntiClockWise:
+            case RotationDirection.AntiClockWise:
                 newPos.x += moveSpeed * Time.deltaTime;
                 break;
         }
