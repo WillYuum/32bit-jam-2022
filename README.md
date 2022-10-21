@@ -1,2 +1,3 @@
-# GameJam-Template
- Unity 2021.3.6f1 custom template for game jams.
+# 32bit-jam-2022
+
+Game jam participation at https://itch.io/jam/32bit-jam-2022
