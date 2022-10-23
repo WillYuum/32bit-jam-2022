@@ -22,4 +22,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         TurretPlatfromTracker.TrackTurretOnPlatform();
     }
+
+
+    public void OnKillEnemy()
+    {
+
+    }
+
 }

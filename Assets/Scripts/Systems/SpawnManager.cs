@@ -11,5 +11,12 @@ namespace SpawnManagerMod
         [SerializeField] private PrefabConfig _enemyPrefab;
 
         public GameObject Spawn(Vector3 position, Quaternion rotation) => _enemyPrefab.CreateGameObject(position, rotation);
+
+
+        [SerializeField] private PrefabConfig turretBulletPrefab;
+        public GameObject SpawnBullet(Vector3 position, Quaternion rotation)
+        {
+            return turretBulletPrefab.CreateGameObject(position, rotation);
+        }
     }
 }

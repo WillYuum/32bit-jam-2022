@@ -1,11 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SpawnManagerMod;
+
+public enum TypeOfShots
+{
+    SingleShot,
+}
 
 public class Turret : MonoBehaviour, ITurretActions
 {
     public HitPoint _hitPoints;
     public TurretMoveDirection MoveDirection { get; private set; }
+    private TypeOfShots _currentTypeShot;
+
+    [SerializeField] private Transform _pointOfShot;
 
     public void SetTurretMoveDirection(TurretMoveDirection direction)
     {
@@ -19,7 +28,21 @@ public class Turret : MonoBehaviour, ITurretActions
 
     public void HandleShoot()
     {
-        throw new System.NotImplementedException();
+        switch (_currentTypeShot)
+        {
+            case TypeOfShots.SingleShot:
+                SingleShot();
+                break;
+        }
+    }
+
+    private void SingleShot()
+    {
+        Debug.Log("SingleShot");
+
+        SpawnManager.instance.SpawnBullet(_pointOfShot.position, _pointOfShot.rotation);
+
+
     }
 
     public void TakeDamage(int amount)
@@ -37,6 +60,7 @@ public class Turret : MonoBehaviour, ITurretActions
     private void OnTriggerEnter2D(Collider2D other)
     {
         //Check if hit by enemy bullet
+
     }
 }
 
