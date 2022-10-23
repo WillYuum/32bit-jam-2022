@@ -5,7 +5,6 @@ using UnityEngine;
 public class Turret : MonoBehaviour, ITurretActions
 {
     public HitPoint _hitPoints;
-    [SerializeField] private float _speed = 5.0f;
     public TurretMoveDirection MoveDirection { get; private set; }
 
     public void SetTurretMoveDirection(TurretMoveDirection direction)

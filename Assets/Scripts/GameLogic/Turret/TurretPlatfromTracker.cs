@@ -6,8 +6,6 @@ public class TurretPlatfromTracker
 {
     private Platform _currentPlatform;
     private Turret _turret;
-
-    private Transform _turretIndicatorPosition;
     private float moveSpeed = 4.0f;
 
     private PlatfromTrackData _platfromTrackData;
@@ -27,8 +25,8 @@ public class TurretPlatfromTracker
     public void TrackTurretOnPlatform()
     {
         Vector2 turretPositionIndicator = _platfromTrackData.TurretIndicatorPosition.localPosition;
-        Vector2 maxLeftPoint = _platfromTrackData.MaxLeftPoint.localPosition;
-        Vector2 maxRightPoint = _platfromTrackData.MaxRightPoint.localPosition;
+        Vector2 maxLeftPoint = _platfromTrackData.MaxClockwisePoint.localPosition;
+        Vector2 maxRightPoint = _platfromTrackData.MaxAntiClockwisePoint.localPosition;
 
         turretPositionIndicator.y = maxLeftPoint.y;
 
@@ -101,7 +99,7 @@ public class TurretPlatfromTracker
                 break;
         }
 
-        newPos.x = Mathf.Clamp(newPos.x, _platfromTrackData.MaxLeftPoint.localPosition.x, _platfromTrackData.MaxRightPoint.localPosition.x);
+        newPos.x = Mathf.Clamp(newPos.x, _platfromTrackData.MaxClockwisePoint.localPosition.x, _platfromTrackData.MaxAntiClockwisePoint.localPosition.x);
         turretIndicatorPosition.localPosition = newPos;
 
         return turretIndicatorPosition.position;
@@ -110,15 +108,15 @@ public class TurretPlatfromTracker
 
 public class PlatfromTrackData
 {
-    public Transform MaxLeftPoint { get; private set; }
-    public Transform MaxRightPoint { get; private set; }
+    public Transform MaxClockwisePoint { get; private set; }
+    public Transform MaxAntiClockwisePoint { get; private set; }
     public Transform TurretIndicatorPosition { get; private set; }
 
 
     public void SetPoints(Transform maxLeftPoint, Transform maxRightPoint, Transform turretIndicatorPosition)
     {
-        MaxLeftPoint = maxLeftPoint;
-        MaxRightPoint = maxRightPoint;
+        MaxClockwisePoint = maxLeftPoint;
+        MaxAntiClockwisePoint = maxRightPoint;
         TurretIndicatorPosition = turretIndicatorPosition;
     }
 }
