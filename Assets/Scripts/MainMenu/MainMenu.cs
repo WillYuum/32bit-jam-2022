@@ -29,6 +29,8 @@ namespace MainMenuScene
         private void OnPlayButtonClicked()
         {
             GameManager.instance.SwitchToScene(GameScenes.Game);
+            GameloopManager.instance.Invoke(nameof(GameloopManager.instance.StartGameLoop), 1.0f);
+
         }
 
         private void OnCreditsButtonClicked()

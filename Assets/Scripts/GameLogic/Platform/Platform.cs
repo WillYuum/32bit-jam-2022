@@ -11,28 +11,19 @@ public class Platform : MonoBehaviour
 
     [SerializeField] public Transform TurretIndicatorPosition;
 
-    private void Awake()
-    {
-        _connectedPlatforms = new ConnectedPlatforms();
-
-        // foreach (var endPoint in _endPoints)
-        // {
-        //     endPoint._OnTriggerEnter += OnEndPointTriggerEnter;
-        //     endPoint._OnTriggerExit += OnEndPointTriggerExit;
-        // }
-
-
-        ConnectToNeighborPlatforms();
-    }
-
     public void KeepTurruetPerpendicularyAligned(Transform turret)
     {
         turret.up = transform.up;
     }
 
 
-    private void ConnectToNeighborPlatforms()
+    public void ConnectToNeighborPlatforms()
     {
+        if (_connectedPlatforms == null)
+        {
+            _connectedPlatforms = new ConnectedPlatforms();
+        }
+
         foreach (var connectingPoint in _connectingPoints)
         {
             Collider2D[] colliders = Physics2D.OverlapCircleAll(connectingPoint.position, 0.1f, LayerMask.GetMask("Movement_Platform"));

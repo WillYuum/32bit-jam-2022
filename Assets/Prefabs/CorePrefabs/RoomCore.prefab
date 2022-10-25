@@ -78,6 +78,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CameraPoint: {fileID: 2347040919242872476}
+  _platformHolder: {fileID: 2347040917538671832}
 --- !u!1 &2347040919242872477
 GameObject:
   m_ObjectHideFlags: 0
