@@ -39,7 +39,7 @@ public class TurretPlatfromTracker
                     if (platform != null)
                     {
                         SwitchToPlatform(platform);
-                        Transform newMaxRightPoint = platform.GetMaxRightPoint();
+                        Transform newMaxRightPoint = platform.GetAntiClockWisePoint();
                         _platfromTrackData.TurretIndicatorPosition.position = newMaxRightPoint.position;
                     }
                 }
@@ -52,7 +52,7 @@ public class TurretPlatfromTracker
                     if (platform != null)
                     {
                         SwitchToPlatform(platform);
-                        Transform newMaxLeftPoint = platform.GetMaxLeftPoint();
+                        Transform newMaxLeftPoint = platform.GetClickWisePoint();
                         _platfromTrackData.TurretIndicatorPosition.position = newMaxLeftPoint.position;
 
                     }
@@ -74,8 +74,8 @@ public class TurretPlatfromTracker
         _currentPlatform = platform;
 
 
-        Transform maxLeftPoint = platform.GetMaxLeftPoint();
-        Transform maxRightPoint = platform.GetMaxRightPoint();
+        Transform maxLeftPoint = platform.GetClickWisePoint();
+        Transform maxRightPoint = platform.GetAntiClockWisePoint();
         Transform turretIndicatorPosition = platform.TurretIndicatorPosition;
 
 

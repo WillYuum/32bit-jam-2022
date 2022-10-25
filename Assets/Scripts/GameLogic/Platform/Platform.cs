@@ -58,12 +58,12 @@ public class Platform : MonoBehaviour
     }
 
 
-    public Transform GetMaxLeftPoint()
+    public Transform GetClickWisePoint()
     {
         return _connectingPoints[0].transform;
     }
 
-    public Transform GetMaxRightPoint()
+    public Transform GetAntiClockWisePoint()
     {
         return _connectingPoints[1].transform;
     }
