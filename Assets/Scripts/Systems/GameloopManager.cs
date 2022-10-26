@@ -11,7 +11,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     private void Awake()
     {
-        enabled = false;
+
+#if UNITY_EDITOR
+        Turret turret = FindObjectOfType<Turret>();
+        if (turret != null)
+        {
+            enabled = false;
+            Invoke(nameof(StartGameLoop), 1.5f);
+        }
+#else
+            enabled = false;
+#endif
+
     }
 
 
