@@ -18,5 +18,12 @@ namespace SpawnManagerMod
         {
             return turretBulletPrefab.CreateGameObject(position, rotation);
         }
+
+
+        [SerializeField] private PrefabConfig berserkerPrefab;
+        public GameObject SpawnBerserker(Vector3 position, Quaternion rotation)
+        {
+            return berserkerPrefab.CreateGameObject(position, rotation);
+        }
     }
 }

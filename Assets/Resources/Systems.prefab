@@ -173,6 +173,9 @@ MonoBehaviour:
   turretBulletPrefab:
     _prefab: {fileID: 2361775967349580019, guid: a501f77215b645541b5c074a9a23df96,
       type: 3}
+  berserkerPrefab:
+    _prefab: {fileID: 3791541795334303134, guid: 47a789e8f63043f428b34288b938faac,
+      type: 3}
 --- !u!1 &6185868911793546644
 GameObject:
   m_ObjectHideFlags: 0
