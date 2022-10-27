@@ -10,7 +10,6 @@ public enum TypeOfShots
 
 public class Turret : MonoBehaviour, ITurretActions
 {
-    public HitPoint _hitPoints;
     public TurretMoveDirection MoveDirection { get; private set; }
     private TypeOfShots _currentTypeShot;
 
@@ -45,14 +44,9 @@ public class Turret : MonoBehaviour, ITurretActions
 
     }
 
-    public void TakeDamage(int amount)
+    public void TakeDamage()
     {
-        _hitPoints.TakeDamage(amount);
-
-        if (_hitPoints.IsOutOfHP())
-        {
-            Destroy(gameObject);
-        }
+        GameloopManager.instance.InvokeFishTakeDamage();
     }
 
 
@@ -66,27 +60,25 @@ public class Turret : MonoBehaviour, ITurretActions
 
 public class HitPoint
 {
-    public int hitPoint { get; private set; }
-    public int maxHitPoint { get; private set; }
-    public HitPoint(int hitPoint, int maxHitPoint)
+    public int CurrenthitPoint { get; private set; }
+    public HitPoint(int maxHitPoint)
     {
-        this.hitPoint = hitPoint;
-        this.maxHitPoint = maxHitPoint;
+        CurrenthitPoint = maxHitPoint;
     }
 
     public void TakeDamage(int damage)
     {
-        hitPoint -= damage;
+        CurrenthitPoint -= damage;
     }
 
     public void Heal(int heal)
     {
-        hitPoint += heal;
+        CurrenthitPoint += heal;
     }
 
     public bool IsOutOfHP()
     {
-        return hitPoint <= 0;
+        return CurrenthitPoint <= 0;
     }
 }
 

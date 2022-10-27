@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     }
 
-    public void RestartGame()
+    public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
