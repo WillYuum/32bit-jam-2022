@@ -5,7 +5,7 @@ using UnityEngine;
 public enum EnemyType
 {
     BombBarrel,
-    Diver,
+    Dasher,
     Elite,
 }
 
