@@ -134,6 +134,7 @@ GameObject:
   - component: {fileID: 181854128}
   - component: {fileID: 181854127}
   - component: {fileID: 181854126}
+  - component: {fileID: 181854129}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -176,7 +177,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 8.5
+  orthographic size: 1
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -207,6 +208,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &181854129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 181854125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a160d838ff8b4b4693ac20007e008c7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AssetsPPU: 10
+  m_RefResolutionX: 320
+  m_RefResolutionY: 240
+  m_UpscaleRT: 0
+  m_PixelSnapping: 1
+  m_CropFrameX: 1
+  m_CropFrameY: 1
+  m_StretchFill: 0
 --- !u!1001 &1746416083
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -342,6 +363,42 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3287237262159657433, guid: 260e984588ac86e40bd6368a86ec4108,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3287237262159657433, guid: 260e984588ac86e40bd6368a86ec4108,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3287237262159657433, guid: 260e984588ac86e40bd6368a86ec4108,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3463180327280680226, guid: 260e984588ac86e40bd6368a86ec4108,
+        type: 3}
+      propertyPath: m_Size.x
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3463180327280680226, guid: 260e984588ac86e40bd6368a86ec4108,
+        type: 3}
+      propertyPath: m_Size.y
+      value: 0.23
+      objectReference: {fileID: 0}
+    - target: {fileID: 3463180327280680226, guid: 260e984588ac86e40bd6368a86ec4108,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 406262577, guid: 37725d443caed48e5bdbc8d8b7c42e71,
+        type: 3}
+    - target: {fileID: 3990760847864241040, guid: 260e984588ac86e40bd6368a86ec4108,
+        type: 3}
+      propertyPath: m_Name
+      value: Fish
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 260e984588ac86e40bd6368a86ec4108, type: 3}
