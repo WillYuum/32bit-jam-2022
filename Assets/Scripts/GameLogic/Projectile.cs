@@ -14,9 +14,9 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out EnemyCore enemyCore))
+        if (other.gameObject.TryGetComponent(out Damageable damageable))
         {
-            enemyCore.TakeDamage(_damage);
+            damageable.TakeDamage(_damage);
         }
 
         Destroy(gameObject);

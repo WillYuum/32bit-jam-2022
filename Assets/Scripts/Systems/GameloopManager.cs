@@ -70,7 +70,10 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             OnGameLoopStart.Invoke();
         }
 
-        InvokeRepeating(nameof(SpawnEnemyRandomly), 0, 0.5f);
+        for (int i = 0; i < 1; i++)
+        {
+            Invoke(nameof(SpawnEnemyRandomly), 0.65f * i);
+        }
     }
 
     public void InvokeFishTakeDamage()

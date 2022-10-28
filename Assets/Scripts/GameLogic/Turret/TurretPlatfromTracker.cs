@@ -6,7 +6,7 @@ public class TurretPlatfromTracker
 {
     private Platform _currentPlatform;
     private Turret _turret;
-    private float moveSpeed = 4.0f;
+    private float moveSpeed = 7.0f;
 
     private PlatfromTrackData _platfromTrackData;
 
