@@ -10,14 +10,15 @@ public class TurretPlatfromTracker
 
     private PlatfromTrackData _platfromTrackData;
 
-    public TurretPlatfromTracker(Turret _turret)
+    public TurretPlatfromTracker(Turret turret, Platform startingPlatform)
     {
-        this._turret = _turret;
-        _currentPlatform = GameObject.FindObjectOfType<Platform>();
+        _turret = turret;
+        _currentPlatform = startingPlatform;
 
         _platfromTrackData = new PlatfromTrackData();
 
         SwitchToPlatform(_currentPlatform);
+        TrackTurretOnPlatform();
     }
 
 

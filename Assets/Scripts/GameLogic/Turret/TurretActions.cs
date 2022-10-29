@@ -26,6 +26,12 @@ public class TurretActions : MonoBehaviour
 
         float turretShootInterval = 0.5f;
         _turretShootController = new ShootController(turretShootInterval);
+
+        GameloopManager.instance.OnGameLoopStart += () =>
+        {
+            Move(RotationDirection.ClockWise);
+
+        };
     }
 
 

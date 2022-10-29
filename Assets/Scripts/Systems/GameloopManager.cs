@@ -15,9 +15,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     private HitPoint _fishHitPoints;
     public int CollectedHightScore { get; private set; }
 
+    public bool LoopIsActive { get; private set; }
+
     private void Awake()
     {
-
+        LoopIsActive = false;
 #if UNITY_EDITOR
         Turret turret = FindObjectOfType<Turret>();
         if (turret != null)
@@ -45,6 +47,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public void StartGameLoop()
     {
         enabled = true;
+        LoopIsActive = true;
 
         CollectedHightScore = 0;
 
@@ -53,12 +56,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
 
-        Turret turret = FindObjectOfType<Turret>();
-        TurretPlatfromTracker = new TurretPlatfromTracker(turret);
-
-
         _currentRoom = GameObject.Find("Room_1").GetComponent<Room>();
         _currentRoom.UpdatePlatformNeighbors();
+
+        Turret turret = FindObjectOfType<Turret>();
+        TurretPlatfromTracker = new TurretPlatfromTracker(turret, _currentRoom.GetFirstPlaform());
 
         Vector3 newCameraPos = _currentRoom.CameraPoint.position;
         newCameraPos.z = Camera.main.transform.position.z;
@@ -76,11 +78,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
     }
 
-    public void InvokeFishTakeDamage()
+    public void InvokeFishTakeDamage(int damageAmount)
     {
-        int hitAmount = 1;
+        if (LoopIsActive == false) return;
 
-        _fishHitPoints.TakeDamage(hitAmount);
+        _fishHitPoints.TakeDamage(damageAmount);
         OnFishTakeHit.Invoke(_fishHitPoints.CurrenthitPoint);
 
         if (_fishHitPoints.IsOutOfHP())
@@ -92,6 +94,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     private void InvokeLosegame()
     {
+        if (LoopIsActive == false) return;
+
         CancelInvoke(nameof(SpawnEnemyRandomly));
         GameUI.instance.SwitchToScreen(GameUI.Screens.LoseScreen);
     }
