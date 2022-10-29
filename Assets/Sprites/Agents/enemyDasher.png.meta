@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 2492c3426264c4981ab15753d1a9984a
+guid: 0fc0ee550ee494782bdb68e992674364
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -104,13 +104,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player45_0
+      name: enemyDasher_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 22
-        height: 22
+        width: 11
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,20 +118,41 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 8582eaf5487d74e1db6f7f1dc51084de
-      internalID: -924017823
+      spriteID: 08dbc882a30854d4e9d87bfe706d2b1b
+      internalID: 634160635
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player45_1
+      name: enemyDasher_1
+      rect:
+        serializedVersion: 2
+        x: 11
+        y: 0
+        width: 11
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d42987a390a47411489b66e5e29ce710
+      internalID: -699464646
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: enemyDasher_2
       rect:
         serializedVersion: 2
         x: 22
         y: 0
-        width: 22
-        height: 22
+        width: 11
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -139,20 +160,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7f35ac6e9e6124c5fbfd410631f160b0
-      internalID: -1992408686
+      spriteID: 029e50e4f5b4e4f8bb07c614eb04668e
+      internalID: 1658595990
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player45_2
+      name: enemyDasher_3
       rect:
         serializedVersion: 2
-        x: 44
+        x: 33
         y: 0
-        width: 22
-        height: 22
+        width: 11
+        height: 20
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -160,50 +181,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dec798f99d7e941cca1abdb9c52b4b28
-      internalID: -714200368
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Player45_3
-      rect:
-        serializedVersion: 2
-        x: 66
-        y: 0
-        width: 22
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 8d019d846740a48c4aceaddd630483e8
-      internalID: 980810844
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Player45_4
-      rect:
-        serializedVersion: 2
-        x: 88
-        y: 0
-        width: 22
-        height: 22
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 4984e7ace46374017914c2b149738607
-      internalID: -57616187
+      spriteID: a2d84e0aba90347f8a3aa942a374b5b5
+      internalID: 1493772675
       vertices: []
       indices: 
       edges: []
@@ -219,11 +198,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Player45_4: -57616187
-      Player45_2: -714200368
-      Player45_1: -1992408686
-      Player45_0: -924017823
-      Player45_3: 980810844
+      enemyDasher_3: 1493772675
+      enemyDasher_2: 1658595990
+      enemyDasher_0: 634160635
+      enemyDasher_1: -699464646
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
