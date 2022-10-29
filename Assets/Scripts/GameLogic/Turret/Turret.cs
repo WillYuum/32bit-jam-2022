@@ -40,13 +40,11 @@ public class Turret : MonoBehaviour, ITurretActions
         Debug.Log("SingleShot");
 
         SpawnManager.instance.SpawnBullet(_pointOfShot.position, _pointOfShot.rotation);
-
-
     }
 
-    public void TakeDamage()
+    public void TakeDamage(int damageCount = 1)
     {
-        GameloopManager.instance.InvokeFishTakeDamage();
+        GameloopManager.instance.InvokeFishTakeDamage(damageCount);
     }
 
 

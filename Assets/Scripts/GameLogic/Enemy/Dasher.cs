@@ -7,7 +7,9 @@ public class Dasher : EnemyCore<Dasher>
     private float _moveSpeed = 5.0f;
     [HideInInspector] public Transform _target;
     private float _angleToAttackTarget = 0.4f;
-    private float _delayToAttack = 2.0f;
+    private float _delayToAttack = 1.65f;
+
+    private float _explodeRange = 1.5f;
 
 
     [SerializeField] private GameObject _visual;
@@ -34,7 +36,7 @@ public class Dasher : EnemyCore<Dasher>
 
     public void ScaleAndAttack()
     {
-        transform.DOScale(1.8f, 1.65f)
+        transform.DOScale(1.8f, _delayToAttack)
         .SetEase(Ease.InOutExpo)
         .OnComplete(() =>
         {
@@ -66,9 +68,14 @@ public class Dasher : EnemyCore<Dasher>
 
     public void Explode()
     {
+        var hit = Physics2D.CircleCast(transform.position, _explodeRange, Vector2.zero, 1.0f, LayerMask.GetMask("Player"));
+        if (hit.collider != null)
+        {
+            hit.collider.GetComponent<Turret>().TakeDamage(1);
+        }
+
         Destroy(gameObject);
     }
-
 
     public class DasherReadyToAttackState : EnemyStateCore<Dasher>
     {
