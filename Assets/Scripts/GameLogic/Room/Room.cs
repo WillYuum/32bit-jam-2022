@@ -23,6 +23,15 @@ public class Room : MonoBehaviour
         }
     }
 
+    public Platform GetFirstPlaform()
+    {
+        if (_platforms == null)
+        {
+            GetAllPlatforms();
+        }
+
+        return _platforms[0];
+    }
 
     private void GetAllPlatforms()
     {
