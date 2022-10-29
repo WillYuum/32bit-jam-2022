@@ -25,7 +25,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         if (turret != null)
         {
             enabled = false;
-            Invoke(nameof(StartGameLoop), 1.5f);
+            Invoke(nameof(StartGameLoop), 0.1f);
         }
         else
         {
@@ -72,7 +72,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             OnGameLoopStart.Invoke();
         }
 
-        for (int i = 0; i < 7; i++)
+        for (int i = 0; i < 1; i++)
         {
             Invoke(nameof(SpawnEnemyRandomly), 0.65f * i);
         }
@@ -124,7 +124,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     private void SpawnEnemyRandomly()
     {
         Vector3 spawnPoint = _currentRoom.GetRandomSpawnPositionWithinRoomRange(0.25f);
-        SpawnManager.instance.DasherPrefab.CreateGameObject(spawnPoint, Quaternion.identity);
+        SpawnManager.instance.BomberPrefab.CreateGameObject(spawnPoint, Quaternion.identity);
     }
 
 }

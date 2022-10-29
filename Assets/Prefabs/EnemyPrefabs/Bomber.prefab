@@ -248,6 +248,27 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 5367971356747332792}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &470623011029886243 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5546500289947425179, guid: 1951a8d21f77ff340933d95888469008,
+    type: 3}
+  m_PrefabInstance: {fileID: 5367971356747332792}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5957987166767130374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 470623011029886243}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a6d4ca482a2390c4f843ea098399ccac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <EnemyType>k__BackingField: 0
+  _startingHealth: 100
+  _bombRangeIndicator: {fileID: 6875552314070481481}
 --- !u!4 &470623012289079388 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5546500290971702500, guid: 1951a8d21f77ff340933d95888469008,

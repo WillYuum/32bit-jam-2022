@@ -5,28 +5,42 @@ public class Bomber : EnemyCore<Bomber>
 {
 
     private Transform _target;
-    private float _moveSpeed = 5.0f;
+    private float _moveSpeed = 1.75f;
     [SerializeField] private Transform _bombRangeIndicator;
     private float _bombRange = 2.65f;
 
+    private float _originalBombRangeScale;
 
     protected override void OnAwake()
     {
         base.OnAwake();
         _bombRangeIndicator.gameObject.SetActive(false);
         _target = GameObject.Find("Turret").transform;
+        SetState(new MoveToTurretState());
+
+        _originalBombRangeScale = _bombRangeIndicator.localScale.x;
     }
 
     public void MoveToTurret()
     {
         Vector2 direction = _target.position - transform.position;
-        transform.up = direction * _moveSpeed * Time.deltaTime;
+        // transform.up = direction * _moveSpeed * Time.deltaTime;
+        transform.Translate(direction.normalized * _moveSpeed * Time.deltaTime, Space.World);
+
+        if (Vector2.Distance(transform.position, _target.position) < _bombRange)
+        {
+            SetState(new EnterExplodeState());
+        }
+
     }
 
     public void InvokeExplode()
     {
+        _bombRangeIndicator.localScale = Vector3.one * _originalBombRangeScale;
+
         _bombRangeIndicator.gameObject.SetActive(true);
-        _bombRangeIndicator.DOScale(_bombRange, 0.5f).SetEase(Ease.InOutExpo);
+        _bombRangeIndicator.DOScale(_originalBombRangeScale * _bombRange, 0.5f)
+        .SetEase(Ease.InOutExpo);
 
         float delayTillExplode = 1.35f;
         Invoke(nameof(Explode), delayTillExplode);
@@ -38,7 +52,6 @@ public class Bomber : EnemyCore<Bomber>
 
         if (hit.collider != null)
         {
-            Debug.Break();
             hit.collider.GetComponent<Turret>().TakeDamage(1);
         }
 
