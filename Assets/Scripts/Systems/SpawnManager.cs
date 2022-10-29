@@ -8,22 +8,8 @@ namespace SpawnManagerMod
     public class SpawnManager : MonoBehaviourSingleton<SpawnManager>
     {
         //Example of how to use the SpawnManager
-        [SerializeField] private PrefabConfig _enemyPrefab;
-
-        public GameObject Spawn(Vector3 position, Quaternion rotation) => _enemyPrefab.CreateGameObject(position, rotation);
-
-
-        [SerializeField] private PrefabConfig turretBulletPrefab;
-        public GameObject SpawnBullet(Vector3 position, Quaternion rotation)
-        {
-            return turretBulletPrefab.CreateGameObject(position, rotation);
-        }
-
-
-        [SerializeField] private PrefabConfig berserkerPrefab;
-        public GameObject SpawnBerserker(Vector3 position, Quaternion rotation)
-        {
-            return berserkerPrefab.CreateGameObject(position, rotation);
-        }
+        [field: SerializeField] public PrefabConfig EnemyPrefab;
+        [field: SerializeField] public PrefabConfig TurretBulletPrefab;
+        [field: SerializeField] public PrefabConfig BerserkerPrefab;
     }
 }

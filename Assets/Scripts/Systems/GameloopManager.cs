@@ -124,7 +124,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     private void SpawnEnemyRandomly()
     {
         Vector3 spawnPoint = _currentRoom.GetRandomSpawnPositionWithinRoomRange(0.25f);
-        SpawnManager.instance.SpawnBerserker(spawnPoint, Quaternion.identity);
+        SpawnManager.instance.BerserkerPrefab.CreateGameObject(spawnPoint, Quaternion.identity);
     }
 
 }

@@ -39,7 +39,8 @@ public class Turret : MonoBehaviour, ITurretActions
     {
         Debug.Log("SingleShot");
 
-        SpawnManager.instance.SpawnBullet(_pointOfShot.position, _pointOfShot.rotation);
+        SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, _pointOfShot.rotation);
+        // SpawnManager.instance.SpawnBullet(_pointOfShot.position, _pointOfShot.rotation);
     }
 
     public void TakeDamage(int damageCount = 1)
