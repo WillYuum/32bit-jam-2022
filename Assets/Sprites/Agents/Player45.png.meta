@@ -104,106 +104,106 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Player90_0
+      name: Player45_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 20
-        height: 23
+        width: 22
+        height: 22
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 95424e196ac884aa6a5b54cdc5e1669c
-      internalID: 406262577
+      spriteID: 668b8ce14bf504a409469860ccc145df
+      internalID: 188300694
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player90_1
+      name: Player45_1
       rect:
         serializedVersion: 2
-        x: 20
+        x: 22
         y: 0
-        width: 20
-        height: 23
+        width: 22
+        height: 22
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: ea7741757285246bf98eed52df6a95f2
-      internalID: -758166713
+      spriteID: bf501c37605b87c4388b117c0e2aeeef
+      internalID: 14626126
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player90_2
+      name: Player45_2
       rect:
         serializedVersion: 2
-        x: 40
+        x: 44
         y: 0
-        width: 20
-        height: 23
+        width: 22
+        height: 22
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 7388a0cf628ab4eacb58f6fdeca40ada
-      internalID: 1557954943
+      spriteID: a31cccf594d472b46a9d631e04884837
+      internalID: -1259063483
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player90_3
+      name: Player45_3
       rect:
         serializedVersion: 2
-        x: 60
+        x: 66
         y: 0
-        width: 20
-        height: 23
+        width: 22
+        height: 22
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: be5ffeb69ee5c4f11be6963687425495
-      internalID: -290924405
+      spriteID: c86888dd2fe4cca49a4598f2aac08052
+      internalID: 343318169
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Player90_4
+      name: Player45_4
       rect:
         serializedVersion: 2
-        x: 80
+        x: 88
         y: 0
-        width: 20
-        height: 23
+        width: 22
+        height: 22
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 17922ef38362c4e3caabbdfd9d6d820c
-      internalID: 623083216
+      spriteID: 32764dfd10b3e474a8f0d046020a9b75
+      internalID: 1703219988
       vertices: []
       indices: 
       edges: []
@@ -219,11 +219,11 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Player90_1: -758166713
-      Player90_4: 623083216
-      Player90_3: -290924405
-      Player90_2: 1557954943
-      Player90_0: 406262577
+      Player45_4: 1703219988
+      Player45_2: -1259063483
+      Player45_1: 14626126
+      Player45_0: 188300694
+      Player45_3: 343318169
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
