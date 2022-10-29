@@ -73,8 +73,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b,
-    type: 3}
+  m_Sprite: {fileID: 21300000, guid: c05352d8630fb4e0bbcafbc9088dad43, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -154,6 +153,28 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 75d48a944ffc7af4dae7b046a30da297, type: 3}
+--- !u!1 &2361775967349580019 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2552023465559766465, guid: 75d48a944ffc7af4dae7b046a30da297,
+    type: 3}
+  m_PrefabInstance: {fileID: 264636406025655602}
+  m_PrefabAsset: {fileID: 0}
+--- !u!58 &3893295192009466615
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2361775967349580019}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 0.4
 --- !u!4 &2361775967646832387 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2552023465262531121, guid: 75d48a944ffc7af4dae7b046a30da297,
