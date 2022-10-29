@@ -70,10 +70,10 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             OnGameLoopStart.Invoke();
         }
 
-        for (int i = 0; i < 1; i++)
-        {
-            Invoke(nameof(SpawnEnemyRandomly), 0.65f * i);
-        }
+        // for (int i = 0; i < 7; i++)
+        // {
+        //     Invoke(nameof(SpawnEnemyRandomly), 0.65f * i);
+        // }
     }
 
     public void InvokeFishTakeDamage()
@@ -106,7 +106,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             case EnemyType.Dasher:
                 CollectedHightScore += 2;
                 break;
-            case EnemyType.BombBarrel:
+            case EnemyType.Bomber:
                 CollectedHightScore += 3;
                 break;
         }

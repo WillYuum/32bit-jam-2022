@@ -1,12 +1,16 @@
 using UnityEngine;
+using DG.Tweening;
 
 public class Dasher : EnemyCore<Dasher>
 {
     private float _rotationSpeed = 5.0f;
     private float _moveSpeed = 5.0f;
-    public Transform _target;
+    [HideInInspector] public Transform _target;
     private float _angleToAttackTarget = 0.4f;
-    private float _delayToAttack = 1.0f;
+    private float _delayToAttack = 2.0f;
+
+
+    [SerializeField] private GameObject _visual;
 
     protected override void OnAwake()
     {
@@ -17,8 +21,6 @@ public class Dasher : EnemyCore<Dasher>
         SetState(new DasherRotateTowardsTurret());
     }
 
-
-
     public void RotateTowardsTargetAndAttack()
     {
         Vector3 direction = _target.position - transform.position;
@@ -26,18 +28,62 @@ public class Dasher : EnemyCore<Dasher>
         float angleBetween = Vector3.Dot(transform.up, direction.normalized);
         if (angleBetween > _angleToAttackTarget)
         {
-            SetState(new DasherAttackTurretState());
+            SetState(new DasherReadyToAttackState());
         }
     }
+
+    public void ScaleAndAttack()
+    {
+        transform.DOScale(1.8f, 1.65f)
+        .SetEase(Ease.InOutExpo)
+        .OnComplete(() =>
+        {
+            transform.transform.localScale = Vector3.one;
+            SetState(new DasherAttackTurretState());
+        });
+    }
+
+    public void KeepLookingAtTurret()
+    {
+        Vector3 direction = _target.position - transform.position;
+        transform.up = direction * _rotationSpeed * Time.deltaTime;
+    }
+
 
 
     public void MoveTowardsPosition(Vector2 finalPosition)
     {
         transform.position = Vector2.MoveTowards(transform.position, finalPosition, _moveSpeed * Time.deltaTime);
         _moveSpeed += 0.05f;
+
+
+        if (transform.position == (Vector3)finalPosition)
+        {
+            Explode();
+        }
     }
 
 
+    public void Explode()
+    {
+        Destroy(gameObject);
+    }
+
+
+    public class DasherReadyToAttackState : EnemyStateCore<Dasher>
+    {
+        public override void EnterState(Dasher enemy)
+        {
+            base.EnterState(enemy);
+            _owner.ScaleAndAttack();
+        }
+
+        public override void Act()
+        {
+            base.Act();
+            _owner.KeepLookingAtTurret();
+        }
+    }
 
     public class DasherRotateTowardsTurret : EnemyStateCore<Dasher>
     {

@@ -147,6 +147,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5546500289947425176, guid: 1951a8d21f77ff340933d95888469008,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5546500289947425177, guid: 1951a8d21f77ff340933d95888469008,
         type: 3}
       propertyPath: <EnemyType>k__BackingField
@@ -180,9 +185,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <EnemyType>k__BackingField: 1
   _startingHealth: 100
+  _target: {fileID: 0}
+  _visual: {fileID: 3791541796457177314}
 --- !u!4 &3791541796457177313 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5546500290971702500, guid: 1951a8d21f77ff340933d95888469008,
+    type: 3}
+  m_PrefabInstance: {fileID: 8676012660855698437}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3791541796457177314 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5546500290971702503, guid: 1951a8d21f77ff340933d95888469008,
     type: 3}
   m_PrefabInstance: {fileID: 8676012660855698437}
   m_PrefabAsset: {fileID: 0}
