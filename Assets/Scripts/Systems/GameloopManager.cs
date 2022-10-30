@@ -62,9 +62,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         Turret turret = FindObjectOfType<Turret>();
         TurretPlatfromTracker = new TurretPlatfromTracker(turret, _currentRoom.GetFirstPlaform());
 
-        Vector3 newCameraPos = _currentRoom.CameraPoint.position;
-        newCameraPos.z = Camera.main.transform.position.z;
-        Camera.main.transform.position = newCameraPos;
+        // Vector3 newCameraPos = _currentRoom.CameraPoint.position;
+        // newCameraPos.z = Camera.main.transform.position.z;
+        // Camera.main.transform.position = newCameraPos;
 
 
         if (OnGameLoopStart != null)

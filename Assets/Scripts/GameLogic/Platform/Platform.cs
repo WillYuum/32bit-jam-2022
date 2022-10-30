@@ -26,7 +26,7 @@ public class Platform : MonoBehaviour
 
         foreach (var connectingPoint in _connectingPoints)
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(connectingPoint.position, 0.1f, LayerMask.GetMask("Movement_Platform"));
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(connectingPoint.position, 0.5f, LayerMask.GetMask("Movement_Platform"));
             foreach (var collider in colliders)
             {
                 Platform platform = collider.GetComponent<Platform>();
