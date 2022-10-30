@@ -13,6 +13,8 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
     public TurretMoveDirection MoveDirection { get; private set; }
     private TypeOfShots _currentTypeShot;
 
+    [SerializeField] private Animator _animator;
+
     [SerializeField] private Transform _pointOfShot;
 
     public void SetTurretMoveDirection(TurretMoveDirection direction)
@@ -37,6 +39,7 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
 
     private void SingleShot()
     {
+        _animator.Play("Shoot");
         var bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
         bullet.GetComponent<Projectile>().SetShootDirection(transform.up);
     }
