@@ -12,8 +12,9 @@ public class Projectile : MonoBehaviour
         transform.Translate(Vector3.up * _speed * Time.deltaTime);
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
+        print("Projectile hit " + other.name);
         if (other.gameObject.TryGetComponent(out Damageable damageable))
         {
             damageable.TakeDamage(_damage);

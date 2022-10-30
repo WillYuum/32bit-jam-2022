@@ -8,7 +8,7 @@ public enum TypeOfShots
     SingleShot,
 }
 
-public class Turret : MonoBehaviour, ITurretActions
+public class Turret : MonoBehaviour, ITurretActions, Damageable
 {
     public TurretMoveDirection MoveDirection { get; private set; }
     private TypeOfShots _currentTypeShot;
@@ -37,10 +37,7 @@ public class Turret : MonoBehaviour, ITurretActions
 
     private void SingleShot()
     {
-        Debug.Log("SingleShot");
-
         SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, _pointOfShot.rotation);
-        // SpawnManager.instance.SpawnBullet(_pointOfShot.position, _pointOfShot.rotation);
     }
 
     public void TakeDamage(int damageCount = 1)
