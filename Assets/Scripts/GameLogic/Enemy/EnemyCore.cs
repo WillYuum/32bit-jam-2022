@@ -56,6 +56,7 @@ where T : MonoBehaviour
         _hitPoint.TakeDamage(damage);
         if (_hitPoint.IsOutOfHP())
         {
+            GameloopManager.instance.InvokeKillEnemy(EnemyType);
             Die();
         }
     }

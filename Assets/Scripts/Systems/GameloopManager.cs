@@ -72,7 +72,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             OnGameLoopStart.Invoke();
         }
 
-        for (int i = 0; i < 1; i++)
+        for (int i = 0; i < 3; i++)
         {
             Invoke(nameof(SpawnEnemyRandomly), 0.65f * i);
         }
@@ -105,13 +105,13 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         switch (enemyType)
         {
             case EnemyType.Elite:
-                CollectedHightScore += 1;
+                CollectedHightScore += GameVariables.instance.PointsData.Elite;
                 break;
             case EnemyType.Dasher:
-                CollectedHightScore += 2;
+                CollectedHightScore += GameVariables.instance.PointsData.Dasher;
                 break;
             case EnemyType.Bomber:
-                CollectedHightScore += 3;
+                CollectedHightScore += GameVariables.instance.PointsData.Bomber;
                 break;
         }
 

@@ -30,6 +30,7 @@ public class GameScreen : MonoBehaviour
     {
         string newValue = string.Format("{0:000000}", GameloopManager.instance.CollectedHightScore);
         _highScoreText.text = _highScoreTextPrefix + newValue;
+
     }
 
     private const string _currentHPTextPrefix = "HP: ";
