@@ -175,6 +175,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2822959060412664884, guid: 1951a8d21f77ff340933d95888469008,
+        type: 3}
+      propertyPath: m_Radius
+      value: 1.05
+      objectReference: {fileID: 0}
     - target: {fileID: 5546500289947425176, guid: 1951a8d21f77ff340933d95888469008,
         type: 3}
       propertyPath: m_RootOrder
@@ -267,7 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EnemyType>k__BackingField: 0
-  _startingHealth: 100
+  _startingHP: 3
   _bombRangeIndicator: {fileID: 6875552314070481481}
 --- !u!4 &470623012289079388 stripped
 Transform:

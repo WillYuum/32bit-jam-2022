@@ -9,22 +9,21 @@ public enum EnemyType
 
 interface Damageable
 {
-    void TakeDamage(float damage);
+    void TakeDamage(int damage);
 }
 
 public class EnemyCore<T> : MonoBehaviour, Damageable
 where T : MonoBehaviour
 {
     [field: SerializeField] public EnemyType EnemyType { get; private set; }
+    [SerializeField] private int _startingHP = 3;
 
-    [SerializeField] private float _startingHealth = 100.0f;
-    [HideInInspector] public float CurrentHealth { get; private set; }
-
+    protected HitPoint _hitPoint;
     private EnemyStateCore<T> _currentState;
 
     private void Awake()
     {
-        CurrentHealth = _startingHealth;
+        _hitPoint = new HitPoint(_startingHP);
         OnAwake();
     }
 
@@ -52,10 +51,10 @@ where T : MonoBehaviour
         _currentState.EnterState(this as T);
     }
 
-    public void TakeDamage(float damage)
+    public void TakeDamage(int damage)
     {
-        CurrentHealth -= damage;
-        if (CurrentHealth <= 0)
+        _hitPoint.TakeDamage(damage);
+        if (_hitPoint.IsOutOfHP())
         {
             Die();
         }

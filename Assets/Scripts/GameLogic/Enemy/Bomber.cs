@@ -24,10 +24,9 @@ public class Bomber : EnemyCore<Bomber>
     public void MoveToTurret()
     {
         Vector2 direction = _target.position - transform.position;
-        // transform.up = direction * _moveSpeed * Time.deltaTime;
         transform.Translate(direction.normalized * _moveSpeed * Time.deltaTime, Space.World);
 
-        if (Vector2.Distance(transform.position, _target.position) < _bombRange)
+        if (Vector2.Distance(transform.position, _target.position) < _bombRange * 0.75f)
         {
             SetState(new EnterExplodeState());
         }
@@ -40,7 +39,7 @@ public class Bomber : EnemyCore<Bomber>
 
         _bombRangeIndicator.gameObject.SetActive(true);
         _bombRangeIndicator.DOScale(_originalBombRangeScale * _bombRange, 0.5f)
-        .SetEase(Ease.InOutExpo);
+        .SetEase(Ease.InOutCirc);
 
         float delayTillExplode = 1.35f;
         Invoke(nameof(Explode), delayTillExplode);
