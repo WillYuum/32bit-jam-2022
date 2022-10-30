@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 1058215774381686111}
   - component: {fileID: 1820645005}
   - component: {fileID: 944328737}
-  - component: {fileID: 33071391}
+  - component: {fileID: 618283398}
   m_Layer: 6
   m_Name: Turret
   m_TagString: Player
@@ -81,6 +81,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2e40e8e5360640439f6469b4d61010a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _animator: {fileID: 2018351607}
   _pointOfShot: {fileID: 105010029304210073}
 --- !u!114 &1820645005
 MonoBehaviour:
@@ -94,6 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 557d98f9e19afa2429d1779f58c14f8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _turretAnimationEvents: {fileID: 68154566}
 --- !u!61 &944328737
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -120,58 +122,19 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.4594233, y: 1.5215077}
   m_EdgeRadius: 0
---- !u!212 &33071391
-SpriteRenderer:
+--- !u!114 &618283398
+MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1058215774381686097}
   m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_StaticShadowCaster: 0
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 0
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 2, y: 2.3}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf429c9061614a34b8379e331a786283, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 2018351607}
 --- !u!1 &3957096783395144785
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,6 +177,7 @@ GameObject:
   - component: {fileID: 3287237262159657433}
   - component: {fileID: 3463180327280680226}
   - component: {fileID: 2018351607}
+  - component: {fileID: 68154566}
   m_Layer: 0
   m_Name: Fishy_Sprite
   m_TagString: Untagged
@@ -308,3 +272,15 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &68154566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3990760847864241040}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7bf32ba6fc111114ea2248a412490ab6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -71,7 +71,7 @@ public class TurretPlatfromTracker
     {
         if (platform == null) return;
 
-        Debug.Log("SWITCHING TO PLATFORM " + platform.name);
+        // Debug.Log("SWITCHING TO PLATFORM " + platform.name);
         _currentPlatform = platform;
 
 

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SpawnManagerMod;
+using System;
 
 public enum TypeOfShots
 {
@@ -17,17 +18,21 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
 
     [SerializeField] private Transform _pointOfShot;
 
+
+
     public void SetTurretMoveDirection(TurretMoveDirection direction)
     {
         MoveDirection = direction;
     }
+
+
 
     public void UpdatePosition(Vector2 position)
     {
         transform.position = position;
     }
 
-    public void HandleShoot()
+    public void PlayAnim()
     {
         switch (_currentTypeShot)
         {
@@ -39,7 +44,11 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
 
     private void SingleShot()
     {
-        // _animator.Play("Shoot");
+        _animator.Play("Shoot");
+    }
+
+    public void ShootBullet()
+    {
         var bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
         bullet.GetComponent<Projectile>().SetShootDirection(transform.up);
     }
@@ -54,11 +63,6 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
     private void OnTriggerEnter2D(Collider2D other)
     {
         //Check if hit by enemy bullet
-
-    }
-
-    class TurrertState
-    {
 
     }
 }
@@ -90,7 +94,9 @@ public class HitPoint
 
 public interface ITurretActions
 {
-    void HandleShoot();
+    void PlayAnim();
     void SetTurretMoveDirection(TurretMoveDirection direction);
     void UpdatePosition(Vector2 position);
+    void ShootBullet();
+
 }

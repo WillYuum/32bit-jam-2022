@@ -19,14 +19,23 @@ public class TurretActions : MonoBehaviour
 {
     private ITurretActions _turretActions;
     private ShootController _turretShootController;
+    [SerializeField] private TurretEvents _turretAnimationEvents;
+
+
+    private void Start()
+    {
+        _turretAnimationEvents.OnTurretShoot += ShootBullet;
+    }
 
     private void Awake()
     {
         _turretActions = gameObject.GetComponent<ITurretActions>();
 
-        float turretShootInterval = 0.5f;
+        float turretShootInterval = 2.5f;
         _turretShootController = new ShootController(turretShootInterval);
 
+
+        //This is to set the fish on the plaform as soon as the game starts
         GameloopManager.instance.OnGameLoopStart += () =>
         {
             Move(RotationDirection.ClockWise);
@@ -51,7 +60,10 @@ public class TurretActions : MonoBehaviour
         }
         else
         {
-            _turretActions.SetTurretMoveDirection(TurretMoveDirection.None);
+            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+            {
+                _turretActions.SetTurretMoveDirection(TurretMoveDirection.None);
+            }
         }
 
         if (Input.GetKey(KeyCode.Space))
@@ -64,9 +76,15 @@ public class TurretActions : MonoBehaviour
     {
         if (_turretShootController.CanShoot)
         {
-            _turretActions.HandleShoot();
-            _turretShootController.ResetShootTimer();
+            _turretShootController.SetPaused();
+            _turretActions.PlayAnim();
         }
+    }
+
+    private void ShootBullet()
+    {
+        _turretShootController.ResetShootTimer();
+        _turretActions.ShootBullet();
     }
 
     public void Move(RotationDirection movement)
@@ -82,17 +100,20 @@ public class ShootController
     public float ShootInterval { get; private set; }
     public float ShootTimer { get; private set; }
     public bool CanShoot { get; private set; }
+    private bool _paused = false;
 
     public ShootController(float shootInterval)
     {
         ShootInterval = shootInterval;
         ShootTimer = 0;
-        CanShoot = true;
+        CanShoot = false;
     }
 
 
     public void UpdateShootTimer()
     {
+        if (_paused) return;
+
         if (ShootTimer < ShootInterval)
         {
             ShootTimer += Time.deltaTime;
@@ -103,8 +124,15 @@ public class ShootController
         }
     }
 
+    public void SetPaused()
+    {
+        CanShoot = false;
+        _paused = true;
+    }
+
     public void ResetShootTimer()
     {
+        _paused = false;
         ShootTimer = 0.0f;
         CanShoot = false;
     }

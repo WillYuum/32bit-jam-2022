@@ -33,7 +33,7 @@ public class Platform : MonoBehaviour
                 if (platform != null && platform != this)
                 {
                     RotationDirection direction = connectingPoint.localPosition.x > 0 ? RotationDirection.AntiClockWise : RotationDirection.ClockWise;
-                    Debug.Log("CONNECTING PLATFORM " + platform.name + " TO " + this.name + " IN DIRECTION " + direction);
+                    // Debug.Log("CONNECTING PLATFORM " + platform.name + " TO " + this.name + " IN DIRECTION " + direction);
                     _connectedPlatforms.SetPlatform(direction, platform);
 
                 }

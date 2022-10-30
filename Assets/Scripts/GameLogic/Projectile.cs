@@ -29,7 +29,7 @@ public class Projectile : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        print("Projectile hit " + other.name);
+        // print("Projectile hit " + other.name + "by " + this.name);
         if (other.gameObject.TryGetComponent(out Damageable damageable))
         {
             damageable.TakeDamage(_damage);
