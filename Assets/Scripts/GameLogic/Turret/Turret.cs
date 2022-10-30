@@ -39,7 +39,7 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
 
     private void SingleShot()
     {
-        _animator.Play("Shoot");
+        // _animator.Play("Shoot");
         var bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
         bullet.GetComponent<Projectile>().SetShootDirection(transform.up);
     }
@@ -54,6 +54,11 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
     private void OnTriggerEnter2D(Collider2D other)
     {
         //Check if hit by enemy bullet
+
+    }
+
+    class TurrertState
+    {
 
     }
 }
