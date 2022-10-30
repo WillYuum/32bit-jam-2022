@@ -649,8 +649,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 19, y: -37}
-  m_SizeDelta: {x: 271.8831, y: 50}
+  m_AnchoredPosition: {x: 31, y: -43}
+  m_SizeDelta: {x: 141.4197, y: 51.5804}
   m_Pivot: {x: 0, y: 1}
 --- !u!222 &795391347070282094
 CanvasRenderer:
@@ -715,7 +715,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1094,11 +1094,11 @@ RectTransform:
   m_Father: {fileID: 795391346528548937}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 19, y: -77}
-  m_SizeDelta: {x: 344.5075, y: 50}
-  m_Pivot: {x: 0, y: 1}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -11, y: -25}
+  m_SizeDelta: {x: 256.0434, y: 107.8069}
+  m_Pivot: {x: 1, y: 1}
 --- !u!222 &795391347465348315
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1127,7 +1127,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'High Score: 00000'
+  m_text: "High Score\n 00000"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: df1775ca2ef913742ac8e949b0b6309d, type: 2}
   m_sharedMaterial: {fileID: -737598713459522945, guid: df1775ca2ef913742ac8e949b0b6309d,
@@ -1162,7 +1162,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
