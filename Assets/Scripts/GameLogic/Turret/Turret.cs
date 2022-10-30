@@ -37,7 +37,8 @@ public class Turret : MonoBehaviour, ITurretActions, Damageable
 
     private void SingleShot()
     {
-        SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, _pointOfShot.rotation);
+        var bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
+        bullet.GetComponent<Projectile>().SetShootDirection(transform.up);
     }
 
     public void TakeDamage(int damageCount = 1)
