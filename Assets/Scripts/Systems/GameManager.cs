@@ -11,8 +11,9 @@ public enum GameScenes
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {
 
-    private void Start()
+    private void Awake()
     {
+        AudioManager.instance.Load();
     }
 
     public void StartGame()

@@ -45,6 +45,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sfxConfigs: []
+  _bgmConfigs:
+  - Name: Main
+    Clip: {fileID: 8300000, guid: db53ac203877940cd97175c7e5b8ae14, type: 3}
+    Volume: 1
+    Loop: 1
 --- !u!1 &2421195833457379878
 GameObject:
   m_ObjectHideFlags: 0

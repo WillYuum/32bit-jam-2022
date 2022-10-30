@@ -53,6 +53,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         GameUI.instance.SwitchToScreen(GameUI.Screens.GameUI);
 
+        AudioManager.instance.PlayBGM("Main");
+
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
 
