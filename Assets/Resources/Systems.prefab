@@ -181,6 +181,9 @@ MonoBehaviour:
   <ElitePrefab>k__BackingField:
     _prefab: {fileID: 4826341759247242587, guid: c32471b33753e0a458b8590f6958a375,
       type: 3}
+  <EliteProjectilePrefab>k__BackingField:
+    _prefab: {fileID: 7140369590177959291, guid: 7ca383a64a8ece049b9bc7e566b86020,
+      type: 3}
 --- !u!1 &4291171186485766178
 GameObject:
   m_ObjectHideFlags: 0
