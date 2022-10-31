@@ -31,7 +31,7 @@ public class TurretActions : MonoBehaviour
     {
         _turretActions = gameObject.GetComponent<ITurretActions>();
 
-        float turretShootInterval = 2.5f;
+        float turretShootInterval = GameVariables.instance.PlayerShootInterval;
         _turretShootController = new ShootController(turretShootInterval);
 
 

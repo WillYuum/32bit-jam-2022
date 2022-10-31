@@ -7,6 +7,10 @@ public class GameVariables : MonoBehaviourSingleton<GameVariables>
     [field: SerializeField] public EnemyHP EnemyHPData { get; private set; }
 
 
+    [field: SerializeField] public float PlayerSpeed { get; private set; }
+    [field: SerializeField] public float PlayerShootInterval { get; private set; }
+    [field: SerializeField] public float BomberExplodeRange { get; private set; }
+
     [System.Serializable]
     public class EnemyHP
     {

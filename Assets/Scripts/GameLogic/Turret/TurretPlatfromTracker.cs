@@ -6,12 +6,14 @@ public class TurretPlatfromTracker
 {
     private Platform _currentPlatform;
     private Turret _turret;
-    private float moveSpeed = 7.0f;
+    private float _moveSpeed = 7.0f;
 
     private PlatfromTrackData _platfromTrackData;
 
     public TurretPlatfromTracker(Turret turret, Platform startingPlatform)
     {
+        _moveSpeed = GameVariables.instance.PlayerSpeed;
+
         _turret = turret;
         _currentPlatform = startingPlatform;
 
@@ -93,10 +95,10 @@ public class TurretPlatfromTracker
         switch (direction)
         {
             case RotationDirection.ClockWise:
-                newPos.x -= moveSpeed * Time.deltaTime;
+                newPos.x -= _moveSpeed * Time.deltaTime;
                 break;
             case RotationDirection.AntiClockWise:
-                newPos.x += moveSpeed * Time.deltaTime;
+                newPos.x += _moveSpeed * Time.deltaTime;
                 break;
         }
 

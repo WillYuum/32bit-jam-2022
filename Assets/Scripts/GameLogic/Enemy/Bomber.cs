@@ -7,13 +7,16 @@ public class Bomber : EnemyCore<Bomber>
     private Transform _target;
     private float _moveSpeed = 1.75f;
     [SerializeField] private Transform _bombRangeIndicator;
-    private float _bombRange = 2.65f;
+    private float _bombRange = 5.0f;
 
     private float _originalBombRangeScale;
 
     protected override void OnAwake()
     {
         base.OnAwake();
+
+        _bombRange = GameVariables.instance.BomberExplodeRange;
+
         _bombRangeIndicator.gameObject.SetActive(false);
         _target = GameObject.Find("Turret").transform;
         SetState(new MoveToTurretState());
@@ -26,7 +29,7 @@ public class Bomber : EnemyCore<Bomber>
         Vector2 direction = _target.position - transform.position;
         transform.Translate(direction.normalized * _moveSpeed * Time.deltaTime, Space.World);
 
-        if (Vector2.Distance(transform.position, _target.position) < _bombRange * 0.75f)
+        if (Vector2.Distance(transform.position, _target.position) < _bombRange * 0.85f)
         {
             SetState(new EnterExplodeState());
         }
