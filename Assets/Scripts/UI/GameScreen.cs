@@ -7,9 +7,9 @@ public class GameScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _highScoreText;
     [SerializeField] private TextMeshProUGUI _currentHPText;
 
-    [SerializeField] private Slider _explosionSlider;
+    // [SerializeField] private Slider _explosionSlider;
 
-
+    [SerializeField] private RectMask2D _explosionSlider;
     void Awake()
     {
         GameloopManager.instance.OnFishTakeHit += UpdateCurrentHPText;
@@ -50,9 +50,11 @@ public class GameScreen : MonoBehaviour
 
     private void UpdateExplosionBar()
     {
-        if (_explosionSlider.value < 1)
-        {
-            _explosionSlider.value = GameloopManager.instance.ExplosionBarTracker.GetRatio();
-        }
+        // if (_explosionSlider.value < 1)
+        // {
+        var finalVal = Vector4.zero;
+        finalVal.w = Mathf.Lerp(153, 0, GameloopManager.instance.ExplosionBarTracker.GetRatio());
+        _explosionSlider.padding = finalVal;
+        // }
     }
 }
