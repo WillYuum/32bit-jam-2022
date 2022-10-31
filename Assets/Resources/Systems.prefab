@@ -44,12 +44,48 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 554411df99a9a064e95265aa36dfe8af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _sfxConfigs: []
+  _sfxConfigs:
+  - Name: 
+    Clip: {fileID: 0}
+    Volume: 0
+    Loop: 0
+    RandPitch: 0
+  - Name: bomber
+    Clip: {fileID: 8300000, guid: dd3057662011542a291ac5c0aefa8cab, type: 3}
+    Volume: 1
+    Loop: 0
+    RandPitch: 1
+  - Name: enemyHurt
+    Clip: {fileID: 8300000, guid: 2bf4cd978da1248e1b4b99228bd9b712, type: 3}
+    Volume: 1
+    Loop: 0
+    RandPitch: 1
+  - Name: gameOver
+    Clip: {fileID: 8300000, guid: efd3093f4ebd84197aac6057e18adc1a, type: 3}
+    Volume: 1
+    Loop: 0
+    RandPitch: 0
+  - Name: playerFire
+    Clip: {fileID: 8300000, guid: 18c506b3d5e9b4fcaa04ef620ecd38d5, type: 3}
+    Volume: 0
+    Loop: 0
+    RandPitch: 1
+  - Name: playerHurt
+    Clip: {fileID: 0}
+    Volume: 1
+    Loop: 0
+    RandPitch: 1
+  - Name: playerSpecial
+    Clip: {fileID: 8300000, guid: 72e16ac5fa1f74eebb8a1649f11f3011, type: 3}
+    Volume: 1
+    Loop: 0
+    RandPitch: 0
   _bgmConfigs:
   - Name: Main
     Clip: {fileID: 8300000, guid: db53ac203877940cd97175c7e5b8ae14, type: 3}
     Volume: 1
     Loop: 1
+    RandPitch: 0
 --- !u!1 &2421195833457379878
 GameObject:
   m_ObjectHideFlags: 0
@@ -189,6 +225,8 @@ MonoBehaviour:
   <EliteProjectilePrefab>k__BackingField:
     _prefab: {fileID: 7140369590177959291, guid: 7ca383a64a8ece049b9bc7e566b86020,
       type: 3}
+  <ExplosionPrefab>k__BackingField:
+    _prefab: {fileID: 0}
 --- !u!1 &4291171186485766178
 GameObject:
   m_ObjectHideFlags: 0
