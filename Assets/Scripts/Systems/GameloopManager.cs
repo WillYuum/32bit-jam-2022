@@ -43,6 +43,14 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     private void Update()
     {
         TurretPlatfromTracker.TrackTurretOnPlatform();
+
+
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            ExplosionBarTracker.IncreaseValue(999);
+        }
+#endif
     }
 
 

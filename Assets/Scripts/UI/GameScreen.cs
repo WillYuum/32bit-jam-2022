@@ -50,8 +50,9 @@ public class GameScreen : MonoBehaviour
 
     private void UpdateExplosionBar()
     {
-        if (GameloopManager.instance.ExplosionBarTracker.IsExplosionBarFull() == false) return;
-
-        _explosionSlider.value = GameloopManager.instance.ExplosionBarTracker.GetRatio();
+        if (_explosionSlider.value < 1)
+        {
+            _explosionSlider.value = GameloopManager.instance.ExplosionBarTracker.GetRatio();
+        }
     }
 }
