@@ -12,6 +12,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action<int> OnFishTakeHit;
     public event Action OnKillEnemy;
 
+
+    public InvisiblityWindowTracker TurretInvisiblityWindowTracker { get; private set; }
+
     public ExplosionBarTracker ExplosionBarTracker { get; private set; }
 
     private HitPoint _fishHitPoints;
@@ -60,6 +63,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         LoopIsActive = true;
 
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
+        TurretInvisiblityWindowTracker = new InvisiblityWindowTracker();
 
         CollectedHightScore = 0;
 
@@ -184,5 +188,29 @@ public class ExplosionBarTracker
     public bool IsExplosionBarFull()
     {
         return _currentExplosionBarValue >= _maxExplosionBarValue;
+    }
+}
+
+
+public class InvisiblityWindowTracker
+{
+    public bool IsInvisiblityWindowActive { get; private set; }
+    public float InvisiblityWindowDuration { get; private set; }
+
+    public InvisiblityWindowTracker()
+    {
+        InvisiblityWindowDuration = GameVariables.instance.InvinsibilityWindowDuration;
+        IsInvisiblityWindowActive = false;
+    }
+
+    public void SetIsVunrable()
+    {
+        IsInvisiblityWindowActive = false;
+    }
+
+
+    public void TakeHit()
+    {
+        IsInvisiblityWindowActive = true;
     }
 }

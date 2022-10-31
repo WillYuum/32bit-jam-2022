@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SpawnManagerMod;
-using System;
+using DG.Tweening;
 
 public enum TypeOfShots
 {
@@ -17,6 +17,8 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
     [SerializeField] private Animator _animator;
 
     [SerializeField] private Transform _pointOfShot;
+
+    [SerializeField] private SpriteRenderer _spriteRenderer;
 
 
 
@@ -57,7 +59,24 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
 
     public void TakeDamage(int damageCount = 1)
     {
+        var invinsibility = GameloopManager.instance.TurretInvisiblityWindowTracker;
+        if (invinsibility.IsInvisiblityWindowActive) return;
+
+        invinsibility.TakeHit();
         AudioManager.instance.PlaySFX("playerHurt");
+
+        var fadeColor = Color.white;
+        fadeColor.a = 0.5f;
+
+        int loop = 6;
+        float durationOfInvinsibility = invinsibility.InvisiblityWindowDuration;
+
+        //Tween fade spirete color like ping yoyo
+        _spriteRenderer.DOColor(fadeColor, durationOfInvinsibility / (float)loop).SetLoops(loop, LoopType.Yoyo).OnComplete(() =>
+        {
+            _spriteRenderer.color = Color.white;
+            invinsibility.SetIsVunrable();
+        });
 
         GameloopManager.instance.InvokeFishTakeDamage(damageCount);
     }
@@ -66,6 +85,10 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
 
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.CompareTag("Enemy"))
+        {
+            TakeDamage(1);
+        }
         //Check if hit by enemy bullet
 
     }

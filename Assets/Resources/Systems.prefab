@@ -280,6 +280,7 @@ MonoBehaviour:
     <Elite>k__BackingField: 15
     <Bomber>k__BackingField: 4
     <Dasher>k__BackingField: 2
+  <InvinsibilityWindowDuration>k__BackingField: 3
   <PlayerSpeed>k__BackingField: 10
   <PlayerShootInterval>k__BackingField: 0.75
   <BomberExplodeRange>k__BackingField: 5

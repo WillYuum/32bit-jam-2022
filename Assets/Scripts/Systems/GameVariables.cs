@@ -8,6 +8,8 @@ public class GameVariables : MonoBehaviourSingleton<GameVariables>
 
     [field: SerializeField] public ExplosionBarVariables ExplosionBarData { get; private set; }
 
+    [field: SerializeField] public float InvinsibilityWindowDuration { get; private set; }
+
 
     [field: SerializeField] public float PlayerSpeed { get; private set; }
     [field: SerializeField] public float PlayerShootInterval { get; private set; }
