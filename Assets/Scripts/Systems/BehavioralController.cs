@@ -29,18 +29,18 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
         _behaviorals.Remove(behavioral);
     }
 
-    private void LateUpdate()
+    private void Update()
     {
-        foreach (BehavioralDataWithTimer behavior in _behavioralsWithTimers)
+        foreach (BehavioralDataWithTimer behaviorWithTimer in _behavioralsWithTimers)
         {
-            behavior.DurationOfBehavior -= Time.deltaTime;
-            behavior.UpdateBehavior.Invoke();
+            behaviorWithTimer.DurationOfBehavior -= Time.deltaTime;
+            behaviorWithTimer.UpdateBehavior.Invoke();
 
 
-            if (behavior.DurationOfBehavior <= 0)
+            if (behaviorWithTimer.DurationOfBehavior <= 0)
             {
-                _behavioralsWithTimers.Remove(behavior);
-                behavior.OnBehaviorEnd.Invoke();
+                behaviorWithTimer.OnBehaviorEnd.Invoke();
+                _behavioralsWithTimers.Remove(behaviorWithTimer);
             }
         }
 
