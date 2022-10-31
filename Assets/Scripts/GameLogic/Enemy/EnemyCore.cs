@@ -65,6 +65,8 @@ where T : MonoBehaviour
 
     public void TakeDamage(int damage)
     {
+        AudioManager.instance.PlaySFX("EnemyHurt");
+
         _hitPoint.TakeDamage(damage);
         if (_hitPoint.IsOutOfHP())
         {

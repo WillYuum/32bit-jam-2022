@@ -49,6 +49,11 @@ public class AudioManager : MonoBehaviourSingleton<AudioManager>
         Play(name, _bgm);
     }
 
+    public void StopAllBGM()
+    {
+        _bgm.ForEach(audio => audio.Stop());
+    }
+
 
 
 
@@ -67,6 +72,10 @@ public class AudioManager : MonoBehaviourSingleton<AudioManager>
 
         audio.Play();
     }
+
+
+
+
 }
 
 

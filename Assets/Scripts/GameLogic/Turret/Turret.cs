@@ -49,12 +49,16 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
 
     public void ShootBullet()
     {
+        AudioManager.instance.PlaySFX("playerFire");
+
         var bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
         bullet.GetComponent<Projectile>().SetShootDirection(transform.up);
     }
 
     public void TakeDamage(int damageCount = 1)
     {
+        AudioManager.instance.PlaySFX("playerHurt");
+
         GameloopManager.instance.InvokeFishTakeDamage(damageCount);
     }
 

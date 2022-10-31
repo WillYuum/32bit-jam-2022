@@ -107,6 +107,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         if (LoopIsActive == false) return;
 
+        AudioManager.instance.StopAllBGM();
+        AudioManager.instance.PlaySFX("gameOver");
+
         CancelInvoke(nameof(SpawnEnemyRandomly));
         GameUI.instance.SwitchToScreen(GameUI.Screens.LoseScreen);
     }

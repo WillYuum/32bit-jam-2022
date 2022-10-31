@@ -52,6 +52,8 @@ public class Bomber : EnemyCore<Bomber>
     {
         var hit = Physics2D.CircleCast(transform.position, _bombRange, Vector2.zero, 0.0f, LayerMask.GetMask("Player"));
 
+        AudioManager.instance.PlaySFX("Bomber");
+
         if (hit.collider != null)
         {
             hit.collider.GetComponent<Turret>().TakeDamage(1);
