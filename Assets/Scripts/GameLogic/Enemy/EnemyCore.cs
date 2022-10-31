@@ -16,14 +16,25 @@ public class EnemyCore<T> : MonoBehaviour, Damageable
 where T : MonoBehaviour
 {
     [field: SerializeField] public EnemyType EnemyType { get; private set; }
-    [SerializeField] private int _startingHP = 3;
 
     protected HitPoint _hitPoint;
     private EnemyStateCore<T> _currentState;
 
     private void Awake()
     {
-        _hitPoint = new HitPoint(_startingHP);
+        switch (EnemyType)
+        {
+            case EnemyType.Elite:
+                _hitPoint = new HitPoint(GameVariables.instance.EnemyHPData.Elite);
+                break;
+            case EnemyType.Dasher:
+                _hitPoint = new HitPoint(GameVariables.instance.EnemyHPData.Dasher);
+                break;
+            case EnemyType.Bomber:
+                _hitPoint = new HitPoint(GameVariables.instance.EnemyHPData.Bomber);
+                break;
+        }
+
         OnAwake();
     }
 

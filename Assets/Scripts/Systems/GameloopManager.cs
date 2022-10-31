@@ -74,10 +74,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             OnGameLoopStart.Invoke();
         }
 
-        for (int i = 0; i < 3; i++)
-        {
-            Invoke(nameof(SpawnEnemyRandomly), 0.65f * i);
-        }
+        Spawner.instance.StartWithScriptedWaves();
     }
 
     public void InvokeFishTakeDamage(int damageAmount)

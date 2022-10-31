@@ -22,7 +22,7 @@ public class Elite : EnemyCore<Elite>
         Vector3 directionToTarget = _target.position - transform.position;
 
         var projectile = SpawnManager.instance.EliteProjectilePrefab.CreateGameObject(transform.position, transform.rotation);
-        projectile.GetComponent<Projectile>().SetShootDirection(directionToTarget);
+        projectile.GetComponent<Projectile>().SetShootDirection(directionToTarget.normalized);
         ShootController.ResetShootTimer();
     }
 

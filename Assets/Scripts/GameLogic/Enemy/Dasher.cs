@@ -20,6 +20,23 @@ public class Dasher : EnemyCore<Dasher>
 
         _target = GameObject.Find("Turret").transform;
         if (_target == null) Debug.LogError("Turret not found");
+        // SetState(new DasherRotateTowardsTurret());
+    }
+
+    public void StartSpawn()
+    {
+        _visual.transform.localScale = Vector3.zero;
+        _visual.transform.DOScale(1, 0.5f).SetEase(Ease.OutBack);
+        SetState(new HandleSpawnState());
+    }
+
+    public void ReadyToGo(float delayToSwitch)
+    {
+        Invoke(nameof(SwitchFromSpawnToAttackTurret), delayToSwitch);
+    }
+
+    private void SwitchFromSpawnToAttackTurret()
+    {
         SetState(new DasherRotateTowardsTurret());
     }
 
@@ -77,7 +94,21 @@ public class Dasher : EnemyCore<Dasher>
         Destroy(gameObject);
     }
 
-    public class DasherReadyToAttackState : EnemyStateCore<Dasher>
+    class HandleSpawnState : EnemyStateCore<Dasher>
+    {
+        public override void EnterState(Dasher enemy)
+        {
+            base.EnterState(enemy);
+        }
+
+        public override void Act()
+        {
+            base.Act();
+            _owner.KeepLookingAtTurret();
+        }
+    }
+
+    class DasherReadyToAttackState : EnemyStateCore<Dasher>
     {
         public override void EnterState(Dasher enemy)
         {
@@ -92,7 +123,7 @@ public class Dasher : EnemyCore<Dasher>
         }
     }
 
-    public class DasherRotateTowardsTurret : EnemyStateCore<Dasher>
+    class DasherRotateTowardsTurret : EnemyStateCore<Dasher>
     {
         public override void EnterState(Dasher enemy)
         {
@@ -107,7 +138,7 @@ public class Dasher : EnemyCore<Dasher>
     }
 
 
-    public class DasherAttackTurretState : EnemyStateCore<Dasher>
+    class DasherAttackTurretState : EnemyStateCore<Dasher>
     {
         private Vector2 _finalPosition;
         public override void EnterState(Dasher enemy)
