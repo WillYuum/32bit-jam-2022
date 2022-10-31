@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7552296284594055769}
   - component: {fileID: 206118635166160349}
   - component: {fileID: 180181710907255302}
+  - component: {fileID: 1543246194020579580}
   m_Layer: 0
   m_Name: Elite_Sprite
   m_TagString: Untagged
@@ -93,7 +94,7 @@ Animator:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7921199704619616320}
-  m_Enabled: 0
+  m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: d00393cd5bd5e3b469af6f2b376c9d55, type: 2}
   m_CullingMode: 0
@@ -105,6 +106,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1543246194020579580
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7921199704619616320}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32fb92063bc001c4297ecd0bd7362b77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashMaterial: {fileID: 2100000, guid: e23e30bd84650f149ab5dbe17593157b, type: 2}
+  _duration: 0.175
 --- !u!1001 &1009858423606086848
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -196,21 +211,6 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1009858423606086848}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &8937638812688885693
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4826341759247242587}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 286da8d0deb364c4e9286811a27417ed, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <EnemyType>k__BackingField: 0
-  _startingHP: 3
-  _target: {fileID: 0}
 --- !u!212 &6056435497628081795
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -263,3 +263,18 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &8937638812688885693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4826341759247242587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 286da8d0deb364c4e9286811a27417ed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  <EnemyType>k__BackingField: 0
+  _simpleFlash: {fileID: 1543246194020579580}
+  _target: {fileID: 0}

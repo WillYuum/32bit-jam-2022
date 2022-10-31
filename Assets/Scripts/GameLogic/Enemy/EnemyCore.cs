@@ -17,6 +17,7 @@ public class EnemyCore<T> : MonoBehaviour, IDamageable
 where T : MonoBehaviour
 {
     [field: SerializeField] public EnemyType EnemyType { get; private set; }
+    [SerializeField] private SimpleFlash _simpleFlash;
 
     protected HitPoint _hitPoint;
     private EnemyStateCore<T> _currentState;
@@ -66,6 +67,8 @@ where T : MonoBehaviour
     public void TakeDamage(int damage)
     {
         AudioManager.instance.PlaySFX("enemyHurt");
+
+        _simpleFlash.Flash();
 
         _hitPoint.TakeDamage(damage);
         if (_hitPoint.IsOutOfHP())

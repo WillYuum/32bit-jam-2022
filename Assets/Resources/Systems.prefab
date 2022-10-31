@@ -273,7 +273,7 @@ MonoBehaviour:
     <Dasher>k__BackingField: 2
   <EnemyHPData>k__BackingField:
     <Elite>k__BackingField: 10
-    <Bomber>k__BackingField: 3
+    <Bomber>k__BackingField: 50
     <Dasher>k__BackingField: 1
   <ExplosionBarData>k__BackingField:
     <MaxExplosionBarValue>k__BackingField: 40

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7839933381832437046}
   - component: {fileID: 7634740130715792390}
   - component: {fileID: 7248104742127352034}
+  - component: {fileID: 8748003797754800230}
   m_Layer: 0
   m_Name: Isometric Diamond
   m_TagString: Untagged
@@ -105,6 +106,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &8748003797754800230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2460851663588421389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32fb92063bc001c4297ecd0bd7362b77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _flashMaterial: {fileID: 2100000, guid: e23e30bd84650f149ab5dbe17593157b, type: 2}
+  _duration: 0.175
 --- !u!1001 &8676012660855698437
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -209,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   <EnemyType>k__BackingField: 1
-  _startingHP: 3
+  _simpleFlash: {fileID: 8748003797754800230}
   _target: {fileID: 0}
   _visual: {fileID: 3791541796457177314}
 --- !u!4 &3791541796457177313 stripped
