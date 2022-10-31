@@ -13,17 +13,15 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
     {
         _waves = new AttackWave[]{
             new DashSwarmTutorial(),
+            new DashSwarmTutorial(),
         };
-
-
 
         _waves[0].InvokNextSpawnAction();
     }
 
-
-
-
 }
+
+
 
 public class DashSwarmTutorial : AttackWave
 {
@@ -42,14 +40,13 @@ public class DashSwarmTutorial : AttackWave
 
         for (int i = 0; i < amountToSpawned; i++)
         {
-
             dashersSpawned[i] = dasherPrefab.CreateGameObject(new Vector3(0, 0, 0), Quaternion.identity).transform;
             dashersSpawned[i].GetComponent<Dasher>().StartSpawn();
         }
 
-        SpawnerUtils.SpawnInCirclePattern(dashersSpawned);
+        SpawnerUtils.SpawnInCirclePattern(dashersSpawned, Vector3.zero);
 
-        Vector3 centerOfSwarm = SpawnerUtils.GetCenterOfObjects(dashersSpawned);
+        Vector3 centerOfSwarm = SpawnerUtils.GetCenterOfObjects(dashersSpawned, Vector3.zero);
 
         float rotationAroundCenterSpeed = 150.0f;
         BehavioralController.instance.AddBehavioral(new BehavioralData()

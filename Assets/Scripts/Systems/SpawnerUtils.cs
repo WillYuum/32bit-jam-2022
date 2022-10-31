@@ -2,7 +2,7 @@ using UnityEngine;
 
 public static class SpawnerUtils
 {
-    public static void SpawnInCirclePattern(Transform[] objects)
+    public static void SpawnInCirclePattern(Transform[] objects, Vector3 spawnPoint)
     {
         int amountToSpawned = objects.Length;
 
@@ -11,18 +11,21 @@ public static class SpawnerUtils
 
         for (int i = 0; i < amountToSpawned; i++)
         {
-            float x = Mathf.Cos(angle * Mathf.Deg2Rad);
-            float y = Mathf.Sin(angle * Mathf.Deg2Rad);
+            if (objects[i] != null)
+            {
+                float x = Mathf.Cos(angle * Mathf.Deg2Rad);
+                float y = Mathf.Sin(angle * Mathf.Deg2Rad);
 
-            Vector3 dir = new Vector3(x, y, 0);
-            objects[i].position = dir;
+                Vector3 dir = spawnPoint + new Vector3(x, y, 0);
+                objects[i].position = dir;
 
-            angle += angleStep;
+                angle += angleStep;
+            }
         }
     }
 
 
-    public static Vector3 GetCenterOfObjects(Transform[] objects)
+    public static Vector3 GetCenterOfObjects(Transform[] objects, Vector3 center)
     {
         int amountOfObjects = objects.Length;
         Vector3 centerOfSwarm = Vector3.zero;
@@ -35,6 +38,6 @@ public static class SpawnerUtils
             }
         }
 
-        return centerOfSwarm / amountOfObjects;
+        return (centerOfSwarm + center) / amountOfObjects;
     }
 }
