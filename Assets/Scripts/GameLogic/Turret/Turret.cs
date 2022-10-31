@@ -9,7 +9,7 @@ public enum TypeOfShots
     SingleShot,
 }
 
-public class Turret : MonoBehaviour, ITurretActions, Damageable
+public class Turret : MonoBehaviour, ITurretActions, IDamageable
 {
     public TurretMoveDirection MoveDirection { get; private set; }
     private TypeOfShots _currentTypeShot;

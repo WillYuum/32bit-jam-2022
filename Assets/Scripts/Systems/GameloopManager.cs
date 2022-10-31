@@ -12,6 +12,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action<int> OnFishTakeHit;
     public event Action OnKillEnemy;
 
+    public ExplosionBarTracker ExplosionBarTracker { get; private set; }
+
     private HitPoint _fishHitPoints;
     public int CollectedHightScore { get; private set; }
 
@@ -48,6 +50,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         enabled = true;
         LoopIsActive = true;
+
+        ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
 
         CollectedHightScore = 0;
 
@@ -105,12 +109,15 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         {
             case EnemyType.Elite:
                 CollectedHightScore += GameVariables.instance.PointsData.Elite;
+                ExplosionBarTracker.IncreaseValue(GameVariables.instance.ExplosionBarData.Elite);
                 break;
             case EnemyType.Dasher:
                 CollectedHightScore += GameVariables.instance.PointsData.Dasher;
+                ExplosionBarTracker.IncreaseValue(GameVariables.instance.ExplosionBarData.Dasher);
                 break;
             case EnemyType.Bomber:
                 CollectedHightScore += GameVariables.instance.PointsData.Bomber;
+                ExplosionBarTracker.IncreaseValue(GameVariables.instance.ExplosionBarData.Bomber);
                 break;
         }
 
@@ -126,4 +133,45 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         SpawnManager.instance.ElitePrefab.CreateGameObject(spawnPoint, Quaternion.identity);
     }
 
+}
+
+
+
+public class ExplosionBarTracker
+{
+    private float _currentExplosionBarValue;
+    private float _maxExplosionBarValue;
+
+    public float CurrentExplosionBarValue { get { return _currentExplosionBarValue; } }
+    public float MaxExplosionBarValue { get { return _maxExplosionBarValue; } }
+
+    public ExplosionBarTracker(float maxExplosionBarValue)
+    {
+        _maxExplosionBarValue = maxExplosionBarValue;
+        _currentExplosionBarValue = 0;
+    }
+
+    public void IncreaseValue(float amount)
+    {
+        _currentExplosionBarValue += amount;
+        if (_currentExplosionBarValue > _maxExplosionBarValue)
+        {
+            _currentExplosionBarValue = _maxExplosionBarValue;
+        }
+    }
+
+    public float GetRatio()
+    {
+        return _currentExplosionBarValue / _maxExplosionBarValue;
+    }
+
+    public void ResetExplosionBar()
+    {
+        _currentExplosionBarValue = 0;
+    }
+
+    public bool IsExplosionBarFull()
+    {
+        return _currentExplosionBarValue >= _maxExplosionBarValue;
+    }
 }

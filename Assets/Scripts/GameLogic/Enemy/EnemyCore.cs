@@ -7,12 +7,13 @@ public enum EnemyType
     Elite,
 }
 
-interface Damageable
+interface IDamageable
 {
+    Transform transform { get; }
     void TakeDamage(int damage);
 }
 
-public class EnemyCore<T> : MonoBehaviour, Damageable
+public class EnemyCore<T> : MonoBehaviour, IDamageable
 where T : MonoBehaviour
 {
     [field: SerializeField] public EnemyType EnemyType { get; private set; }

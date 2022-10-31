@@ -241,6 +241,11 @@ MonoBehaviour:
     <Elite>k__BackingField: 10
     <Bomber>k__BackingField: 3
     <Dasher>k__BackingField: 1
+  <ExplosionBarData>k__BackingField:
+    <MaxExplosionBarValue>k__BackingField: 40
+    <Elite>k__BackingField: 15
+    <Bomber>k__BackingField: 4
+    <Dasher>k__BackingField: 2
   <PlayerSpeed>k__BackingField: 10
   <PlayerShootInterval>k__BackingField: 0.75
   <BomberExplodeRange>k__BackingField: 5

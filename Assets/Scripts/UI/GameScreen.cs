@@ -1,10 +1,13 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameScreen : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _highScoreText;
     [SerializeField] private TextMeshProUGUI _currentHPText;
+
+    [SerializeField] private Slider _explosionSlider;
 
 
     void Awake()
@@ -25,6 +28,12 @@ public class GameScreen : MonoBehaviour
     }
 
 
+    private void LateUpdate()
+    {
+        if (!GameloopManager.instance.LoopIsActive) return;
+        UpdateExplosionBar();
+    }
+
     private const string _highScoreTextPrefix = "High Score \n";
     private void UpdateHighScoreText()
     {
@@ -37,5 +46,12 @@ public class GameScreen : MonoBehaviour
     private void UpdateCurrentHPText(int currentHP)
     {
         _currentHPText.text = _currentHPTextPrefix + currentHP.ToString();
+    }
+
+    private void UpdateExplosionBar()
+    {
+        if (GameloopManager.instance.ExplosionBarTracker.IsExplosionBarFull() == false) return;
+
+        _explosionSlider.value = GameloopManager.instance.ExplosionBarTracker.GetRatio();
     }
 }

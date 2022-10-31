@@ -49,7 +49,7 @@ public class DashSwarmTutorial : AttackWave
         Vector3 centerOfSwarm = SpawnerUtils.GetCenterOfObjects(dashersSpawned, Vector3.zero);
 
         float rotationAroundCenterSpeed = 150.0f;
-        BehavioralController.instance.AddBehavioral(new BehavioralData()
+        BehavioralController.instance.AddBehavioral(new BehavioralDataWithTimer()
         {
             DurationOfBehavior = 1.5f,
             UpdateBehavior = () =>
