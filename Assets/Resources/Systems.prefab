@@ -45,11 +45,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _sfxConfigs:
-  - Name: 
-    Clip: {fileID: 0}
-    Volume: 0
-    Loop: 0
-    RandPitch: 0
   - Name: bomber
     Clip: {fileID: 8300000, guid: dd3057662011542a291ac5c0aefa8cab, type: 3}
     Volume: 1
@@ -226,7 +221,8 @@ MonoBehaviour:
     _prefab: {fileID: 7140369590177959291, guid: 7ca383a64a8ece049b9bc7e566b86020,
       type: 3}
   <ExplosionPrefab>k__BackingField:
-    _prefab: {fileID: 0}
+    _prefab: {fileID: 4514348531954860478, guid: b19351f6467ecfe49988bd6e449d7f05,
+      type: 3}
 --- !u!1 &4291171186485766178
 GameObject:
   m_ObjectHideFlags: 0
