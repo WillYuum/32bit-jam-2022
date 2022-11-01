@@ -40,12 +40,23 @@ public class GameScreen : MonoBehaviour
         string newValue = string.Format("{0:000000}", GameloopManager.instance.CollectedHightScore);
         _highScoreText.text = _highScoreTextPrefix + newValue;
 
+        _highScoreText.DOColor(_orangeLightColor, 0.1f).OnComplete(ResetToColorWhite);
     }
 
+    private void ResetToColorWhite()
+    {
+        _highScoreText.DOColor(Color.white, 0.1f);
+        _currentHPText.DOColor(Color.white, 0.1f);
+    }
+
+    private Color _orangeLightColor = new Color(238.0f / 255.0f, 189.0f / 255.0f, 92.0f / 255.0f, 255.0f / 255.0f);
     private const string _currentHPTextPrefix = "HP: ";
     private void UpdateCurrentHPText(int currentHP)
     {
+        // Color.ToRGB
+        // Color.
         _currentHPText.text = _currentHPTextPrefix + currentHP.ToString();
+        _currentHPText.DOColor(_orangeLightColor, 0.1f).OnComplete(ResetToColorWhite);
     }
 
     [SerializeField] private GameObject _boomImage;
