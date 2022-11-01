@@ -9,6 +9,8 @@ public class Bomber : EnemyCore<Bomber>
     [SerializeField] private Transform _bombRangeIndicator;
     private float _bombRange = 5.0f;
 
+    [SerializeField] private GameObject _visuals;
+
     private float _originalBombRangeScale;
 
     protected override void OnAwake()
@@ -38,11 +40,14 @@ public class Bomber : EnemyCore<Bomber>
 
     public void InvokeExplode()
     {
-        _bombRangeIndicator.localScale = Vector3.one * _originalBombRangeScale;
+        SpriteRenderer rangeSpriteRenderer = _bombRangeIndicator.GetComponent<SpriteRenderer>();
+        rangeSpriteRenderer.color = new Color(1, 1, 1, 0.3f);
+        _bombRangeIndicator.localScale = Vector3.one * (_originalBombRangeScale * _bombRange);
+
 
         _bombRangeIndicator.gameObject.SetActive(true);
-        _bombRangeIndicator.DOScale(_originalBombRangeScale * _bombRange, 0.5f)
-        .SetEase(Ease.InOutCirc);
+        // _bombRangeIndicator.DOScale(_originalBombRangeScale * _bombRange, 0.5f)
+        // .SetEase(Ease.InOutCirc);
 
         float delayTillExplode = 1.35f;
         Invoke(nameof(Explode), delayTillExplode);
@@ -50,6 +55,21 @@ public class Bomber : EnemyCore<Bomber>
 
     private void Explode()
     {
+        SpriteRenderer rangeSpriteRenderer = _bombRangeIndicator.GetComponent<SpriteRenderer>();
+        rangeSpriteRenderer.color = new Color(1, 1, 1, 1);
+
+        float explosionScale = 0.5f;
+
+        _visuals.SetActive(false);
+
+        _bombRangeIndicator.localScale = Vector3.zero;
+        _bombRangeIndicator.DOScale(_originalBombRangeScale * _bombRange, explosionScale)
+       .SetEase(Ease.InOutCirc).OnComplete(() =>
+       {
+           rangeSpriteRenderer.DOFade(0, 0.5f);
+           Destroy(gameObject);
+       });
+
         var hit = Physics2D.CircleCast(transform.position, _bombRange, Vector2.zero, 0.0f, LayerMask.GetMask("Player"));
 
         AudioManager.instance.PlaySFX("bomber");
@@ -59,7 +79,7 @@ public class Bomber : EnemyCore<Bomber>
             hit.collider.GetComponent<Turret>().TakeDamage(1);
         }
 
-        Destroy(gameObject);
+        gameObject.GetComponent<CircleCollider2D>().enabled = false;
     }
 
 

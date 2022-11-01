@@ -224,12 +224,12 @@ PrefabInstance:
     - target: {fileID: 5546500289947425176, guid: 1951a8d21f77ff340933d95888469008,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: 1.4145205
       objectReference: {fileID: 0}
     - target: {fileID: 5546500289947425176, guid: 1951a8d21f77ff340933d95888469008,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.9677344
       objectReference: {fileID: 0}
     - target: {fileID: 5546500289947425176, guid: 1951a8d21f77ff340933d95888469008,
         type: 3}
@@ -310,9 +310,16 @@ MonoBehaviour:
   <EnemyType>k__BackingField: 0
   _simpleFlash: {fileID: 6896536893871490041}
   _bombRangeIndicator: {fileID: 6875552314070481481}
+  _visuals: {fileID: 470623012289079391}
 --- !u!4 &470623012289079388 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5546500290971702500, guid: 1951a8d21f77ff340933d95888469008,
+    type: 3}
+  m_PrefabInstance: {fileID: 5367971356747332792}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &470623012289079391 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5546500290971702503, guid: 1951a8d21f77ff340933d95888469008,
     type: 3}
   m_PrefabInstance: {fileID: 5367971356747332792}
   m_PrefabAsset: {fileID: 0}
