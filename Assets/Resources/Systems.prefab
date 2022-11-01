@@ -47,12 +47,12 @@ MonoBehaviour:
   _sfxConfigs:
   - Name: bomber
     Clip: {fileID: 8300000, guid: dd3057662011542a291ac5c0aefa8cab, type: 3}
-    Volume: 1
+    Volume: 0.65
     Loop: 0
     RandPitch: 1
   - Name: enemyHurt
     Clip: {fileID: 8300000, guid: 2bf4cd978da1248e1b4b99228bd9b712, type: 3}
-    Volume: 1
+    Volume: 0.16
     Loop: 0
     RandPitch: 1
   - Name: gameOver
@@ -66,8 +66,8 @@ MonoBehaviour:
     Loop: 0
     RandPitch: 1
   - Name: playerHurt
-    Clip: {fileID: 0}
-    Volume: 1
+    Clip: {fileID: 8300000, guid: 602642a838da64728882789416f1fbcc, type: 3}
+    Volume: 0.8
     Loop: 0
     RandPitch: 1
   - Name: playerSpecial
@@ -78,7 +78,7 @@ MonoBehaviour:
   _bgmConfigs:
   - Name: Main
     Clip: {fileID: 8300000, guid: db53ac203877940cd97175c7e5b8ae14, type: 3}
-    Volume: 1
+    Volume: 0.722
     Loop: 1
     RandPitch: 0
 --- !u!1 &2421195833457379878
