@@ -47,27 +47,23 @@ public class PlayerBomb : MonoBehaviour
             currentRadius += speedIncreaseRadius * Time.deltaTime;
             transform.localScale += Vector3.one * currentRadius;
 
-            foreach (IDamageable damageable in damageables)
+            for (int i = 0; i < damageables.Count; i++)
             {
+                IDamageable damageable = damageables[i];
                 if (damageable != null)
                 {
-                    bool enemyInRadius = Vector2.Distance(Vector2.zero, damageable.transform.position) <= currentRadius;
-
-                    if (enemyInRadius)
+                    int damageAmount;
+                    if (damageable.transform.TryGetComponent(out EnemyCore<Elite> enemyCore))
                     {
-                        int damageAmount;
-                        if (damageable.transform.TryGetComponent(out EnemyCore<Elite> enemyCore))
-                        {
-                            damageAmount = (int)(GameVariables.instance.EnemyHPData.Elite * 0.15f);
-                        }
-                        else
-                        {
-                            damageAmount = 999;
-                        }
-
-                        damageable.TakeDamage(damageAmount);
-                        damageables.Remove(damageable);
+                        damageAmount = (int)(GameVariables.instance.EnemyHPData.Elite * 0.15f);
                     }
+                    else
+                    {
+                        damageAmount = 999;
+                    }
+
+                    damageable.TakeDamage(damageAmount);
+                    damageables.Remove(damageable);
                 }
                 else
                 {
