@@ -282,7 +282,7 @@ MonoBehaviour:
     <Dasher>k__BackingField: 2
   <InvinsibilityWindowDuration>k__BackingField: 3
   <PlayerSpeed>k__BackingField: 10
-  <PlayerShootInterval>k__BackingField: 0.75
+  <PlayerShootInterval>k__BackingField: 0.3
   <BomberExplodeRange>k__BackingField: 5
 --- !u!1 &6185868911793546644
 GameObject:

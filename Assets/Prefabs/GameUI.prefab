@@ -190,6 +190,7 @@ MonoBehaviour:
   _highScoreText: {fileID: 795391347465348312}
   _currentHPText: {fileID: 795391347070282095}
   _explosionSlider: {fileID: 0}
+  _boomImage: {fileID: 0}
 --- !u!1 &795391346581011472
 GameObject:
   m_ObjectHideFlags: 0

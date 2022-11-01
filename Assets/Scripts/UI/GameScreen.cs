@@ -27,6 +27,7 @@ public class GameScreen : MonoBehaviour
             GameloopManager.instance.OnKillEnemy += UpdateHighScoreText;
             GameloopManager.instance.ExplosionBarTracker.OnUpdate += UpdateExplosionBar;
             UpdateHighScoreOnStart();
+            UpdateExplosionBar();
         };
 
     }

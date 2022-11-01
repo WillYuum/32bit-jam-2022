@@ -1588,6 +1588,11 @@ PrefabInstance:
       propertyPath: _explosionSlider
       value: 
       objectReference: {fileID: 1257831938}
+    - target: {fileID: 795391347164546507, guid: 7c7776b197c40394a848e83e31eba36b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 795391347453442270, guid: 7c7776b197c40394a848e83e31eba36b,
         type: 3}
       propertyPath: m_Pivot.x
