@@ -103,11 +103,12 @@ public class TurretActions : MonoBehaviour
 
     private void UseExplosionAbility()
     {
-        AudioManager.instance.PlaySFX("playerSpecial");
         ExplosionBarTracker explosionBarTracker = GameloopManager.instance.ExplosionBarTracker;
 
         if (explosionBarTracker.IsExplosionBarFull())
         {
+            AudioManager.instance.PlaySFX("playerSpecial");
+
             var explosion = SpawnManager.instance.ExplosionPrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
             explosion.GetComponent<PlayerBomb>().Explode();
             explosion.transform.position = Vector3.zero;
