@@ -68,6 +68,8 @@ where T : MonoBehaviour
     {
         AudioManager.instance.PlaySFX("enemyHurt");
 
+        print("damage" + damage);
+
         _simpleFlash.Flash();
 
         _hitPoint.TakeDamage(damage);

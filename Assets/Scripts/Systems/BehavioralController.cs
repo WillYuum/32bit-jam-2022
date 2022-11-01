@@ -56,6 +56,10 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
             {
                 behavior.UpdateBehavior.Invoke();
             }
+            else
+            {
+                _behaviorals.Remove(behavior);
+            }
         }
     }
 }

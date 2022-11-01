@@ -13,7 +13,6 @@ public class Elite : EnemyCore<Elite>
         ShootController = new ShootController(1.0f);
         SetState(new AttackTurret());
         _target = GameObject.Find("Turret").transform;
-
     }
 
 
@@ -55,7 +54,7 @@ public class Elite : EnemyCore<Elite>
             _owner.ShootController.UpdateShootTimer();
             if (_owner.ShootController.CanShoot)
             {
-                _owner.HandleShoot();
+                // _owner.HandleShoot();
             }
         }
     }

@@ -6,7 +6,7 @@ using System;
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
     public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
-    private Room _currentRoom;
+    public Room CurrentRoom;
 
     public event Action OnGameLoopStart;
     public event Action<int> OnFishTakeHit;
@@ -76,11 +76,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
 
-        _currentRoom = GameObject.Find("Room_1").GetComponent<Room>();
-        _currentRoom.UpdatePlatformNeighbors();
+        CurrentRoom = GameObject.Find("Room_1").GetComponent<Room>();
+        CurrentRoom.UpdatePlatformNeighbors();
 
         Turret turret = FindObjectOfType<Turret>();
-        TurretPlatfromTracker = new TurretPlatfromTracker(turret, _currentRoom.GetFirstPlaform());
+        TurretPlatfromTracker = new TurretPlatfromTracker(turret, CurrentRoom.GetFirstPlaform());
 
         // Vector3 newCameraPos = _currentRoom.CameraPoint.position;
         // newCameraPos.z = Camera.main.transform.position.z;
@@ -92,7 +92,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             OnGameLoopStart.Invoke();
         }
 
-        Spawner.instance.StartWithScriptedWaves();
+        Spawner.instance.StartSpawner();
     }
 
     public void InvokeFishTakeDamage(int damageAmount)
@@ -116,7 +116,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         AudioManager.instance.StopAllBGM();
         AudioManager.instance.PlaySFX("gameOver");
 
-        CancelInvoke(nameof(SpawnEnemyRandomly));
         GameUI.instance.SwitchToScreen(GameUI.Screens.LoseScreen);
     }
 
@@ -144,11 +143,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
     }
 
-    private void SpawnEnemyRandomly()
-    {
-        Vector3 spawnPoint = _currentRoom.GetRandomSpawnPositionWithinRoomRange(0.25f);
-        SpawnManager.instance.ElitePrefab.CreateGameObject(spawnPoint, Quaternion.identity);
-    }
 
 }
 

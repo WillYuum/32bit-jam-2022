@@ -33,11 +33,11 @@ namespace Utils.ArrayUtils
     public static class ArrayTools
     {
         [System.Serializable]
-        public class PsuedoRandArray<T>
+        public class PseudoRandArray<T>
         {
             public T[] items;
             private int _currentIndex = 0;
-            public PsuedoRandArray(params T[] _items)
+            public PseudoRandArray(params T[] _items)
             {
                 if (_items == null)
                 {

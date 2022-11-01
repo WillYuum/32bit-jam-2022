@@ -2,6 +2,33 @@ using UnityEngine;
 
 public static class SpawnerUtils
 {
+
+    public static Vector2[] GetPositionsAroundObject(Vector2 objectPosition, float radius, int numberOfPoints, float startAngle = 0)
+    {
+        Vector2[] positions = new Vector2[numberOfPoints];
+        float angle = 0;
+        float angleStep = 360f / numberOfPoints;
+        for (int i = 0; i < numberOfPoints; i++)
+        {
+            positions[i] = objectPosition + new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad)) * radius;
+            angle += angleStep;
+        }
+        return positions;
+    }
+
+    public static void PositionAroundObject(Vector2 objectToSpawnAround, Transform[] transforms, float radius)
+    {
+        for (int i = 0; i < transforms.Length; i++)
+        {
+            if (transforms[i] != null)
+            {
+                Transform transform = transforms[i];
+                Vector2 randomPoint = Random.insideUnitCircle * radius;
+                transform.position = objectToSpawnAround + randomPoint;
+            }
+        }
+    }
+
     public static void SpawnInCirclePattern(Transform[] objects, Vector3 spawnPoint)
     {
         int amountToSpawned = objects.Length;
