@@ -18,6 +18,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public ExplosionBarTracker ExplosionBarTracker { get; private set; }
 
     private HitPoint _fishHitPoints;
+    public int FishHP { get { return _fishHitPoints.CurrenthitPoint; } }
+
     public int CollectedHightScore { get; private set; }
 
     public bool LoopIsActive { get; private set; }
@@ -160,10 +162,17 @@ public class ExplosionBarTracker
     public float CurrentExplosionBarValue { get { return _currentExplosionBarValue; } }
     public float MaxExplosionBarValue { get { return _maxExplosionBarValue; } }
 
+    public event Action OnUpdate;
+
     public ExplosionBarTracker(float maxExplosionBarValue)
     {
         _maxExplosionBarValue = maxExplosionBarValue;
         _currentExplosionBarValue = 0;
+
+        if (OnUpdate != null)
+        {
+            OnUpdate.Invoke();
+        }
     }
 
     public void IncreaseValue(float amount)
@@ -172,6 +181,11 @@ public class ExplosionBarTracker
         if (_currentExplosionBarValue > _maxExplosionBarValue)
         {
             _currentExplosionBarValue = _maxExplosionBarValue;
+        }
+
+        if (OnUpdate != null)
+        {
+            OnUpdate.Invoke();
         }
     }
 
@@ -183,6 +197,7 @@ public class ExplosionBarTracker
     public void ResetExplosionBar()
     {
         _currentExplosionBarValue = 0;
+        OnUpdate.Invoke();
     }
 
     public bool IsExplosionBarFull()

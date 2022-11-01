@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class GameScreen : MonoBehaviour
 {
@@ -17,22 +18,20 @@ public class GameScreen : MonoBehaviour
         void UpdateHighScoreOnStart()
         {
             UpdateHighScoreText();
-            UpdateCurrentHPText(5); //this is bad, but I don't have time to fix it
+            UpdateCurrentHPText(GameloopManager.instance.FishHP); //this is bad, but I don't have time to fix it
             GameloopManager.instance.OnGameLoopStart -= UpdateHighScoreOnStart;
         };
 
-        GameloopManager.instance.OnGameLoopStart += UpdateHighScoreOnStart;
+        GameloopManager.instance.OnGameLoopStart += () =>
+        {
+            GameloopManager.instance.OnKillEnemy += UpdateHighScoreText;
+            GameloopManager.instance.ExplosionBarTracker.OnUpdate += UpdateExplosionBar;
+            UpdateHighScoreOnStart();
+        };
 
-
-        GameloopManager.instance.OnKillEnemy += UpdateHighScoreText;
     }
 
 
-    private void LateUpdate()
-    {
-        if (!GameloopManager.instance.LoopIsActive) return;
-        UpdateExplosionBar();
-    }
 
     private const string _highScoreTextPrefix = "High Score \n";
     private void UpdateHighScoreText()
@@ -48,13 +47,24 @@ public class GameScreen : MonoBehaviour
         _currentHPText.text = _currentHPTextPrefix + currentHP.ToString();
     }
 
+    [SerializeField] private GameObject _boomImage;
     private void UpdateExplosionBar()
     {
-        // if (_explosionSlider.value < 1)
-        // {
+        float ratio = GameloopManager.instance.ExplosionBarTracker.GetRatio();
+
         var finalVal = Vector4.zero;
-        finalVal.w = Mathf.Lerp(153, 0, GameloopManager.instance.ExplosionBarTracker.GetRatio());
+        finalVal.w = Mathf.Lerp(153, 0, ratio);
         _explosionSlider.padding = finalVal;
-        // }
+
+
+        if (ratio >= 1)
+        {
+            _boomImage.SetActive(true);
+            _boomImage.transform.DOShakeScale(0.5f, 0.5f, 10, 90, false);
+        }
+        else
+        {
+            _boomImage.SetActive(false);
+        }
     }
 }

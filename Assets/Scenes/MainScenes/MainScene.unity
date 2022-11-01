@@ -1580,6 +1580,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 795391346528548936, guid: 7c7776b197c40394a848e83e31eba36b,
         type: 3}
+      propertyPath: _boomImage
+      value: 
+      objectReference: {fileID: 1910901997}
+    - target: {fileID: 795391346528548936, guid: 7c7776b197c40394a848e83e31eba36b,
+        type: 3}
       propertyPath: _explosionSlider
       value: 
       objectReference: {fileID: 1257831938}
