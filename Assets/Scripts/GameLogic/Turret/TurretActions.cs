@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using SpawnManagerMod;
+using DG.Tweening;
 
 public enum RotationDirection
 {
@@ -102,73 +103,17 @@ public class TurretActions : MonoBehaviour
 
     private void UseExplosionAbility()
     {
-        AudioManager.instance.PlaySFX("playerSpecials");
-
+        AudioManager.instance.PlaySFX("playerSpecial");
         ExplosionBarTracker explosionBarTracker = GameloopManager.instance.ExplosionBarTracker;
+
         if (explosionBarTracker.IsExplosionBarFull())
         {
-            explosionBarTracker.ResetExplosionBar();
-
-            List<IDamageable> damageables = new List<IDamageable>();
-
-            RaycastHit2D[] enemies = Physics2D.CircleCastAll(transform.position, 25, Vector2.zero, 0, LayerMask.GetMask("Enemy"));
-
-            foreach (RaycastHit2D enemy in enemies)
-            {
-                IDamageable damageable = enemy.transform.GetComponent<IDamageable>();
-                if (damageable != null)
-                {
-                    damageables.Add(damageable);
-                }
-            }
-
             var explosion = SpawnManager.instance.ExplosionPrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
-
-            float currentRadius = 0;
-            float speedIncreaseRadius = 50;
-
-            explosion.transform.localScale += Vector3.one * currentRadius;
-
-            BehavioralData behavioralData = new BehavioralData()
-            {
-                UpdateBehavior = () =>
-                {
-                    currentRadius += speedIncreaseRadius * Time.deltaTime;
-                    foreach (IDamageable damageable in damageables)
-                    {
-                        if (damageable != null)
-                        {
-                            bool enemyInRadius = Vector2.Distance(Vector2.zero, damageable.transform.position) <= currentRadius;
-
-                            if (enemyInRadius)
-                            {
-                                int damageAmount;
-                                if (damageable.transform.TryGetComponent(out EnemyCore<Elite> enemyCore))
-                                {
-                                    damageAmount = (int)(GameVariables.instance.EnemyHPData.Elite * 0.15f);
-                                }
-                                else
-                                {
-                                    damageAmount = 999;
-                                }
-
-                                damageable.TakeDamage(damageAmount);
-                                damageables.Remove(damageable);
-                            }
-                        }
-                        else
-                        {
-                            damageables.Remove(damageable);
-                        }
-                    }
-                },
-                OnBehaviorEnd = () =>
-                {
-                }
-            };
-            // BehavioralController.instance.AddBehavioral()
-            // _turretActions.UseExplosionAbility();
+            explosion.GetComponent<PlayerBomb>().Explode();
+            explosion.transform.position = Vector3.zero;
         }
+
+
     }
 }
 

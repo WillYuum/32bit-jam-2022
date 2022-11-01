@@ -26,27 +26,36 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
 
     public void RemoveBehavioral(BehavioralData behavioral)
     {
+        behavioral.OnBehaviorEnd.Invoke();
         _behaviorals.Remove(behavioral);
     }
 
     private void Update()
     {
-        foreach (BehavioralDataWithTimer behaviorWithTimer in _behavioralsWithTimers)
+        for (int i = 0; i < _behavioralsWithTimers.Count; i++)
         {
+            BehavioralDataWithTimer behaviorWithTimer = _behavioralsWithTimers[i];
             behaviorWithTimer.DurationOfBehavior -= Time.deltaTime;
             behaviorWithTimer.UpdateBehavior.Invoke();
 
 
             if (behaviorWithTimer.DurationOfBehavior <= 0)
             {
-                behaviorWithTimer.OnBehaviorEnd.Invoke();
-                _behavioralsWithTimers.Remove(behaviorWithTimer);
+                if (behaviorWithTimer != null)
+                {
+                    behaviorWithTimer.OnBehaviorEnd.Invoke();
+                    _behavioralsWithTimers.Remove(behaviorWithTimer);
+                }
             }
         }
 
-        foreach (BehavioralData behavior in _behaviorals)
+        for (int i = 0; i < _behaviorals.Count; i++)
         {
-            behavior.UpdateBehavior.Invoke();
+            BehavioralData behavior = _behaviorals[i];
+            if (behavior != null)
+            {
+                behavior.UpdateBehavior.Invoke();
+            }
         }
     }
 }
