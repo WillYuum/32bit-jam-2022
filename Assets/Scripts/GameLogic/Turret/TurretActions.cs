@@ -24,13 +24,9 @@ public class TurretActions : MonoBehaviour
     [SerializeField] private TurretEvents _turretAnimationEvents;
 
 
-    private void Start()
-    {
-        _turretAnimationEvents.OnTurretShoot += ShootBullet;
-    }
-
     private void Awake()
     {
+        print("HELLO WORLD");
         _turretActions = gameObject.GetComponent<ITurretActions>();
 
         float turretShootInterval = GameVariables.instance.PlayerShootInterval;
@@ -38,16 +34,23 @@ public class TurretActions : MonoBehaviour
 
 
         //This is to set the fish on the plaform as soon as the game starts
-        GameloopManager.instance.OnGameLoopStart += () =>
-        {
-            Move(RotationDirection.ClockWise);
-
-        };
+        // GameloopManager.instance.OnGameLoopStart += () =>
+        // {
+        //     Move(RotationDirection.ClockWise);
+        // };
     }
+    private void Start()
+    {
+        _turretAnimationEvents.OnTurretShoot += ShootBullet;
+        Move(RotationDirection.ClockWise);
+    }
+
+
 
 
     private void Update()
     {
+        if (GameloopManager.instance.LoopIsActive == false) return;
         _turretShootController.UpdateShootTimer();
 
         if (Input.GetKey(KeyCode.A))
@@ -97,7 +100,10 @@ public class TurretActions : MonoBehaviour
 
     public void Move(RotationDirection movement)
     {
+        // if (_turretActions) return;
+
         Vector2 newPos = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(movement);
+
         _turretActions.UpdatePosition(newPos);
     }
 

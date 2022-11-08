@@ -15,6 +15,34 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
 
     private void Awake()
     {
+        GameloopManager.instance.OnRestartGame += () =>
+        {
+            _currentTimer = _delayToNextSpawn;
+
+            AttackWave[] waves = new AttackWave[]{
+            new SimpleSwarmSpawn(),
+            new SimpleBombersAttack(),
+            new SimpleSwarmSpawn(),
+            new SimpleEliteSpawn(),
+            new SimpleBombersAttack(),
+            new SimpleBombersAttack(),
+            new SimpleEliteSpawn(),
+            new SimpleSwarmSpawn(),
+            new SimpleBombersAttack(),
+            new SimpleSwarmSpawn(),
+            new SimpleSwarmSpawn(),
+            new SimpleBombersAttack(),
+            new SimpleBombersAttack(),
+            new SimpleSwarmSpawn(),
+            new SimpleEliteSpawn(),
+            new SimpleBombersAttack(),
+            new SimpleEliteSpawn(),
+    };
+
+
+            _waves = new ArrayTools.PseudoRandArray<AttackWave>(waves);
+        };
+
         _currentTimer = _delayToNextSpawn;
     }
 
@@ -49,8 +77,14 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
             new SimpleSwarmSpawn(),
             new SimpleEliteSpawn(),
             new SimpleBombersAttack(),
+            new SimpleBombersAttack(),
             new SimpleEliteSpawn(),
             new SimpleSwarmSpawn(),
+            new SimpleBombersAttack(),
+            new SimpleSwarmSpawn(),
+            new SimpleSwarmSpawn(),
+            new SimpleBombersAttack(),
+            new SimpleBombersAttack(),
             new SimpleSwarmSpawn(),
             new SimpleEliteSpawn(),
             new SimpleBombersAttack(),

@@ -6,7 +6,7 @@ public static class SpawnerUtils
     public static Vector2[] GetPositionsAroundObject(Vector2 objectPosition, float radius, int numberOfPoints, float startAngle = 0)
     {
         Vector2[] positions = new Vector2[numberOfPoints];
-        float angle = 0;
+        float angle = startAngle;
         float angleStep = 360f / numberOfPoints;
         for (int i = 0; i < numberOfPoints; i++)
         {

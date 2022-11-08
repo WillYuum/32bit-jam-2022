@@ -59,6 +59,8 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
 
     public void TakeDamage(int damageCount = 1)
     {
+        if (GameloopManager.instance.LoopIsActive == false) return;
+
         var invinsibility = GameloopManager.instance.TurretInvisiblityWindowTracker;
         if (invinsibility.IsInvisiblityWindowActive) return;
 

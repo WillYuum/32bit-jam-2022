@@ -9,6 +9,15 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
     private List<BehavioralData> _behaviorals = new List<BehavioralData>();
 
 
+    private void Awake()
+    {
+        GameloopManager.instance.OnRestartGame += () =>
+        {
+            _behavioralsWithTimers.Clear();
+            _behaviorals.Clear();
+        };
+    }
+
     public void AddBehavioral(BehavioralDataWithTimer behavioral)
     {
         _behavioralsWithTimers.Add(behavioral);

@@ -11,6 +11,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action OnGameLoopStart;
     public event Action<int> OnFishTakeHit;
     public event Action OnKillEnemy;
+    public event Action OnRestartGame;
 
 
     public InvisiblityWindowTracker TurretInvisiblityWindowTracker { get; private set; }
@@ -26,6 +27,14 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     private void Awake()
     {
+        GameloopManager.instance.OnRestartGame += () =>
+        {
+            GameloopManager.instance.LoopIsActive = false;
+            GameloopManager.instance.enabled = false;
+            // Turret turret = FindObjectOfType<Turret>();
+            GameloopManager.instance.Invoke(nameof(GameloopManager.instance.StartGameLoop), 0.1f);
+        };
+
         LoopIsActive = false;
 #if UNITY_EDITOR
         Turret turret = FindObjectOfType<Turret>();
@@ -47,6 +56,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     private void Update()
     {
+        if (GameloopManager.instance.LoopIsActive == false) return;
+
         TurretPlatfromTracker.TrackTurretOnPlatform();
 
 
@@ -55,15 +66,17 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         {
             ExplosionBarTracker.IncreaseValue(999);
         }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            InvokeLosegame();
+        }
 #endif
     }
 
 
     public void StartGameLoop()
     {
-        enabled = true;
-        LoopIsActive = true;
-
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
         TurretInvisiblityWindowTracker = new InvisiblityWindowTracker();
 
@@ -92,6 +105,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             OnGameLoopStart.Invoke();
         }
 
+        enabled = true;
+        LoopIsActive = true;
         Spawner.instance.StartSpawner();
     }
 
@@ -113,10 +128,23 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         if (LoopIsActive == false) return;
 
+        GameloopManager.instance.LoopIsActive = false;
+
         AudioManager.instance.StopAllBGM();
         AudioManager.instance.PlaySFX("gameOver");
 
         GameUI.instance.SwitchToScreen(GameUI.Screens.LoseScreen);
+
+        enabled = false;
+    }
+
+
+    public void InvokeRestartGame()
+    {
+        if (OnRestartGame != null)
+        {
+            OnRestartGame.Invoke();
+        }
     }
 
     public void InvokeKillEnemy(EnemyType enemyType)

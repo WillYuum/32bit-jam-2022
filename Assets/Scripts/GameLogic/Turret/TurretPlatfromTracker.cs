@@ -12,6 +12,7 @@ public class TurretPlatfromTracker
 
     public TurretPlatfromTracker(Turret turret, Platform startingPlatform)
     {
+        Debug.Log("PEW PEW");
         _moveSpeed = GameVariables.instance.PlayerSpeed;
 
         _turret = turret;
@@ -118,6 +119,10 @@ public class PlatfromTrackData
 
     public void SetPoints(Transform maxLeftPoint, Transform maxRightPoint, Transform turretIndicatorPosition)
     {
+        if (turretIndicatorPosition == null)
+        {
+            Debug.LogError("TurretIndicatorPosition is null");
+        }
         MaxClockwisePoint = maxLeftPoint;
         MaxAntiClockwisePoint = maxRightPoint;
         TurretIndicatorPosition = turretIndicatorPosition;

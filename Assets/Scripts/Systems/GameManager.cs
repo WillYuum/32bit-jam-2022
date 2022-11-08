@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     public void RestartScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameloopManager.instance.InvokeRestartGame();
     }
 
     public void LoseGame()
