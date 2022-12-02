@@ -9,37 +9,7 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
     private List<BehavioralData> _behaviorals = new List<BehavioralData>();
 
 
-    private void Awake()
-    {
-        GameloopManager.instance.OnRestartGame += () =>
-        {
-            _behavioralsWithTimers.Clear();
-            _behaviorals.Clear();
-        };
-    }
-
-    public void AddBehavioral(BehavioralDataWithTimer behavioral)
-    {
-        _behavioralsWithTimers.Add(behavioral);
-    }
-
-    public void AddBehavioral(BehavioralData behavioral)
-    {
-        _behaviorals.Add(behavioral);
-    }
-
-    public void RemoveBehavioral(BehavioralDataWithTimer behavioral)
-    {
-        _behavioralsWithTimers.Remove(behavioral);
-    }
-
-    public void RemoveBehavioral(BehavioralData behavioral)
-    {
-        behavioral.OnBehaviorEnd.Invoke();
-        _behaviorals.Remove(behavioral);
-    }
-
-    private void Update()
+    void Update()
     {
         for (int i = 0; i < _behavioralsWithTimers.Count; i++)
         {
@@ -70,6 +40,33 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
                 _behaviorals.Remove(behavior);
             }
         }
+    }
+
+    public void AddBehavioral(BehavioralDataWithTimer behavioral)
+    {
+        _behavioralsWithTimers.Add(behavioral);
+    }
+
+    public void AddBehavioral(BehavioralData behavioral)
+    {
+        _behaviorals.Add(behavioral);
+    }
+
+    public void RemoveBehavioral(BehavioralDataWithTimer behavioral)
+    {
+        _behavioralsWithTimers.Remove(behavioral);
+    }
+
+    public void RemoveBehavioral(BehavioralData behavioral)
+    {
+        behavioral.OnBehaviorEnd.Invoke();
+        _behaviorals.Remove(behavioral);
+    }
+
+    public void Reset()
+    {
+        _behavioralsWithTimers.Clear();
+        _behaviorals.Clear();
     }
 }
 

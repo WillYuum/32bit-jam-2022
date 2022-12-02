@@ -12,7 +12,6 @@ public class TurretPlatfromTracker
 
     public TurretPlatfromTracker(Turret turret, Platform startingPlatform)
     {
-        Debug.Log("PEW PEW");
         _moveSpeed = GameVariables.instance.PlayerSpeed;
 
         _turret = turret;
@@ -72,15 +71,26 @@ public class TurretPlatfromTracker
 
     private void SwitchToPlatform(Platform platform)
     {
-        if (platform == null) return;
+        if (platform == null)
+        {
+            Debug.LogError("Platform is null");
+            return;
+        };
 
-        // Debug.Log("SWITCHING TO PLATFORM " + platform.name);
+        Debug.Log("SWITCHING TO PLATFORM " + platform.name);
         _currentPlatform = platform;
 
 
         Transform maxLeftPoint = platform.GetClickWisePoint();
         Transform maxRightPoint = platform.GetAntiClockWisePoint();
         Transform turretIndicatorPosition = platform.TurretIndicatorPosition;
+
+        if (maxLeftPoint == null || maxRightPoint == null || turretIndicatorPosition == null)
+        {
+            Debug.LogError("One of the points is null");
+            Debug.Break();
+            return;
+        }
 
 
         _platfromTrackData.SetPoints(maxLeftPoint, maxRightPoint, turretIndicatorPosition);

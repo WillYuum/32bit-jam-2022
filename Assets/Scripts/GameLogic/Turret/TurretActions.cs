@@ -26,7 +26,7 @@ public class TurretActions : MonoBehaviour
 
     private void Awake()
     {
-        print("HELLO WORLD");
+        print("Init turret actions");
         _turretActions = gameObject.GetComponent<ITurretActions>();
 
         float turretShootInterval = GameVariables.instance.PlayerShootInterval;
@@ -42,7 +42,11 @@ public class TurretActions : MonoBehaviour
     private void Start()
     {
         _turretAnimationEvents.OnTurretShoot += ShootBullet;
-        Move(RotationDirection.ClockWise);
+
+        GameloopManager.instance.OnGameLoopStart += () =>
+        {
+            Move(RotationDirection.ClockWise);
+        };
     }
 
 

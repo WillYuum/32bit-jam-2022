@@ -1,6 +1,5 @@
 using UnityEngine;
 using Utils.GenericSingletons;
-using SpawnManagerMod;
 using System;
 
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
@@ -27,13 +26,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     private void Awake()
     {
-        GameloopManager.instance.OnRestartGame += () =>
-        {
-            GameloopManager.instance.LoopIsActive = false;
-            GameloopManager.instance.enabled = false;
-            // Turret turret = FindObjectOfType<Turret>();
-            GameloopManager.instance.Invoke(nameof(GameloopManager.instance.StartGameLoop), 0.1f);
-        };
+        print("AWAKE");
 
         LoopIsActive = false;
 #if UNITY_EDITOR
@@ -89,7 +82,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
 
-        CurrentRoom = GameObject.Find("Room_1").GetComponent<Room>();
+        // CurrentRoom = GameObject.Find("Room_1").GetComponent<Room>();
+        CurrentRoom = GameObject.FindObjectOfType<Room>();
         CurrentRoom.UpdatePlatformNeighbors();
 
         Turret turret = FindObjectOfType<Turret>();
@@ -100,14 +94,16 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         // Camera.main.transform.position = newCameraPos;
 
 
-        if (OnGameLoopStart != null)
-        {
-            OnGameLoopStart.Invoke();
-        }
 
         enabled = true;
         LoopIsActive = true;
         Spawner.instance.StartSpawner();
+
+        if (OnGameLoopStart != null)
+        {
+            OnGameLoopStart.Invoke();
+        }
+        print("GameLoop Started");
     }
 
     public void InvokeFishTakeDamage(int damageAmount)
@@ -133,6 +129,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         AudioManager.instance.StopAllBGM();
         AudioManager.instance.PlaySFX("gameOver");
 
+        BehavioralController.instance.Reset();
+
         GameUI.instance.SwitchToScreen(GameUI.Screens.LoseScreen);
 
         enabled = false;
@@ -141,10 +139,13 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public void InvokeRestartGame()
     {
-        if (OnRestartGame != null)
-        {
-            OnRestartGame.Invoke();
-        }
+        //reset events
+        OnGameLoopStart = null;
+        OnKillEnemy = null;
+        OnRestartGame = null;
+
+        Invoke(nameof(StartGameLoop), 0.1f);
+
     }
 
     public void InvokeKillEnemy(EnemyType enemyType)
