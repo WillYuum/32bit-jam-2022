@@ -29,7 +29,6 @@ public class GameScreen : MonoBehaviour
             UpdateHighScoreOnStart();
             UpdateExplosionBar();
         };
-
     }
 
 

@@ -31,6 +31,7 @@ public class LoseScreen : MonoBehaviour
     private void OnClickRestartButton()
     {
         GameManager.instance.RestartScene();
+        // GameManager.instance.SwitchToScene(GameScenes.MainMenu);
     }
 
 
