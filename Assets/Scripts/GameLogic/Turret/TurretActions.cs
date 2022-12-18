@@ -23,6 +23,8 @@ public class TurretActions : MonoBehaviour
     private ShootController _turretShootController;
     [SerializeField] private TurretEvents _turretAnimationEvents;
 
+    private RotationDirection _currentRotationDirection;
+
 
     private void Awake()
     {
@@ -32,6 +34,8 @@ public class TurretActions : MonoBehaviour
         float turretShootInterval = GameVariables.instance.PlayerShootInterval;
         _turretShootController = new ShootController(turretShootInterval);
 
+
+        _currentRotationDirection = RotationDirection.ClockWise;
 
         //This is to set the fish on the plaform as soon as the game starts
         // GameloopManager.instance.OnGameLoopStart += () =>
@@ -45,7 +49,7 @@ public class TurretActions : MonoBehaviour
 
         GameloopManager.instance.OnGameLoopStart += () =>
         {
-            Move(RotationDirection.ClockWise);
+            Move();
         };
     }
 
@@ -57,23 +61,28 @@ public class TurretActions : MonoBehaviour
         if (GameloopManager.instance.LoopIsActive == false) return;
         _turretShootController.UpdateShootTimer();
 
-        if (Input.GetKey(KeyCode.A))
+
+
+        if (Input.GetKey(KeyCode.K))
         {
-            Move(RotationDirection.ClockWise);
-            _turretActions.SetTurretMoveDirection(TurretMoveDirection.ClockWise);
+            Move();
         }
-        else if (Input.GetKey(KeyCode.D))
+
+        if (Input.GetKeyDown(KeyCode.S))
         {
-            Move(RotationDirection.AntiClockWise);
-            _turretActions.SetTurretMoveDirection(TurretMoveDirection.AntiClockWise);
-        }
-        else
-        {
-            if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+            switch (_currentRotationDirection)
             {
-                _turretActions.SetTurretMoveDirection(TurretMoveDirection.None);
+                case RotationDirection.ClockWise:
+                    _currentRotationDirection = RotationDirection.AntiClockWise;
+                    _turretActions.SetTurretMoveDirection(TurretMoveDirection.AntiClockWise);
+                    break;
+                case RotationDirection.AntiClockWise:
+                    _currentRotationDirection = RotationDirection.ClockWise;
+                    _turretActions.SetTurretMoveDirection(TurretMoveDirection.ClockWise);
+                    break;
             }
         }
+
 
         if (Input.GetKey(KeyCode.Space))
         {
@@ -102,12 +111,9 @@ public class TurretActions : MonoBehaviour
         _turretActions.ShootBullet();
     }
 
-    public void Move(RotationDirection movement)
+    public void Move()
     {
-        // if (_turretActions) return;
-
-        Vector2 newPos = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(movement);
-
+        Vector2 newPos = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
         _turretActions.UpdatePosition(newPos);
     }
 
