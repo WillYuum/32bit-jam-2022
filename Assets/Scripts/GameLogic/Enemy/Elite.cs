@@ -9,10 +9,14 @@ public class Elite : EnemyCore<Elite>
 
     protected override void OnAwake()
     {
-        base.OnAwake();
         ShootController = new ShootController(1.0f);
-        SetState(new AttackTurret());
         _target = GameObject.Find("Turret").transform;
+    }
+
+
+    public void ReadyToGo()
+    {
+        SetState(new AttackTurret());
     }
 
 

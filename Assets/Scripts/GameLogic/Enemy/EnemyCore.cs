@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using DG.Tweening;
 
 public enum EnemyType
 {
@@ -45,6 +47,14 @@ where T : MonoBehaviour
 
     }
 
+
+    public virtual Tweener SpawnEnemy()
+    {
+        //tween scale up then enemy then invoke onSpawnComplete
+        transform.localScale = Vector3.zero;
+        return transform.DOScale(Vector3.one, 3.5f);
+    }
+
     private void Update()
     {
         if (_currentState != null)
@@ -82,6 +92,7 @@ where T : MonoBehaviour
 
     protected void Die()
     {
+        DOTween.Complete(transform);
         Destroy(gameObject);
     }
 }

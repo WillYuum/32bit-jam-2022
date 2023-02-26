@@ -15,15 +15,18 @@ public class Bomber : EnemyCore<Bomber>
 
     protected override void OnAwake()
     {
-        base.OnAwake();
-
         _bombRange = GameVariables.instance.BomberExplodeRange;
 
         _bombRangeIndicator.gameObject.SetActive(false);
         _target = GameObject.Find("Turret").transform;
-        SetState(new MoveToTurretState());
 
         _originalBombRangeScale = _bombRangeIndicator.localScale.x;
+    }
+
+
+    public void ReadyToGo()
+    {
+        SetState(new MoveToTurretState());
     }
 
     public void MoveToTurret()
