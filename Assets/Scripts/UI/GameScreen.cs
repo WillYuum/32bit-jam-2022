@@ -5,12 +5,16 @@ using DG.Tweening;
 
 public class GameScreen : MonoBehaviour
 {
+    private const string _highScoreTextPrefix = "High Score \n";
     [SerializeField] private TextMeshProUGUI _highScoreText;
     [SerializeField] private TextMeshProUGUI _currentHPText;
 
-    // [SerializeField] private Slider _explosionSlider;
 
+    [SerializeField] private GameObject _boomImage;
     [SerializeField] private RectMask2D _explosionSlider;
+    private Color _orangeLightColor = new Color(238.0f / 255.0f, 189.0f / 255.0f, 92.0f / 255.0f, 255.0f / 255.0f);
+
+
     void Awake()
     {
         GameloopManager.instance.OnFishTakeHit += UpdateCurrentHPText;
@@ -33,7 +37,6 @@ public class GameScreen : MonoBehaviour
 
 
 
-    private const string _highScoreTextPrefix = "High Score \n";
     private void UpdateHighScoreText()
     {
         string newValue = string.Format("{0:000000}", GameloopManager.instance.CollectedHightScore);
@@ -48,22 +51,18 @@ public class GameScreen : MonoBehaviour
         _currentHPText.DOColor(Color.white, 0.1f);
     }
 
-    private Color _orangeLightColor = new Color(238.0f / 255.0f, 189.0f / 255.0f, 92.0f / 255.0f, 255.0f / 255.0f);
     private const string _currentHPTextPrefix = "HP: ";
     private void UpdateCurrentHPText(int currentHP)
     {
-        // Color.ToRGB
-        // Color.
         _currentHPText.text = _currentHPTextPrefix + currentHP.ToString();
         _currentHPText.DOColor(_orangeLightColor, 0.1f).OnComplete(ResetToColorWhite);
     }
 
-    [SerializeField] private GameObject _boomImage;
     private void UpdateExplosionBar()
     {
         float ratio = GameloopManager.instance.ExplosionBarTracker.GetRatio();
 
-        var finalVal = Vector4.zero;
+        Vector4 finalVal = Vector4.zero;
         finalVal.w = Mathf.Lerp(153, 0, ratio);
         _explosionSlider.padding = finalVal;
 

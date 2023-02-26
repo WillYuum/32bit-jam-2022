@@ -29,7 +29,7 @@ public static class SpawnerUtils
         }
     }
 
-    public static void SpawnInCirclePattern(Transform[] objects, Vector3 spawnPoint)
+    public static void PositionInCirclePattern(Transform[] objects, Vector3 spawnPoint)
     {
         int amountToSpawned = objects.Length;
 

@@ -16,19 +16,12 @@ public class Dasher : EnemyCore<Dasher>
 
     protected override void OnAwake()
     {
-        base.OnAwake();
-
         _target = GameObject.Find("Turret").transform;
         if (_target == null) Debug.LogError("Turret not found");
         // SetState(new DasherRotateTowardsTurret());
     }
 
-    public void StartSpawn()
-    {
-        _visual.transform.localScale = Vector3.zero;
-        _visual.transform.DOScale(1, 0.5f).SetEase(Ease.OutBack);
-        SetState(new HandleSpawnState());
-    }
+
 
     public void ReadyToGo(float delayToSwitch)
     {
