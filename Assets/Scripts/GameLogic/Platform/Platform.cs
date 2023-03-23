@@ -13,7 +13,9 @@ public class Platform : MonoBehaviour
 
     public void KeepTurruetPerpendicularyAligned(Transform turret)
     {
-        turret.up = transform.up;
+        turret.rotation = Quaternion.Euler(0, 0, transform.rotation.eulerAngles.z);
+
+
     }
 
 
