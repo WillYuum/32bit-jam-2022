@@ -2,6 +2,14 @@ using UnityEngine;
 using Utils.GenericSingletons;
 using System;
 
+
+public enum TypeOfShots
+{
+    SingleShot,
+    TripleShot,
+}
+
+
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
     public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
@@ -12,6 +20,17 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action OnKillEnemy;
     public event Action OnRestartGame;
 
+
+    //Maybe make this a map dictionary
+    private TypeOfShots[] _typeOfShotsByLevel = new TypeOfShots[]
+    {
+        TypeOfShots.SingleShot,
+        TypeOfShots.TripleShot,
+    };
+
+    private int _currentShootLevel = 0;
+
+    public TypeOfShots CurrentTypeShot { get; private set; }
 
     public InvisiblityWindowTracker TurretInvisiblityWindowTracker { get; private set; }
 
@@ -93,6 +112,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         // newCameraPos.z = Camera.main.transform.position.z;
         // Camera.main.transform.position = newCameraPos;
 
+        InvokeChangeShotType(TypeOfShots.TripleShot);
+
 
 
         enabled = true;
@@ -172,6 +193,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
     }
 
+
+    private void InvokeChangeShotType(TypeOfShots typeOfShots)
+    {
+        CurrentTypeShot = typeOfShots;
+    }
 
 }
 

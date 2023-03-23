@@ -45,7 +45,7 @@ public class TurretActions : MonoBehaviour
     }
     private void Start()
     {
-        _turretAnimationEvents.OnTurretShoot += ShootBullet;
+        _turretAnimationEvents.OnTurretShoot += InvokeTurretShoot;
 
         GameloopManager.instance.OnGameLoopStart += () =>
         {
@@ -105,10 +105,10 @@ public class TurretActions : MonoBehaviour
     }
 
 
-    private void ShootBullet()
+    private void InvokeTurretShoot()
     {
         _turretShootController.ResetShootTimer();
-        _turretActions.ShootBullet();
+        _turretActions.shoot();
     }
 
     public void Move()

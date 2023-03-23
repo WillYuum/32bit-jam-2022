@@ -7,24 +7,25 @@ public class Projectile : MonoBehaviour
     [SerializeField] private float _speed = 10.0f;
     [SerializeField] private int _damage = 1;
 
-    private Vector3 _shootDirection;
+    private Vector3 _moveDirectionWithSpeed;
 
     private void Awake()
     {
-        _shootDirection = Vector3.zero;
+        _moveDirectionWithSpeed = Vector3.zero;
     }
 
     private void Update()
     {
-        if (_shootDirection != Vector3.zero)
+        if (_moveDirectionWithSpeed != Vector3.zero)
         {
-            transform.Translate(_shootDirection * _speed * Time.deltaTime);
+            transform.Translate(_moveDirectionWithSpeed * Time.deltaTime);
         }
     }
 
     public void SetShootDirection(Vector3 direction)
     {
-        _shootDirection = direction;
+        _moveDirectionWithSpeed = direction.normalized * _speed;
+
     }
 
     private void OnTriggerEnter2D(Collider2D other)

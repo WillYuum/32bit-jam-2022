@@ -1,18 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using SpawnManagerMod;
 using DG.Tweening;
 
-public enum TypeOfShots
-{
-    SingleShot,
-}
-
 public class Turret : MonoBehaviour, ITurretActions, IDamageable
 {
     public TurretMoveDirection MoveDirection { get; private set; }
-    private TypeOfShots _currentTypeShot;
 
     [SerializeField] private Animator _animator;
 
@@ -34,27 +26,53 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
         transform.position = position;
     }
 
+
+    //NOTE: Anim will have an event that will call the shoot bullet function
     public void PlayAnim()
     {
-        switch (_currentTypeShot)
-        {
-            case TypeOfShots.SingleShot:
-                SingleShot();
-                break;
-        }
-    }
-
-    private void SingleShot()
-    {
         _animator.Play("Shoot");
+        // switch (GameloopManager.instance.CurrentTypeShot)
+        // {
+        //     case TypeOfShots.SingleShot:
+        //         break;
+        // }
     }
 
-    public void ShootBullet()
+
+    public void shoot()
     {
         AudioManager.instance.PlaySFX("playerFire");
 
-        var bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
-        bullet.GetComponent<Projectile>().SetShootDirection(transform.up);
+
+        switch (GameloopManager.instance.CurrentTypeShot)
+        {
+            case TypeOfShots.SingleShot:
+                GameObject spawnedBullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
+                spawnedBullet.GetComponent<Projectile>().SetShootDirection(transform.up);
+                break;
+
+            case TypeOfShots.TripleShot:
+                Vector3 direction = _pointOfShot.up;
+                Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0);
+
+                float bulletDistance = 1.0f;
+                int bulletCount = 3;
+                float bulletSpacing = 0.2f;
+
+
+                for (int i = 0; i < bulletCount; i++)
+                {
+                    // Spawn bullet
+                    Vector3 spawnPosition = _pointOfShot.position * bulletDistance;
+                    GameObject bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(spawnPosition, Quaternion.identity);
+
+                    // Set bullet direction
+                    float directionModifier = (i == 0) ? 1f : ((i == bulletCount - 1) ? -1f : 0f);
+                    Vector3 bulletDirection = direction + transform.right * bulletSpacing * directionModifier;
+                    bullet.GetComponent<Projectile>().SetShootDirection(bulletDirection);
+                }
+                break;
+        }
     }
 
     public void TakeDamage(int damageCount = 1)
@@ -126,6 +144,6 @@ public interface ITurretActions
     void PlayAnim();
     void SetTurretMoveDirection(TurretMoveDirection direction);
     void UpdatePosition(Vector2 position);
-    void ShootBullet();
+    void shoot();
 
 }
