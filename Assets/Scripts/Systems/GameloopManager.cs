@@ -3,10 +3,11 @@ using Utils.GenericSingletons;
 using System;
 
 
+
 public enum TypeOfShots
 {
-    SingleShot,
-    TripleShot,
+    PeaShots,
+    Laser,
 }
 
 
@@ -21,16 +22,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action OnRestartGame;
 
 
-    //Maybe make this a map dictionary
-    private TypeOfShots[] _typeOfShotsByLevel = new TypeOfShots[]
-    {
-        TypeOfShots.SingleShot,
-        TypeOfShots.TripleShot,
-    };
-
     private int _currentShootLevel = 0;
 
-    public TypeOfShots CurrentTypeShot { get; private set; }
+    public TypeOfShots SelectedShootType { get; private set; }
 
     public InvisiblityWindowTracker TurretInvisiblityWindowTracker { get; private set; }
 
@@ -83,6 +77,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         {
             InvokeLosegame();
         }
+
+
+
+        if (Input.GetKeyDown(KeyCode.M))
+        {
+            CurrentShootBehavior.Upgrade();
+        }
+
+        if (Input.GetKeyDown(KeyCode.N))
+        {
+            CurrentShootBehavior.Downgrade();
+        }
 #endif
     }
 
@@ -112,7 +118,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         // newCameraPos.z = Camera.main.transform.position.z;
         // Camera.main.transform.position = newCameraPos;
 
-        InvokeChangeShotType(TypeOfShots.TripleShot);
+        SelectShootType(TypeOfShots.PeaShots);
 
 
 
@@ -194,9 +200,30 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
-    private void InvokeChangeShotType(TypeOfShots typeOfShots)
+    private RatioValue _killMomentun;
+
+    public ShootBehavior CurrentShootBehavior { get; private set; }
+    private void SelectShootType(TypeOfShots typeOfShots)
     {
-        CurrentTypeShot = typeOfShots;
+        Turret turret = FindObjectOfType<Turret>();
+
+        switch (typeOfShots)
+        {
+            case TypeOfShots.PeaShots:
+                CurrentShootBehavior = new PeaShootBehavior();
+                break;
+            case TypeOfShots.Laser:
+                CurrentShootBehavior = new LaserShootBehavior();
+                break;
+            default:
+#if UNITY_EDITOR
+                Debug.LogError("No ShootBehavior found for " + typeOfShots);
+#endif
+                break;
+        }
+
+        CurrentShootBehavior.SetTurretTransform(turret.GetShootPoint());
+        SelectedShootType = typeOfShots;
     }
 
 }
@@ -276,5 +303,46 @@ public class InvisiblityWindowTracker
     public void TakeHit()
     {
         IsInvisiblityWindowActive = true;
+    }
+}
+
+
+public class RatioValue
+{
+    public float CurrentValue { get; private set; }
+    public float MaxValue { get; private set; }
+
+    public RatioValue(float maxValue)
+    {
+        MaxValue = maxValue;
+        CurrentValue = 0;
+    }
+
+    public void IncreaseValue(float value)
+    {
+        CurrentValue += value;
+        if (CurrentValue > MaxValue)
+        {
+            CurrentValue = MaxValue;
+        }
+    }
+
+    public void DecreaseValue(float value)
+    {
+        CurrentValue -= value;
+        if (CurrentValue < 0)
+        {
+            CurrentValue = 0;
+        }
+    }
+
+    public void ResetValue()
+    {
+        CurrentValue = 0;
+    }
+
+    public float GetRatio()
+    {
+        return CurrentValue / MaxValue;
     }
 }

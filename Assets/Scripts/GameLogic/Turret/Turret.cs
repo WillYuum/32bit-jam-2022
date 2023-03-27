@@ -1,6 +1,7 @@
 using UnityEngine;
 using SpawnManagerMod;
 using DG.Tweening;
+using System;
 
 public class Turret : MonoBehaviour, ITurretActions, IDamageable
 {
@@ -27,6 +28,12 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
     }
 
 
+    public Transform GetShootPoint()
+    {
+        return _pointOfShot;
+    }
+
+
     //NOTE: Anim will have an event that will call the shoot bullet function
     public void PlayAnim()
     {
@@ -43,36 +50,7 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
     {
         AudioManager.instance.PlaySFX("playerFire");
 
-
-        switch (GameloopManager.instance.CurrentTypeShot)
-        {
-            case TypeOfShots.SingleShot:
-                GameObject spawnedBullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(_pointOfShot.position, Quaternion.identity);
-                spawnedBullet.GetComponent<Projectile>().SetShootDirection(transform.up);
-                break;
-
-            case TypeOfShots.TripleShot:
-                Vector3 direction = _pointOfShot.up;
-                Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0);
-
-                float bulletDistance = 1.0f;
-                int bulletCount = 3;
-                float bulletSpacing = 0.2f;
-
-
-                for (int i = 0; i < bulletCount; i++)
-                {
-                    // Spawn bullet
-                    Vector3 spawnPosition = _pointOfShot.position * bulletDistance;
-                    GameObject bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(spawnPosition, Quaternion.identity);
-
-                    // Set bullet direction
-                    float directionModifier = (i == 0) ? 1f : ((i == bulletCount - 1) ? -1f : 0f);
-                    Vector3 bulletDirection = direction + transform.right * bulletSpacing * directionModifier;
-                    bullet.GetComponent<Projectile>().SetShootDirection(bulletDirection);
-                }
-                break;
-        }
+        GameloopManager.instance.CurrentShootBehavior.Shoot();
     }
 
     public void TakeDamage(int damageCount = 1)
@@ -146,4 +124,104 @@ public interface ITurretActions
     void UpdatePosition(Vector2 position);
     void shoot();
 
+}
+
+public class LaserShootBehavior : ShootBehavior
+{
+    public LaserShootBehavior()
+    {
+        InitActions(new Action[] { ShootSingleLaserShot, ShootThickLaserShot });
+    }
+
+
+    private void ShootSingleLaserShot()
+    {
+
+    }
+    private void ShootThickLaserShot()
+    {
+
+    }
+}
+
+
+public class PeaShootBehavior : ShootBehavior
+{
+    public PeaShootBehavior()
+    {
+        InitActions(new Action[] { ShootSingleBullet, ShootTripleBullet });
+    }
+
+
+    private void ShootSingleBullet()
+    {
+        GameObject spawnedBullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(ShootPointTransform.position, Quaternion.identity);
+        spawnedBullet.GetComponent<Projectile>().SetShootDirection(ShootPointTransform.up);
+    }
+
+    private void ShootTripleBullet()
+    {
+        Vector3 direction = ShootPointTransform.up;
+        Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0);
+
+        float bulletDistance = 1.0f;
+        int bulletCount = 3;
+        float bulletSpacing = 0.2f;
+
+
+        for (int i = 0; i < bulletCount; i++)
+        {
+            // Spawn bullet
+            Vector3 spawnPosition = ShootPointTransform.position * bulletDistance;
+            GameObject bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(spawnPosition, Quaternion.identity);
+
+            // Set bullet direction
+            float directionModifier = (i == 0) ? 1f : ((i == bulletCount - 1) ? -1f : 0f);
+            Vector3 bulletDirection = direction + ShootPointTransform.right * bulletSpacing * directionModifier;
+            bullet.GetComponent<Projectile>().SetShootDirection(bulletDirection);
+        }
+    }
+}
+
+
+public abstract class ShootBehavior
+{
+    private int _currentLevel;
+    private int _maxLevel;
+    private Action[] shootActionsPerLevel;
+    protected Transform ShootPointTransform;
+
+
+    protected void InitActions(Action[] shootActionsPerLevel)
+    {
+        _maxLevel = shootActionsPerLevel.Length - 1;
+        this.shootActionsPerLevel = shootActionsPerLevel;
+        _currentLevel = 0;
+    }
+
+    public void SetTurretTransform(Transform shootPntTransform)
+    {
+        ShootPointTransform = shootPntTransform;
+    }
+
+    public void Shoot()
+    {
+        shootActionsPerLevel[_currentLevel].Invoke();
+    }
+
+    public void Upgrade()
+    {
+        if (_currentLevel < _maxLevel)
+        {
+            _currentLevel++;
+        }
+    }
+
+    public void Downgrade()
+    {
+        if (_currentLevel > 0)
+        {
+            _currentLevel--;
+        }
+    }
 }
