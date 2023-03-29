@@ -130,7 +130,7 @@ public class LaserShootBehavior : ShootBehavior
 {
     public LaserShootBehavior()
     {
-        InitActions(new Action[] { ShootSingleLaserShot, ShootThickLaserShot });
+        InitActions(new Action[] { ShootSingleLaserShot, ShootThinLaserShot });
     }
 
 
@@ -138,7 +138,7 @@ public class LaserShootBehavior : ShootBehavior
     {
 
     }
-    private void ShootThickLaserShot()
+    private void ShootThinLaserShot()
     {
 
     }
@@ -186,7 +186,7 @@ public class PeaShootBehavior : ShootBehavior
 
 public abstract class ShootBehavior
 {
-    private int _currentLevel;
+    public int CurrentLevel { get; private set; }
     private int _maxLevel;
     private Action[] shootActionsPerLevel;
     protected Transform ShootPointTransform;
@@ -196,7 +196,7 @@ public abstract class ShootBehavior
     {
         _maxLevel = shootActionsPerLevel.Length - 1;
         this.shootActionsPerLevel = shootActionsPerLevel;
-        _currentLevel = 0;
+        CurrentLevel = 0;
     }
 
     public void SetTurretTransform(Transform shootPntTransform)
@@ -206,22 +206,22 @@ public abstract class ShootBehavior
 
     public void Shoot()
     {
-        shootActionsPerLevel[_currentLevel].Invoke();
+        shootActionsPerLevel[CurrentLevel].Invoke();
     }
 
     public void Upgrade()
     {
-        if (_currentLevel < _maxLevel)
+        if (CurrentLevel < _maxLevel)
         {
-            _currentLevel++;
+            CurrentLevel++;
         }
     }
 
     public void Downgrade()
     {
-        if (_currentLevel > 0)
+        if (CurrentLevel > 0)
         {
-            _currentLevel--;
+            CurrentLevel--;
         }
     }
 }

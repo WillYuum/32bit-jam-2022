@@ -281,6 +281,10 @@ MonoBehaviour:
     <Bomber>k__BackingField: 4
     <Dasher>k__BackingField: 2
   <InvinsibilityWindowDuration>k__BackingField: 3
+  <TurretPeaShotLevelsData>k__BackingField:
+    <SinglePeaShot>k__BackingField: 0
+    <DoublePeaShot>k__BackingField: 0.469
+    <TriplePeaShot>k__BackingField: 0.849
   <PlayerSpeed>k__BackingField: 10
   <PlayerShootInterval>k__BackingField: 0.3
   <BomberExplodeRange>k__BackingField: 5

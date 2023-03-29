@@ -15,6 +15,8 @@ public class GameScreen : MonoBehaviour
     private Color _orangeLightColor = new Color(238.0f / 255.0f, 189.0f / 255.0f, 92.0f / 255.0f, 255.0f / 255.0f);
 
 
+    [SerializeField] private Slider _momentumBar;
+
     void Awake()
     {
         GameloopManager.instance.OnFishTakeHit += UpdateCurrentHPText;
@@ -33,9 +35,9 @@ public class GameScreen : MonoBehaviour
             UpdateHighScoreOnStart();
             UpdateExplosionBar();
         };
+
+        GameloopManager.instance.OnMomentumChange += UpdateMomentumBar;
     }
-
-
 
     private void UpdateHighScoreText()
     {
@@ -76,5 +78,10 @@ public class GameScreen : MonoBehaviour
         {
             _boomImage.SetActive(false);
         }
+    }
+
+    private void UpdateMomentumBar(float ratio)
+    {
+        _momentumBar.value = ratio;
     }
 }

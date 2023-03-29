@@ -20,6 +20,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action<int> OnFishTakeHit;
     public event Action OnKillEnemy;
     public event Action OnRestartGame;
+    public event Action<float> OnMomentumChange;
 
 
     private int _currentShootLevel = 0;
@@ -120,6 +121,12 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         SelectShootType(TypeOfShots.PeaShots);
 
+        float maxMomentumValue = 5;
+        float increaseRatio = maxMomentumValue * 0.15f;
+        float decreaseRatio = maxMomentumValue * 0.1f;
+
+        KillMomentunTracker = new KillMomentum(maxMomentumValue, increaseRatio, decreaseRatio);
+
 
 
         enabled = true;
@@ -136,6 +143,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public void InvokeFishTakeDamage(int damageAmount)
     {
         if (LoopIsActive == false) return;
+
+        KillMomentunTracker.DecreaseMomentum();
+        GameloopManager.instance.OnMomentumChange.Invoke(KillMomentunTracker.GetMomentumRatio());
+
+        CheckForChangeShootBehavior();
 
         _fishHitPoints.TakeDamage(damageAmount);
         OnFishTakeHit.Invoke(_fishHitPoints.CurrenthitPoint);
@@ -172,11 +184,15 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         OnRestartGame = null;
 
         Invoke(nameof(StartGameLoop), 0.1f);
-
     }
 
     public void InvokeKillEnemy(EnemyType enemyType)
     {
+        KillMomentunTracker.IncreaseMomentum();
+        GameloopManager.instance.OnMomentumChange.Invoke(KillMomentunTracker.GetMomentumRatio());
+
+        CheckForChangeShootBehavior();
+
         switch (enemyType)
         {
             case EnemyType.Elite:
@@ -200,7 +216,29 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
-    private RatioValue _killMomentun;
+    private void CheckForChangeShootBehavior()
+    {
+        int currentShootLevel = CurrentShootBehavior.CurrentLevel;
+        float momentumRatio = KillMomentunTracker.GetMomentumRatio();
+        int levelToUse = GameVariables.instance.TurretPeaShotUnlockData.GetLevelRelativeToMomentum(momentumRatio);
+
+
+        bool sameLevel = currentShootLevel == levelToUse;
+        if (sameLevel) return;
+
+
+        bool shouldUpgrade = currentShootLevel < levelToUse;
+        if (shouldUpgrade)
+        {
+            CurrentShootBehavior.Upgrade();
+        }
+        else
+        {
+            CurrentShootBehavior.Downgrade();
+        }
+    }
+
+    public KillMomentum KillMomentunTracker { get; private set; }
 
     public ShootBehavior CurrentShootBehavior { get; private set; }
     private void SelectShootType(TypeOfShots typeOfShots)
@@ -303,6 +341,51 @@ public class InvisiblityWindowTracker
     public void TakeHit()
     {
         IsInvisiblityWindowActive = true;
+    }
+}
+
+
+public class KillMomentum
+{
+    private float _maxMomentumValue;
+    public float CurrentMomentumValue { get; private set; }
+    private float _increaseRatio;
+    private float _decreaseRatio;
+    public KillMomentum(float maxMomentumValue, float increaseRatio, float decreaseRatio)
+    {
+        _maxMomentumValue = maxMomentumValue;
+        CurrentMomentumValue = 0;
+        _increaseRatio = increaseRatio;
+        _decreaseRatio = decreaseRatio;
+    }
+
+
+    public void IncreaseMomentum()
+    {
+        CurrentMomentumValue += _increaseRatio;
+        if (CurrentMomentumValue > _maxMomentumValue)
+        {
+            CurrentMomentumValue = _maxMomentumValue;
+        }
+    }
+
+    public void DecreaseMomentum()
+    {
+        CurrentMomentumValue -= _decreaseRatio;
+        if (CurrentMomentumValue < 0)
+        {
+            CurrentMomentumValue = 0;
+        }
+    }
+
+    public float GetMomentumRatio()
+    {
+        return CurrentMomentumValue / _maxMomentumValue;
+    }
+
+    public void ResetMomentum()
+    {
+        CurrentMomentumValue = 0;
     }
 }
 
