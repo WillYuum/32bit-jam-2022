@@ -4,9 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using System;
 
 public class LoseScreen : MonoBehaviour
 {
+
+    public struct LoadConfig
+    {
+        public Action<Action> OpenScreen;
+    }
+
     [SerializeField] private Image _background;
     [SerializeField] private Button _restartButton;
     [SerializeField] private TextMeshProUGUI _highScoreText;
@@ -20,6 +27,19 @@ public class LoseScreen : MonoBehaviour
     {
         _background.DOColor(new Color(0, 0, 0, 0.85f), 1.5f);
         RenderLoseScreen();
+    }
+
+    public LoadConfig Load()
+    {
+        LoadConfig config = new LoadConfig();
+
+        config.OpenScreen = (cb) =>
+        {
+            gameObject.SetActive(true);
+            cb.Invoke();
+        };
+
+        return config;
     }
 
     private void RenderLoseScreen()

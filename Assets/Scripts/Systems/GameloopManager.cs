@@ -48,7 +48,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         if (turret != null)
         {
             enabled = false;
-            Invoke(nameof(StartGameLoop), 0.1f);
         }
         else
         {
@@ -94,14 +93,17 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
+    public void SetShootType(TypeOfShots shootType)
+    {
+        SelectShootType(shootType);
+    }
+
     public void StartGameLoop()
     {
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
         TurretInvisiblityWindowTracker = new InvisiblityWindowTracker();
 
         CollectedHightScore = 0;
-
-        GameUI.instance.SwitchToScreen(GameUI.Screens.GameUI);
 
         AudioManager.instance.PlayBGM("Main");
 
@@ -119,7 +121,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         // newCameraPos.z = Camera.main.transform.position.z;
         // Camera.main.transform.position = newCameraPos;
 
-        SelectShootType(TypeOfShots.PeaShots);
+        // SelectShootType(TypeOfShots.PeaShots);
 
         float maxMomentumValue = 5;
         float increaseRatio = maxMomentumValue * 0.15f;
@@ -170,7 +172,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         BehavioralController.instance.Reset();
 
-        GameUI.instance.SwitchToScreen(GameUI.Screens.LoseScreen);
+        var loseScreen = GameUI.instance.LoadLoseScreen();
+        loseScreen.OpenScreen(() =>
+        {
+
+        });
 
         enabled = false;
     }
