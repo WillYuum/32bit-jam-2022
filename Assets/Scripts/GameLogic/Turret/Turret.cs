@@ -149,17 +149,39 @@ public class PeaShootBehavior : ShootBehavior
 {
     public PeaShootBehavior()
     {
-        InitActions(new Action[] { ShootSingleBullet, ShootTripleBullet });
+        InitActions(new Action[] { SinglePeaShot, DoublePeaShot, TripleBullet });
     }
 
 
-    private void ShootSingleBullet()
+    private void SinglePeaShot()
     {
         GameObject spawnedBullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(ShootPointTransform.position, Quaternion.identity);
         spawnedBullet.GetComponent<Projectile>().SetShootDirection(ShootPointTransform.up);
     }
 
-    private void ShootTripleBullet()
+    private void DoublePeaShot()
+    {
+        Vector3 direction = ShootPointTransform.up;
+        Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0);
+
+        float bulletDistance = 1.0f;
+        int bulletCount = 2;
+        float bulletSpacing = 0.2f;
+
+        for (int i = 0; i < bulletCount; i++)
+        {
+            // Spawn bullet
+            Vector3 spawnPosition = ShootPointTransform.position * bulletDistance;
+            GameObject bullet = SpawnManager.instance.TurretBulletPrefab.CreateGameObject(spawnPosition, Quaternion.identity);
+
+            // Set bullet direction
+            float directionModifier = (i == 0) ? 1f : ((i == bulletCount - 1) ? -1f : 0f);
+            Vector3 bulletDirection = direction + ShootPointTransform.right * bulletSpacing * directionModifier;
+            bullet.GetComponent<Projectile>().SetShootDirection(bulletDirection);
+        }
+    }
+
+    private void TripleBullet()
     {
         Vector3 direction = ShootPointTransform.up;
         Vector3 perpendicular = new Vector3(-direction.y, direction.x, 0);

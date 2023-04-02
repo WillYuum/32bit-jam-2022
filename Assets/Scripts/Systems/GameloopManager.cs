@@ -89,6 +89,17 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         {
             CurrentShootBehavior.Downgrade();
         }
+
+
+        if (Input.GetKeyDown(KeyCode.Alpha0))
+        {
+            CurrentShootBehavior.Upgrade();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            CurrentShootBehavior.Downgrade();
+        }
 #endif
     }
 
