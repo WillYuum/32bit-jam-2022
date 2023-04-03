@@ -16,5 +16,10 @@ namespace SpawnManagerMod.Configs
         {
             return GameObject.Instantiate(_prefab, position, rotation, parent);
         }
+
+        public GameObject GetPrefabConfig()
+        {
+            return _prefab;
+        }
     }
 }

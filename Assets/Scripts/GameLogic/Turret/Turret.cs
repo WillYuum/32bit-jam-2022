@@ -128,19 +128,96 @@ public interface ITurretActions
 
 public class LaserShootBehavior : ShootBehavior
 {
+    private float _laserShotWidth;
+    private float _laserShotHeight;
+
     public LaserShootBehavior()
     {
-        InitActions(new Action[] { ShootSingleLaserShot, ShootThinLaserShot });
+        InitActions(new Action[] { LaserShotOne, LaserShotTwo, LaserShotThree });
+    }
+
+    public override void OnLevelChange()
+    {
+
+        GameObject beam = CurrentLevel switch
+        {
+            0 => SpawnManager.instance.BeamLevelOnePrefab.GetPrefabConfig(),
+            1 => SpawnManager.instance.BeamLevelTwoPrefab.GetPrefabConfig(),
+            2 => SpawnManager.instance.BeamLevelThreePrefab.GetPrefabConfig(),
+            _ => SpawnManager.instance.BeamLevelOnePrefab.GetPrefabConfig()
+        };
+
+        SpriteRenderer beamSpriteRenderer = beam.GetComponentInChildren<SpriteRenderer>();
+
+        _laserShotWidth = beamSpriteRenderer.bounds.extents.x;
+        _laserShotHeight = beamSpriteRenderer.bounds.extents.y * 2f;
     }
 
 
-    private void ShootSingleLaserShot()
+    private void LaserShotOne()
     {
-
+        GameObject beam = SpawnManager.instance.BeamLevelOnePrefab.CreateGameObject(ShootPointTransform.position, Quaternion.identity);
+        PositionAndRotateBeam(beam);
+        CheckIfHitEnemiesWithBeam(beam);
+        FadeOutBeam(beam);
     }
-    private void ShootThinLaserShot()
-    {
 
+    private void LaserShotTwo()
+    {
+        GameObject beam = SpawnManager.instance.BeamLevelTwoPrefab.CreateGameObject(ShootPointTransform.position, Quaternion.identity);
+        PositionAndRotateBeam(beam);
+        CheckIfHitEnemiesWithBeam(beam);
+        FadeOutBeam(beam);
+    }
+
+    private void LaserShotThree()
+    {
+        GameObject beam = SpawnManager.instance.BeamLevelThreePrefab.CreateGameObject(ShootPointTransform.position, Quaternion.identity);
+        PositionAndRotateBeam(beam);
+        CheckIfHitEnemiesWithBeam(beam);
+        FadeOutBeam(beam);
+    }
+
+    private void PositionAndRotateBeam(GameObject beam)
+    {
+        beam.transform.position = ShootPointTransform.position;
+        beam.transform.rotation = ShootPointTransform.rotation;
+    }
+
+    private void CheckIfHitEnemiesWithBeam(GameObject beam)
+    {
+        Vector2 startPoint = ShootPointTransform.position;
+        Vector2 endPoint = beam.transform.position + beam.transform.up * _laserShotHeight;
+
+
+        Vector2 centerOfStartPoint = startPoint + ((endPoint - startPoint) / 2f);
+
+        Vector2 size = new Vector2(_laserShotWidth, _laserShotHeight);
+#if UNITY_EDITOR
+        // Debug.Draw
+        DebugDraw.DrawBox(centerOfStartPoint, size, Color.red, beam.transform.rotation, 2f);
+#endif
+
+        float angle = Vector2.SignedAngle(Vector2.up, endPoint - startPoint);
+        RaycastHit2D[] hits = Physics2D.BoxCastAll(centerOfStartPoint, size, angle, endPoint - startPoint, _laserShotHeight, LayerMask.GetMask("Enemy"));
+
+
+        if (hits.Length > 0)
+        {
+            int damageAmount = 1;
+            foreach (RaycastHit2D hit in hits)
+            {
+                hit.collider.GetComponent<IDamageable>().TakeDamage(damageAmount);
+            }
+        }
+    }
+
+    private void FadeOutBeam(GameObject beam)
+    {
+        beam.GetComponentInChildren<SpriteRenderer>().DOFade(0f, 0.5f).OnComplete(() =>
+        {
+            GameObject.Destroy(beam);
+        });
     }
 }
 
@@ -219,6 +296,7 @@ public abstract class ShootBehavior
         _maxLevel = shootActionsPerLevel.Length - 1;
         this.shootActionsPerLevel = shootActionsPerLevel;
         CurrentLevel = 0;
+        OnLevelChange();
     }
 
     public void SetTurretTransform(Transform shootPntTransform)
@@ -231,19 +309,28 @@ public abstract class ShootBehavior
         shootActionsPerLevel[CurrentLevel].Invoke();
     }
 
+    public virtual void OnLevelChange()
+    {
+
+    }
+
     public void Upgrade()
     {
-        if (CurrentLevel < _maxLevel)
-        {
-            CurrentLevel++;
-        }
+        if (CurrentLevel >= _maxLevel) return;
+
+
+        CurrentLevel++;
+        OnLevelChange();
+
+        Debug.Log("Upgrade " + CurrentLevel + " to " + (CurrentLevel));
+
     }
 
     public void Downgrade()
     {
-        if (CurrentLevel > 0)
-        {
-            CurrentLevel--;
-        }
+        if (CurrentLevel <= 0) return;
+
+        CurrentLevel--;
+        OnLevelChange();
     }
 }

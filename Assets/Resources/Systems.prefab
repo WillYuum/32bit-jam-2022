@@ -223,6 +223,15 @@ MonoBehaviour:
   <ExplosionPrefab>k__BackingField:
     _prefab: {fileID: 4514348531954860478, guid: b19351f6467ecfe49988bd6e449d7f05,
       type: 3}
+  <BeamLevelOnePrefab>k__BackingField:
+    _prefab: {fileID: 2882542295558859558, guid: 20397822fabeb424fb02e6aad9e3e806,
+      type: 3}
+  <BeamLevelTwoPrefab>k__BackingField:
+    _prefab: {fileID: 2882542295558859558, guid: f6976f150e12ded40870da329b98bb27,
+      type: 3}
+  <BeamLevelThreePrefab>k__BackingField:
+    _prefab: {fileID: 2882542295558859558, guid: 5390bdbc6691245449dc4c5c44156065,
+      type: 3}
 --- !u!1 &4291171186485766178
 GameObject:
   m_ObjectHideFlags: 0
@@ -281,10 +290,13 @@ MonoBehaviour:
     <Bomber>k__BackingField: 4
     <Dasher>k__BackingField: 2
   <InvinsibilityWindowDuration>k__BackingField: 3
-  <TurretPeaShotLevelsData>k__BackingField:
+  <TurretPeaShotUnlockData>k__BackingField:
     <SinglePeaShot>k__BackingField: 0
-    <DoublePeaShot>k__BackingField: 0.469
-    <TriplePeaShot>k__BackingField: 0.849
+    <DoublePeaShot>k__BackingField: 0
+    <TriplePeaShot>k__BackingField: 0
+  <TurretLaserShotUnlockData>k__BackingField:
+    <thinLaserShot>k__BackingField: 0
+    <thickLaserShot>k__BackingField: 0
   <PlayerSpeed>k__BackingField: 10
   <PlayerShootInterval>k__BackingField: 0.3
   <BomberExplodeRange>k__BackingField: 5
