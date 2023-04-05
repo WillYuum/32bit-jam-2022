@@ -149,7 +149,7 @@ public class LaserShootBehavior : ShootBehavior
 
         SpriteRenderer beamSpriteRenderer = beam.GetComponentInChildren<SpriteRenderer>();
 
-        _laserShotWidth = beamSpriteRenderer.bounds.extents.x;
+        _laserShotWidth = beamSpriteRenderer.bounds.extents.x * 2f;
         _laserShotHeight = beamSpriteRenderer.bounds.extents.y * 2f;
     }
 
@@ -188,19 +188,15 @@ public class LaserShootBehavior : ShootBehavior
     {
         Vector2 startPoint = ShootPointTransform.position;
         Vector2 endPoint = beam.transform.position + beam.transform.up * _laserShotHeight;
-
-
         Vector2 centerOfStartPoint = startPoint + ((endPoint - startPoint) / 2f);
-
         Vector2 size = new Vector2(_laserShotWidth, _laserShotHeight);
+
 #if UNITY_EDITOR
-        // Debug.Draw
         DebugDraw.DrawBox(centerOfStartPoint, size, Color.red, beam.transform.rotation, 2f);
 #endif
 
         float angle = Vector2.SignedAngle(Vector2.up, endPoint - startPoint);
         RaycastHit2D[] hits = Physics2D.BoxCastAll(centerOfStartPoint, size, angle, endPoint - startPoint, _laserShotHeight, LayerMask.GetMask("Enemy"));
-
 
         if (hits.Length > 0)
         {

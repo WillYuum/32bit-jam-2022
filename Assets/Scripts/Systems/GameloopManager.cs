@@ -160,7 +160,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         KillMomentunTracker.DecreaseMomentum();
         GameloopManager.instance.OnMomentumChange.Invoke(KillMomentunTracker.GetMomentumRatio());
 
-        CheckForChangeShootBehavior();
+        DetermineShootLevel();
 
         _fishHitPoints.TakeDamage(damageAmount);
         OnFishTakeHit.Invoke(_fishHitPoints.CurrenthitPoint);
@@ -208,7 +208,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         KillMomentunTracker.IncreaseMomentum();
         GameloopManager.instance.OnMomentumChange.Invoke(KillMomentunTracker.GetMomentumRatio());
 
-        CheckForChangeShootBehavior();
+        DetermineShootLevel();
 
         switch (enemyType)
         {
@@ -233,7 +233,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
-    private void CheckForChangeShootBehavior()
+    private void DetermineShootLevel()
     {
         int currentShootLevel = CurrentShootBehavior.CurrentLevel;
         float momentumRatio = KillMomentunTracker.GetMomentumRatio();
