@@ -11,8 +11,7 @@ namespace MainMenuScene
 
         public struct LoadConfig
         {
-            public Action<Action> OpenScreen;
-            public Action<Action> OnPlayButtonClicked;
+            public Action OpenScreen;
         }
 
         [SerializeField] private MainMenuScreens _mainMenuScreens;
@@ -22,11 +21,11 @@ namespace MainMenuScene
         [SerializeField] private Button _exitButton;
 
 
-        public LoadConfig LoadUpScreen()
+        public LoadConfig LoadUpScreen(Action onClickPlay)
         {
             LoadConfig loadConfig = new LoadConfig();
 
-            loadConfig.OpenScreen = (cb) =>
+            loadConfig.OpenScreen = () =>
             {
                 gameObject.SetActive(true);
 
@@ -34,21 +33,16 @@ namespace MainMenuScene
                 _exitButton.onClick.AddListener(OnExitButtonClicked);
 
                 _mainMenuScreens.ShowScreen(MainMenuScreens.ScreenType.MainScreen);
-
-                cb += () =>
-                {
-                    _creditsButton.onClick.RemoveListener(OnCreditsButtonClicked);
-                    _exitButton.onClick.RemoveListener(OnExitButtonClicked);
-                };
-
-                cb.Invoke();
             };
 
 
-            loadConfig.OnPlayButtonClicked = (cb) =>
+            _playButton.onClick.AddListener(() =>
             {
-                cb.Invoke();
-            };
+                _creditsButton.onClick.RemoveListener(OnCreditsButtonClicked);
+                _exitButton.onClick.RemoveListener(OnExitButtonClicked);
+
+                onClickPlay.Invoke();
+            });
 
             return loadConfig;
         }

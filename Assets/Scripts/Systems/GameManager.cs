@@ -19,15 +19,48 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     void Start()
     {
+
 #if UNITY_EDITOR
-        Turret turret = FindObjectOfType<Turret>();
-        if (turret != null)
+        //check current scene and load the correct screen
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            LoadGameFromMainMenu();
+        }
+        else if (SceneManager.GetActiveScene().name == "MainScene")
+        {
+            LoadGameFromMainGame();
+        }
+#else
+        LoadGameFromMainMenu();
+#endif
+    }
+
+
+    private void LoadGameFromMainGame()
+    {
+        var selectScreenUI = GameUI.instance.LoadSelectScreen();
+        selectScreenUI.OpenScreen((shootType) =>
+        {
+            GameloopManager.instance.SetShootType(shootType);
+            GameloopManager.instance.StartGameLoop();
+            var gameScreen = GameUI.instance.LoadGameScreen();
+            gameScreen.OpenScreen(() =>
+            {
+                GameloopManager.instance.SetShootType(shootType);
+                GameloopManager.instance.StartGameLoop();
+            });
+        });
+    }
+
+
+
+    private void LoadGameFromMainMenu()
+    {
+        void startGameScene()
         {
             var selectScreenUI = GameUI.instance.LoadSelectScreen();
             selectScreenUI.OpenScreen((shootType) =>
             {
-                GameloopManager.instance.SetShootType(shootType);
-                GameloopManager.instance.StartGameLoop();
                 var gameScreen = GameUI.instance.LoadGameScreen();
                 gameScreen.OpenScreen(() =>
                 {
@@ -36,35 +69,16 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
                 });
             });
         }
-        else
+
+        void onClickPlay()
         {
-            LoadStartGame();
+            GameManager.instance.SwitchToScene(GameScenes.Game, startGameScene);
         }
-#else
-        LoadStartGame();
-#endif
+
+        var mainMenuActions = GameObject.FindObjectOfType<MainMenuScene.MainMenu>().LoadUpScreen(onClickPlay);
+        mainMenuActions.OpenScreen();
     }
 
-    private void LoadStartGame()
-    {
-        var mainMenuActions = GameObject.FindObjectOfType<MainMenuScene.MainMenu>().LoadUpScreen();
-        mainMenuActions.OnPlayButtonClicked(() =>
-        {
-            GameManager.instance.SwitchToScene(GameScenes.Game, () =>
-            {
-                var selectScreenUI = GameUI.instance.LoadSelectScreen();
-                selectScreenUI.OpenScreen((shootType) =>
-                {
-                    var gameScreen = GameUI.instance.LoadGameScreen();
-                    gameScreen.OpenScreen(() =>
-                    {
-                        GameloopManager.instance.SetShootType(shootType);
-                        GameloopManager.instance.StartGameLoop();
-                    });
-                });
-            });
-        });
-    }
 
 
     public void RestartScene()
