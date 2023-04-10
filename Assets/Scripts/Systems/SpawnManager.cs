@@ -14,5 +14,8 @@ namespace SpawnManagerMod
         [field: SerializeField] public PrefabConfig ElitePrefab { get; private set; }
         [field: SerializeField] public PrefabConfig EliteProjectilePrefab { get; private set; }
         [field: SerializeField] public PrefabConfig ExplosionPrefab { get; private set; }
+        [field: SerializeField] public PrefabConfig BeamLevelOnePrefab { get; private set; }
+        [field: SerializeField] public PrefabConfig BeamLevelTwoPrefab { get; private set; }
+        [field: SerializeField] public PrefabConfig BeamLevelThreePrefab { get; private set; }
     }
 }

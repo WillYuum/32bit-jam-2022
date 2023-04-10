@@ -1,8 +1,5 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using SpawnManagerMod;
-using DG.Tweening;
 
 public enum RotationDirection
 {
@@ -45,7 +42,7 @@ public class TurretActions : MonoBehaviour
     }
     private void Start()
     {
-        _turretAnimationEvents.OnTurretShoot += ShootBullet;
+        _turretAnimationEvents.OnTurretShoot += InvokeTurretShoot;
 
         GameloopManager.instance.OnGameLoopStart += () =>
         {
@@ -105,16 +102,16 @@ public class TurretActions : MonoBehaviour
     }
 
 
-    private void ShootBullet()
+    private void InvokeTurretShoot()
     {
         _turretShootController.ResetShootTimer();
-        _turretActions.ShootBullet();
+        _turretActions.shoot();
     }
 
     public void Move()
     {
-        Vector2 newPos = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
-        _turretActions.UpdatePosition(newPos);
+        Transform turretIndicatorTransform = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
+        _turretActions.UpdateTransformProps(turretIndicatorTransform.position, turretIndicatorTransform.up);
     }
 
     private void UseExplosionAbility()

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utils.GenericSingletons;
 
@@ -16,15 +17,69 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         AudioManager.instance.Load();
     }
 
-    public void StartGame()
+    void Start()
     {
 
+#if UNITY_EDITOR
+        //check current scene and load the correct screen
+        if (SceneManager.GetActiveScene().name == "MainMenu")
+        {
+            LoadGameFromMainMenu();
+        }
+        else if (SceneManager.GetActiveScene().name == "MainScene")
+        {
+            LoadGameFromMainGame();
+        }
+#else
+        LoadGameFromMainMenu();
+#endif
     }
 
-    public void WinGame()
+
+    private void LoadGameFromMainGame()
     {
-
+        var selectScreenUI = GameUI.instance.LoadSelectScreen();
+        selectScreenUI.OpenScreen((shootType) =>
+        {
+            GameloopManager.instance.SetShootType(shootType);
+            GameloopManager.instance.StartGameLoop();
+            var gameScreen = GameUI.instance.LoadGameScreen();
+            gameScreen.OpenScreen(() =>
+            {
+                GameloopManager.instance.SetShootType(shootType);
+                GameloopManager.instance.StartGameLoop();
+            });
+        });
     }
+
+
+
+    private void LoadGameFromMainMenu()
+    {
+        void startGameScene()
+        {
+            var selectScreenUI = GameUI.instance.LoadSelectScreen();
+            selectScreenUI.OpenScreen((shootType) =>
+            {
+                var gameScreen = GameUI.instance.LoadGameScreen();
+                gameScreen.OpenScreen(() =>
+                {
+                    GameloopManager.instance.SetShootType(shootType);
+                    GameloopManager.instance.StartGameLoop();
+                });
+            });
+        }
+
+        void onClickPlay()
+        {
+            GameManager.instance.SwitchToScene(GameScenes.Game, startGameScene);
+        }
+
+        var mainMenuActions = GameObject.FindObjectOfType<MainMenuScene.MainMenu>().LoadUpScreen(onClickPlay);
+        mainMenuActions.OpenScreen();
+    }
+
+
 
     public void RestartScene()
     {
@@ -43,18 +98,29 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     }
 
 
-    public void SwitchToScene(GameScenes scene)
+    public void SwitchToScene(GameScenes scene, Action cb = null)
     {
-        switch (scene)
+
+        string sceneName = scene switch
         {
-            case GameScenes.MainMenu:
-                SceneManager.LoadScene("MainMenu");
-                break;
-            case GameScenes.Game:
-                SceneManager.LoadScene("MainScene");
-                break;
-            default:
-                break;
+            GameScenes.MainMenu => "MainMenu",
+            GameScenes.Game => "MainScene",
+            _ => ""
+        };
+
+
+        void onSceneLoaded(Scene loadedScene, LoadSceneMode mode)
+        {
+            if (loadedScene.name == sceneName)
+            {
+                cb?.Invoke();
+            }
+
+            SceneManager.sceneLoaded -= onSceneLoaded;
         }
+
+        SceneManager.sceneLoaded += onSceneLoaded;
+
+        SceneManager.LoadScene(sceneName);
     }
 }

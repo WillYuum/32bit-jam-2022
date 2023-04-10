@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,30 +8,43 @@ namespace MainMenuScene
 {
     public class MainMenu : MonoBehaviour
     {
+
+        public struct LoadConfig
+        {
+            public Action OpenScreen;
+        }
+
         [SerializeField] private MainMenuScreens _mainMenuScreens;
 
         [SerializeField] private Button _playButton;
         [SerializeField] private Button _creditsButton;
         [SerializeField] private Button _exitButton;
 
-        private void Awake()
+
+        public LoadConfig LoadUpScreen(Action onClickPlay)
         {
-            _playButton.onClick.AddListener(OnPlayButtonClicked);
-            _creditsButton.onClick.AddListener(OnCreditsButtonClicked);
-            _exitButton.onClick.AddListener(OnExitButtonClicked);
-        }
+            LoadConfig loadConfig = new LoadConfig();
 
-        private void Start()
-        {
-            _mainMenuScreens.ShowScreen(MainMenuScreens.ScreenType.MainScreen);
-        }
+            loadConfig.OpenScreen = () =>
+            {
+                gameObject.SetActive(true);
+
+                _creditsButton.onClick.AddListener(OnCreditsButtonClicked);
+                _exitButton.onClick.AddListener(OnExitButtonClicked);
+
+                _mainMenuScreens.ShowScreen(MainMenuScreens.ScreenType.MainScreen);
+            };
 
 
-        private void OnPlayButtonClicked()
-        {
-            GameManager.instance.SwitchToScene(GameScenes.Game);
-            GameloopManager.instance.Invoke(nameof(GameloopManager.instance.StartGameLoop), 1.0f);
+            _playButton.onClick.AddListener(() =>
+            {
+                _creditsButton.onClick.RemoveListener(OnCreditsButtonClicked);
+                _exitButton.onClick.RemoveListener(OnExitButtonClicked);
 
+                onClickPlay.Invoke();
+            });
+
+            return loadConfig;
         }
 
         private void OnCreditsButtonClicked()
