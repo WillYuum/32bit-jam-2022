@@ -110,8 +110,8 @@ public class TurretActions : MonoBehaviour
 
     public void Move()
     {
-        Vector2 newPos = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
-        _turretActions.UpdatePosition(newPos);
+        Transform turretIndicatorTransform = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
+        _turretActions.UpdateTransformProps(turretIndicatorTransform.position, turretIndicatorTransform.up);
     }
 
     private void UseExplosionAbility()

@@ -1,140 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using PathCreation;
 
 public class TurretPlatfromTracker
 {
-    private Platform _currentPlatform;
+    private PathCreator _pathCreator;
     private Turret _turret;
     private float _moveSpeed = 7.0f;
 
-    private PlatfromTrackData _platfromTrackData;
+    private Transform _turretIndicatorPosition;
 
-    public TurretPlatfromTracker(Turret turret, Platform startingPlatform)
+    private float _distanceTravelled;
+
+
+    public TurretPlatfromTracker(Turret turret)
     {
         _moveSpeed = GameVariables.instance.PlayerSpeed;
 
+        _pathCreator = GameObject.FindObjectOfType<PathCreator>();
+
         _turret = turret;
-        _currentPlatform = startingPlatform;
 
-        _platfromTrackData = new PlatfromTrackData();
-
-        SwitchToPlatform(_currentPlatform);
-        TrackTurretOnPlatform();
+        _turretIndicatorPosition = _turret.transform;
     }
 
 
-
-    public void TrackTurretOnPlatform()
+    public Transform MoveIndicator(RotationDirection direction)
     {
-        Vector2 turretPositionIndicator = _platfromTrackData.TurretIndicatorPosition.localPosition;
-        Vector2 maxLeftPoint = _platfromTrackData.MaxClockwisePoint.localPosition;
-        Vector2 maxRightPoint = _platfromTrackData.MaxAntiClockwisePoint.localPosition;
-
-        turretPositionIndicator.y = maxLeftPoint.y;
-
-        switch (_turret.MoveDirection)
-        {
-            case TurretMoveDirection.ClockWise:
-                if (Mathf.Abs(maxLeftPoint.x - turretPositionIndicator.x) < 0.1f)
-                {
-                    var platform = _currentPlatform.GetConnectingPlatform(RotationDirection.ClockWise);
-                    if (platform != null)
-                    {
-                        SwitchToPlatform(platform);
-                        Transform newMaxRightPoint = platform.GetAntiClockWisePoint();
-                        _platfromTrackData.TurretIndicatorPosition.position = newMaxRightPoint.position;
-                    }
-                }
-                break;
-
-            case TurretMoveDirection.AntiClockWise:
-                if (Mathf.Abs(maxRightPoint.x - turretPositionIndicator.x) < 0.1f)
-                {
-                    var platform = _currentPlatform.GetConnectingPlatform(RotationDirection.AntiClockWise);
-                    if (platform != null)
-                    {
-                        SwitchToPlatform(platform);
-                        Transform newMaxLeftPoint = platform.GetClickWisePoint();
-                        _platfromTrackData.TurretIndicatorPosition.position = newMaxLeftPoint.position;
-
-                    }
-                }
-                break;
-
-            default:
-                break;
-        }
-
-
-    }
-
-    private void SwitchToPlatform(Platform platform)
-    {
-        if (platform == null)
-        {
-            Debug.LogError("Platform is null");
-            return;
-        };
-
-        Debug.Log("SWITCHING TO PLATFORM " + platform.name);
-        _currentPlatform = platform;
-
-
-        Transform maxLeftPoint = platform.GetClickWisePoint();
-        Transform maxRightPoint = platform.GetAntiClockWisePoint();
-        Transform turretIndicatorPosition = platform.TurretIndicatorPosition;
-
-        if (maxLeftPoint == null || maxRightPoint == null || turretIndicatorPosition == null)
-        {
-            Debug.LogError("One of the points is null");
-            Debug.Break();
-            return;
-        }
-
-
-        _platfromTrackData.SetPoints(maxLeftPoint, maxRightPoint, turretIndicatorPosition);
-
-        //Make turrent face the platform
-        platform.KeepTurruetPerpendicularyAligned(_turret.transform);
-    }
-
-    public Vector2 MoveIndicator(RotationDirection direction)
-    {
-        Transform turretIndicatorPosition = _platfromTrackData.TurretIndicatorPosition;
-        Vector2 newPos = turretIndicatorPosition.localPosition;
+        Vector2 newPos = _turretIndicatorPosition.localPosition;
         switch (direction)
         {
             case RotationDirection.ClockWise:
-                newPos.x -= _moveSpeed * Time.deltaTime;
+                _distanceTravelled -= _moveSpeed * Time.deltaTime;
                 break;
             case RotationDirection.AntiClockWise:
-                newPos.x += _moveSpeed * Time.deltaTime;
+                _distanceTravelled += _moveSpeed * Time.deltaTime;
                 break;
         }
 
-        newPos.x = Mathf.Clamp(newPos.x, _platfromTrackData.MaxClockwisePoint.localPosition.x, _platfromTrackData.MaxAntiClockwisePoint.localPosition.x);
-        turretIndicatorPosition.localPosition = newPos;
+        _turretIndicatorPosition.position = _pathCreator.path.GetPointAtDistance(_distanceTravelled);
+        _turretIndicatorPosition.up = _pathCreator.path.GetNormalAtDistance(_distanceTravelled);
 
-        return turretIndicatorPosition.position;
-    }
-}
-
-public class PlatfromTrackData
-{
-    public Transform MaxClockwisePoint { get; private set; }
-    public Transform MaxAntiClockwisePoint { get; private set; }
-    public Transform TurretIndicatorPosition { get; private set; }
-
-
-    public void SetPoints(Transform maxLeftPoint, Transform maxRightPoint, Transform turretIndicatorPosition)
-    {
-        if (turretIndicatorPosition == null)
-        {
-            Debug.LogError("TurretIndicatorPosition is null");
-        }
-        MaxClockwisePoint = maxLeftPoint;
-        MaxAntiClockwisePoint = maxRightPoint;
-        TurretIndicatorPosition = turretIndicatorPosition;
+        return _turretIndicatorPosition;
     }
 }

@@ -22,9 +22,11 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
 
 
 
-    public void UpdatePosition(Vector2 position)
+    public void UpdateTransformProps(Vector2 position, Vector3 normal)
     {
         transform.position = position;
+        // rotation.y = 0;
+        transform.up = normal;
     }
 
 
@@ -121,7 +123,7 @@ public interface ITurretActions
 {
     void PlayAnim();
     void SetTurretMoveDirection(TurretMoveDirection direction);
-    void UpdatePosition(Vector2 position);
+    void UpdateTransformProps(Vector2 position, Vector3 normal);
     void shoot();
 
 }

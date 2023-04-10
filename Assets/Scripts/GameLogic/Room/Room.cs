@@ -4,48 +4,16 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-    [SerializeField] public Transform CameraPoint;
-    [SerializeField] private Transform _platformHolder;
-    private Platform[] _platforms;
-
-
-    public void UpdatePlatformNeighbors()
-    {
-        if (_platforms == null)
-        {
-            GetAllPlatforms();
-        }
-
-
-        foreach (var platform in _platforms)
-        {
-            platform.ConnectToNeighborPlatforms();
-        }
-    }
-
-    public Platform GetFirstPlaform()
-    {
-        if (_platforms == null)
-        {
-            GetAllPlatforms();
-        }
-
-        return _platforms[0];
-    }
-
-    private void GetAllPlatforms()
-    {
-        _platforms = _platformHolder.GetComponentsInChildren<Platform>();
-    }
+    [SerializeField] private Transform[] _roomBounds;
 
 
     public Vector3 GetRandomSpawnPositionWithinRoomRange(float rangeScale = 1.0f)
     {
         List<Vector3> polygonRoom = new List<Vector3>();
 
-        foreach (var platform in _platforms)
+        foreach (var bound in _roomBounds)
         {
-            polygonRoom.Add(platform.transform.position);
+            polygonRoom.Add(bound.position);
         }
 
         return GeneratePointInsidePolygon(polygonRoom, rangeScale);

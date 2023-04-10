@@ -64,8 +64,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         if (GameloopManager.instance.LoopIsActive == false) return;
 
-        TurretPlatfromTracker.TrackTurretOnPlatform();
-
 
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.P))
@@ -123,10 +121,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         // CurrentRoom = GameObject.Find("Room_1").GetComponent<Room>();
         CurrentRoom = GameObject.FindObjectOfType<Room>();
-        CurrentRoom.UpdatePlatformNeighbors();
 
         Turret turret = FindObjectOfType<Turret>();
-        TurretPlatfromTracker = new TurretPlatfromTracker(turret, CurrentRoom.GetFirstPlaform());
+        TurretPlatfromTracker = new TurretPlatfromTracker(turret);
 
         // Vector3 newCameraPos = _currentRoom.CameraPoint.position;
         // newCameraPos.z = Camera.main.transform.position.z;
