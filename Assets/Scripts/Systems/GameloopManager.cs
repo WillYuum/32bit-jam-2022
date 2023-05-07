@@ -23,7 +23,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action<float> OnMomentumChange;
 
 
-    private int _currentShootLevel = 0;
 
     public TypeOfShots SelectedShootType { get; private set; }
 
@@ -35,8 +34,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public int FishHP { get { return _fishHitPoints.CurrenthitPoint; } }
 
     public int CollectedHightScore { get; private set; }
-
     public bool LoopIsActive { get; private set; }
+
+
+    public KillMomentum KillMomentunTracker { get; private set; }
+    public ShootBehavior CurrentShootBehavior { get; private set; }
 
     private void Awake()
     {
@@ -80,28 +82,30 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         if (Input.GetKeyDown(KeyCode.M))
         {
-            CurrentShootBehavior.Upgrade();
+            KillMomentunTracker.IncreaseMomentum();
+            DetermineShootLevel();
         }
 
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            CurrentShootBehavior.Downgrade();
-        }
+        // if (Input.GetKeyDown(KeyCode.N))
+        // {
+        //     CurrentShootBehavior.Downgrade();
+        // }
 
 
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            CurrentShootBehavior.Upgrade();
-        }
+        // if (Input.GetKeyDown(KeyCode.Alpha0))
+        // {
+        //     CurrentShootBehavior.Upgrade();
+        // }
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            CurrentShootBehavior.Downgrade();
-        }
+        // if (Input.GetKeyDown(KeyCode.Alpha1))
+        // {
+        //     CurrentShootBehavior.Downgrade();
+        // }
 #endif
     }
 
 
+    //This is very bad, need to remove it
     public void SetShootType(TypeOfShots shootType)
     {
         SelectShootType(shootType);
@@ -131,11 +135,12 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         // SelectShootType(TypeOfShots.PeaShots);
 
-        float maxMomentumValue = 5;
-        float increaseRatio = maxMomentumValue * 0.15f;
-        float decreaseRatio = maxMomentumValue * 0.1f;
+        float increaseRatio = 0.08f;
+        float decreaseRatio = 0.02f;
 
-        KillMomentunTracker = new KillMomentum(maxMomentumValue, increaseRatio, decreaseRatio);
+        KillMomentunTracker = new KillMomentum(increaseRatio, decreaseRatio);
+
+        CurrentShootBehavior.SetLevel(1);
 
 
 
@@ -232,29 +237,48 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     private void DetermineShootLevel()
     {
+
         int currentShootLevel = CurrentShootBehavior.CurrentLevel;
         float momentumRatio = KillMomentunTracker.GetMomentumRatio();
-        int levelToUse = GameVariables.instance.TurretPeaShotUnlockData.GetLevelRelativeToMomentum(momentumRatio);
 
+        int levelToUse = 0;
+
+        switch (SelectedShootType)
+        {
+            case TypeOfShots.PeaShots:
+                if (momentumRatio < 0.5f)
+                {
+                    levelToUse = 1;
+                }
+                else if (momentumRatio >= 0.75f && momentumRatio < 0.9f)
+                {
+                    levelToUse = 2;
+                }
+                else
+                {
+                    levelToUse = 3;
+                }
+                break;
+
+            case TypeOfShots.Laser:
+                if (momentumRatio < 0.5f)
+                {
+                    levelToUse = 1;
+                }
+                else
+                {
+                    levelToUse = 2;
+                }
+                break;
+        }
 
         bool sameLevel = currentShootLevel == levelToUse;
         if (sameLevel) return;
 
-
-        bool shouldUpgrade = currentShootLevel < levelToUse;
-        if (shouldUpgrade)
-        {
-            CurrentShootBehavior.Upgrade();
-        }
-        else
-        {
-            CurrentShootBehavior.Downgrade();
-        }
+        CurrentShootBehavior.SetLevel(levelToUse);
     }
 
-    public KillMomentum KillMomentunTracker { get; private set; }
 
-    public ShootBehavior CurrentShootBehavior { get; private set; }
     private void SelectShootType(TypeOfShots typeOfShots)
     {
         Turret turret = FindObjectOfType<Turret>();
@@ -351,7 +375,6 @@ public class InvisiblityWindowTracker
         IsInvisiblityWindowActive = false;
     }
 
-
     public void TakeHit()
     {
         IsInvisiblityWindowActive = true;
@@ -361,31 +384,33 @@ public class InvisiblityWindowTracker
 
 public class KillMomentum
 {
-    private float _maxMomentumValue;
+    private float _maxMomentum;
     public float CurrentMomentumValue { get; private set; }
-    private float _increaseRatio;
-    private float _decreaseRatio;
-    public KillMomentum(float maxMomentumValue, float increaseRatio, float decreaseRatio)
+    private float _increaseValue;
+    private float _decreaseValue;
+    public KillMomentum(float increaseValRatio, float decreaseValRatio)
     {
-        _maxMomentumValue = maxMomentumValue;
+        _maxMomentum = 1.0f;
+
+        _increaseValue = increaseValRatio;
+        _decreaseValue = decreaseValRatio;
+
         CurrentMomentumValue = 0;
-        _increaseRatio = increaseRatio;
-        _decreaseRatio = decreaseRatio;
     }
 
 
     public void IncreaseMomentum()
     {
-        CurrentMomentumValue += _increaseRatio;
-        if (CurrentMomentumValue > _maxMomentumValue)
+        CurrentMomentumValue += _increaseValue;
+        if (CurrentMomentumValue > _maxMomentum)
         {
-            CurrentMomentumValue = _maxMomentumValue;
+            CurrentMomentumValue = _maxMomentum;
         }
     }
 
     public void DecreaseMomentum()
     {
-        CurrentMomentumValue -= _decreaseRatio;
+        CurrentMomentumValue -= _decreaseValue;
         if (CurrentMomentumValue < 0)
         {
             CurrentMomentumValue = 0;
@@ -394,7 +419,7 @@ public class KillMomentum
 
     public float GetMomentumRatio()
     {
-        return CurrentMomentumValue / _maxMomentumValue;
+        return CurrentMomentumValue / _maxMomentum;
     }
 
     public void ResetMomentum()

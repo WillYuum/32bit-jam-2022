@@ -51,54 +51,18 @@ public class GameVariables : MonoBehaviourSingleton<GameVariables>
     }
 
     [System.Serializable]
-    public class TurretPeaShotMomentunUnlock : IShotUnlockData
+    public class TurretPeaShotMomentunUnlock
     {
         [field: SerializeField, Range(0.0f, 1.0f)] public float SinglePeaShot { get; private set; }
         [field: SerializeField, Range(0.0f, 1.0f)] public float DoublePeaShot { get; private set; }
         [field: SerializeField, Range(0.0f, 1.0f)] public float TriplePeaShot { get; private set; }
-
-        public int GetLevelRelativeToMomentum(float momentumRatio)
-        {
-            if (momentumRatio < SinglePeaShot)
-            {
-                return 0;
-            }
-            else if (momentumRatio < DoublePeaShot)
-            {
-                return 1;
-            }
-            else if (momentumRatio < TriplePeaShot)
-            {
-                return 2;
-            }
-            else
-            {
-                return 3;
-            }
-        }
     }
 
     [System.Serializable]
-    public class TurretLaserShotMomentunUnlock : IShotUnlockData
+    public class TurretLaserShotMomentunUnlock
     {
         [field: SerializeField, Range(0.0f, 1.0f)] public float thinLaserShot { get; private set; }
         [field: SerializeField, Range(0.0f, 1.0f)] public float thickLaserShot { get; private set; }
-
-        public int GetLevelRelativeToMomentum(float momentumRatio)
-        {
-            if (momentumRatio < thinLaserShot)
-            {
-                return 0;
-            }
-            else if (momentumRatio < thickLaserShot)
-            {
-                return 1;
-            }
-            else
-            {
-                return 2;
-            }
-        }
     }
 
 }
