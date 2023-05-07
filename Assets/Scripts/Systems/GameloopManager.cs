@@ -79,28 +79,16 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
 
 
-
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.U))
         {
             KillMomentunTracker.IncreaseMomentum();
             DetermineShootLevel();
         }
-
-        // if (Input.GetKeyDown(KeyCode.N))
-        // {
-        //     CurrentShootBehavior.Downgrade();
-        // }
-
-
-        // if (Input.GetKeyDown(KeyCode.Alpha0))
-        // {
-        //     CurrentShootBehavior.Upgrade();
-        // }
-
-        // if (Input.GetKeyDown(KeyCode.Alpha1))
-        // {
-        //     CurrentShootBehavior.Downgrade();
-        // }
+        else if (Input.GetKeyDown(KeyCode.I))
+        {
+            KillMomentunTracker.DecreaseMomentum();
+            DetermineShootLevel();
+        }
 #endif
     }
 
