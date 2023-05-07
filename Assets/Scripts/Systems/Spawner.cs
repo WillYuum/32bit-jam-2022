@@ -141,9 +141,10 @@ public class SimpleEliteSpawn : AttackWave
                     timer = delayToShoot;
 
                     int amountToSpawn = 6;
-                    Vector2[] positions = SpawnerUtils.GetPositionsAroundObject(spawnedElite.transform.position, 0.75f, amountToSpawn, angles.PickNext());
+                    float radius = 0.75f;
+                    Vector2[] positions = SpawnerUtils.GetPositionsAroundObject(spawnedElite.transform.position, radius, amountToSpawn, angles.PickNext());
 
-                    for (int i = 0; i < 6; i++)
+                    for (int i = 0; i < amountToSpawn; i++)
                     {
                         var proj = enemyProjectile.CreateGameObject(positions[i], Quaternion.identity).transform;
                         proj.GetComponent<Projectile>().SetShootDirection((positions[i] - (Vector2)spawnedElite.transform.position).normalized);
