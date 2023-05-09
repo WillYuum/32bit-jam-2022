@@ -41,13 +41,13 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         var selectScreenUI = GameUI.instance.LoadSelectScreen();
         selectScreenUI.OpenScreen((shootType) =>
         {
-            GameloopManager.instance.SetShootType(shootType);
-            GameloopManager.instance.StartGameLoop();
             var gameScreen = GameUI.instance.LoadGameScreen();
             gameScreen.OpenScreen(() =>
             {
-                GameloopManager.instance.SetShootType(shootType);
-                GameloopManager.instance.StartGameLoop();
+                GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
+                {
+                    SelectTypeShot = shootType
+                });
             });
         });
     }
@@ -64,8 +64,10 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
                 var gameScreen = GameUI.instance.LoadGameScreen();
                 gameScreen.OpenScreen(() =>
                 {
-                    GameloopManager.instance.SetShootType(shootType);
-                    GameloopManager.instance.StartGameLoop();
+                    GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
+                    {
+                        SelectTypeShot = shootType
+                    });
                 });
             });
         }

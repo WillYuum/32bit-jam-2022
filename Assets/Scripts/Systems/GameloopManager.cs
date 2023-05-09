@@ -10,11 +10,16 @@ public enum TypeOfShots
     Laser,
 }
 
+public struct StartGameLoopStruct
+{
+    public TypeOfShots SelectTypeShot;
+}
+
 
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
     public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
-    public Room CurrentRoom;
+    // public Room CurrentRoom;
 
     public event Action OnGameLoopStart;
     public event Action<int> OnFishTakeHit;
@@ -92,14 +97,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 #endif
     }
 
+    public void StartGameLoop(StartGameLoopStruct startGameLoopStruct)
 
-    //This is very bad, need to remove it
-    public void SetShootType(TypeOfShots shootType)
-    {
-        SelectShootType(shootType);
-    }
-
-    public void StartGameLoop()
     {
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
         TurretInvisiblityWindowTracker = new InvisiblityWindowTracker();
@@ -111,30 +110,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
 
-        // CurrentRoom = GameObject.Find("Room_1").GetComponent<Room>();
-        CurrentRoom = GameObject.FindObjectOfType<Room>();
-
         Turret turret = FindObjectOfType<Turret>();
         TurretPlatfromTracker = new TurretPlatfromTracker(turret);
 
-        // Vector3 newCameraPos = _currentRoom.CameraPoint.position;
-        // newCameraPos.z = Camera.main.transform.position.z;
-        // Camera.main.transform.position = newCameraPos;
-
-        // SelectShootType(TypeOfShots.PeaShots);
+        SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 
         float increaseRatio = 0.08f;
         float decreaseRatio = 0.02f;
-
         KillMomentunTracker = new KillMomentum(increaseRatio, decreaseRatio);
-
-        CurrentShootBehavior.SetLevel(1);
-
-
 
         enabled = true;
         LoopIsActive = true;
-        Spawner.instance.StartSpawner();
+        Spawner.instance.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)
         {
@@ -267,7 +254,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
-    private void SelectShootType(TypeOfShots typeOfShots)
+    private void SetShootTypeOnTurret(TypeOfShots typeOfShots)
     {
         Turret turret = FindObjectOfType<Turret>();
 
@@ -288,6 +275,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         CurrentShootBehavior.SetTurretTransform(turret.GetShootPoint());
         SelectedShootType = typeOfShots;
+
+        CurrentShootBehavior.SetLevel(1);
     }
 
 }
