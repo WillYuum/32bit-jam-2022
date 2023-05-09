@@ -291,9 +291,9 @@ public abstract class ShootBehavior
 
     protected void InitActions(Action[] shootActionsPerLevel)
     {
-        _maxLevel = shootActionsPerLevel.Length - 1;
+        _maxLevel = shootActionsPerLevel.Length;
         this.shootActionsPerLevel = shootActionsPerLevel;
-        CurrentLevel = 0;
+        CurrentLevel = 1;
         OnLevelChange();
     }
 
@@ -304,7 +304,8 @@ public abstract class ShootBehavior
 
     public void Shoot()
     {
-        shootActionsPerLevel[CurrentLevel].Invoke();
+        int levelIndex = CurrentLevel - 1;
+        shootActionsPerLevel[levelIndex].Invoke();
     }
 
     public virtual void OnLevelChange()
@@ -312,23 +313,13 @@ public abstract class ShootBehavior
 
     }
 
-    public void Upgrade()
+    public void SetLevel(int level)
     {
-        if (CurrentLevel >= _maxLevel) return;
+        if (level < 0 || level > _maxLevel) return;
 
+        Debug.Log("Setting shoot level to " + level);
 
-        CurrentLevel++;
-        OnLevelChange();
-
-        Debug.Log("Upgrade " + CurrentLevel + " to " + (CurrentLevel));
-
-    }
-
-    public void Downgrade()
-    {
-        if (CurrentLevel <= 0) return;
-
-        CurrentLevel--;
+        CurrentLevel = level;
         OnLevelChange();
     }
 }

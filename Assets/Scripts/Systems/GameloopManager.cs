@@ -10,11 +10,16 @@ public enum TypeOfShots
     Laser,
 }
 
+public struct StartGameLoopStruct
+{
+    public TypeOfShots SelectTypeShot;
+}
+
 
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
     public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
-    public Room CurrentRoom;
+    // public Room CurrentRoom;
 
     public event Action OnGameLoopStart;
     public event Action<int> OnFishTakeHit;
@@ -23,7 +28,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public event Action<float> OnMomentumChange;
 
 
-    private int _currentShootLevel = 0;
 
     public TypeOfShots SelectedShootType { get; private set; }
 
@@ -35,8 +39,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public int FishHP { get { return _fishHitPoints.CurrenthitPoint; } }
 
     public int CollectedHightScore { get; private set; }
-
     public bool LoopIsActive { get; private set; }
+
+
+    public KillMomentum KillMomentunTracker { get; private set; }
+    public ShootBehavior CurrentShootBehavior { get; private set; }
 
     private void Awake()
     {
@@ -77,37 +84,21 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
 
 
-
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.U))
         {
-            CurrentShootBehavior.Upgrade();
+            KillMomentunTracker.IncreaseMomentum();
+            DetermineShootLevel();
         }
-
-        if (Input.GetKeyDown(KeyCode.N))
+        else if (Input.GetKeyDown(KeyCode.I))
         {
-            CurrentShootBehavior.Downgrade();
-        }
-
-
-        if (Input.GetKeyDown(KeyCode.Alpha0))
-        {
-            CurrentShootBehavior.Upgrade();
-        }
-
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            CurrentShootBehavior.Downgrade();
+            KillMomentunTracker.DecreaseMomentum();
+            DetermineShootLevel();
         }
 #endif
     }
 
+    public void StartGameLoop(StartGameLoopStruct startGameLoopStruct)
 
-    public void SetShootType(TypeOfShots shootType)
-    {
-        SelectShootType(shootType);
-    }
-
-    public void StartGameLoop()
     {
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
         TurretInvisiblityWindowTracker = new InvisiblityWindowTracker();
@@ -119,29 +110,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
 
-        // CurrentRoom = GameObject.Find("Room_1").GetComponent<Room>();
-        CurrentRoom = GameObject.FindObjectOfType<Room>();
-
         Turret turret = FindObjectOfType<Turret>();
         TurretPlatfromTracker = new TurretPlatfromTracker(turret);
 
-        // Vector3 newCameraPos = _currentRoom.CameraPoint.position;
-        // newCameraPos.z = Camera.main.transform.position.z;
-        // Camera.main.transform.position = newCameraPos;
+        SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 
-        // SelectShootType(TypeOfShots.PeaShots);
-
-        float maxMomentumValue = 5;
-        float increaseRatio = maxMomentumValue * 0.15f;
-        float decreaseRatio = maxMomentumValue * 0.1f;
-
-        KillMomentunTracker = new KillMomentum(maxMomentumValue, increaseRatio, decreaseRatio);
-
-
+        float increaseRatio = 0.08f;
+        float decreaseRatio = 0.02f;
+        KillMomentunTracker = new KillMomentum(increaseRatio, decreaseRatio);
 
         enabled = true;
         LoopIsActive = true;
-        Spawner.instance.StartSpawner();
+        Spawner.instance.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)
         {
@@ -232,30 +212,53 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     private void DetermineShootLevel()
     {
+
         int currentShootLevel = CurrentShootBehavior.CurrentLevel;
         float momentumRatio = KillMomentunTracker.GetMomentumRatio();
-        int levelToUse = GameVariables.instance.TurretPeaShotUnlockData.GetLevelRelativeToMomentum(momentumRatio);
 
+        int levelToUse = 0;
+
+        switch (SelectedShootType)
+        {
+            case TypeOfShots.PeaShots:
+                if (momentumRatio < 0.5f)
+                {
+                    levelToUse = 1;
+                }
+                else if (momentumRatio >= 0.75f && momentumRatio < 0.9f)
+                {
+                    levelToUse = 2;
+                }
+                else
+                {
+                    levelToUse = 3;
+                }
+                break;
+
+            case TypeOfShots.Laser:
+                if (momentumRatio < 0.5f)
+                {
+                    levelToUse = 1;
+                }
+                else if (momentumRatio >= 0.7f && momentumRatio < 0.9f)
+                {
+                    levelToUse = 2;
+                }
+                else
+                {
+                    levelToUse = 3;
+                }
+                break;
+        }
 
         bool sameLevel = currentShootLevel == levelToUse;
         if (sameLevel) return;
 
-
-        bool shouldUpgrade = currentShootLevel < levelToUse;
-        if (shouldUpgrade)
-        {
-            CurrentShootBehavior.Upgrade();
-        }
-        else
-        {
-            CurrentShootBehavior.Downgrade();
-        }
+        CurrentShootBehavior.SetLevel(levelToUse);
     }
 
-    public KillMomentum KillMomentunTracker { get; private set; }
 
-    public ShootBehavior CurrentShootBehavior { get; private set; }
-    private void SelectShootType(TypeOfShots typeOfShots)
+    private void SetShootTypeOnTurret(TypeOfShots typeOfShots)
     {
         Turret turret = FindObjectOfType<Turret>();
 
@@ -276,6 +279,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         CurrentShootBehavior.SetTurretTransform(turret.GetShootPoint());
         SelectedShootType = typeOfShots;
+
+        CurrentShootBehavior.SetLevel(1);
     }
 
 }
@@ -351,7 +356,6 @@ public class InvisiblityWindowTracker
         IsInvisiblityWindowActive = false;
     }
 
-
     public void TakeHit()
     {
         IsInvisiblityWindowActive = true;
@@ -361,31 +365,33 @@ public class InvisiblityWindowTracker
 
 public class KillMomentum
 {
-    private float _maxMomentumValue;
+    private float _maxMomentum;
     public float CurrentMomentumValue { get; private set; }
-    private float _increaseRatio;
-    private float _decreaseRatio;
-    public KillMomentum(float maxMomentumValue, float increaseRatio, float decreaseRatio)
+    private float _increaseValue;
+    private float _decreaseValue;
+    public KillMomentum(float increaseValRatio, float decreaseValRatio)
     {
-        _maxMomentumValue = maxMomentumValue;
+        _maxMomentum = 1.0f;
+
+        _increaseValue = increaseValRatio;
+        _decreaseValue = decreaseValRatio;
+
         CurrentMomentumValue = 0;
-        _increaseRatio = increaseRatio;
-        _decreaseRatio = decreaseRatio;
     }
 
 
     public void IncreaseMomentum()
     {
-        CurrentMomentumValue += _increaseRatio;
-        if (CurrentMomentumValue > _maxMomentumValue)
+        CurrentMomentumValue += _increaseValue;
+        if (CurrentMomentumValue > _maxMomentum)
         {
-            CurrentMomentumValue = _maxMomentumValue;
+            CurrentMomentumValue = _maxMomentum;
         }
     }
 
     public void DecreaseMomentum()
     {
-        CurrentMomentumValue -= _decreaseRatio;
+        CurrentMomentumValue -= _decreaseValue;
         if (CurrentMomentumValue < 0)
         {
             CurrentMomentumValue = 0;
@@ -394,7 +400,7 @@ public class KillMomentum
 
     public float GetMomentumRatio()
     {
-        return CurrentMomentumValue / _maxMomentumValue;
+        return CurrentMomentumValue / _maxMomentum;
     }
 
     public void ResetMomentum()

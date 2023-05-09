@@ -1817,6 +1817,14 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 375541666, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 375541666, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 513005532, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
       propertyPath: m_SizeDelta.x
       value: 36.776
@@ -1846,6 +1854,30 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 21300000, guid: 39f4cbe5a13db05459bb3bf6fed34789,
         type: 3}
+    - target: {fileID: 809064111, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 230.9167
+      objectReference: {fileID: 0}
+    - target: {fileID: 809064111, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 55.8812
+      objectReference: {fileID: 0}
+    - target: {fileID: 809064111, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 2.1291
+      objectReference: {fileID: 0}
+    - target: {fileID: 809064111, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -0.5577011
+      objectReference: {fileID: 0}
+    - target: {fileID: 809064112, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_Value
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1298525934, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -5
+      objectReference: {fileID: 0}
     - target: {fileID: 795391346528548936, guid: 7c7776b197c40394a848e83e31eba36b,
         type: 3}
       propertyPath: _boomImage
@@ -1856,6 +1888,11 @@ PrefabInstance:
       propertyPath: _explosionSlider
       value: 
       objectReference: {fileID: 1257831938}
+    - target: {fileID: 795391346528548942, guid: 7c7776b197c40394a848e83e31eba36b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 795391347453442270, guid: 7c7776b197c40394a848e83e31eba36b,
         type: 3}
       propertyPath: m_Pivot.x

@@ -70,7 +70,7 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
         }
     }
 
-    public void StartSpawner()
+    public void StartSpawner(Room roomToSpawn)
     {
         AttackWave[] waves = new AttackWave[]{
             new SimpleSwarmSpawn(),
@@ -95,6 +95,12 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
     };
 
 
+        foreach (AttackWave item in waves)
+        {
+            item.SetRoomToSpawn(roomToSpawn);
+        }
+
+
         _waves = new ArrayTools.PseudoRandArray<AttackWave>(waves);
 
         _waves.PickNext().InvokNextSpawnAction();
@@ -113,7 +119,7 @@ public class SimpleEliteSpawn : AttackWave
     private void SpawnElite()
     {
         var elite = SpawnManager.instance.ElitePrefab;
-        Vector3 spawnPoint = GameloopManager.instance.CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.65f);
+        Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.65f);
         GameObject spawnedElite = elite.CreateGameObject(spawnPoint, Quaternion.identity);
 
         void StartEliteAttack()
@@ -141,9 +147,10 @@ public class SimpleEliteSpawn : AttackWave
                     timer = delayToShoot;
 
                     int amountToSpawn = 6;
-                    Vector2[] positions = SpawnerUtils.GetPositionsAroundObject(spawnedElite.transform.position, 0.75f, amountToSpawn, angles.PickNext());
+                    float radius = 0.75f;
+                    Vector2[] positions = SpawnerUtils.GetPositionsAroundObject(spawnedElite.transform.position, radius, amountToSpawn, angles.PickNext());
 
-                    for (int i = 0; i < 6; i++)
+                    for (int i = 0; i < amountToSpawn; i++)
                     {
                         var proj = enemyProjectile.CreateGameObject(positions[i], Quaternion.identity).transform;
                         proj.GetComponent<Projectile>().SetShootDirection((positions[i] - (Vector2)spawnedElite.transform.position).normalized);
@@ -178,7 +185,7 @@ public class SimpleBombersAttack : AttackWave
 
         for (int i = 0; i < 4; i++)
         {
-            Vector3 spawnPoint = GameloopManager.instance.CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.7f);
+            Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.7f);
             var bomber = bomberPrefab.CreateGameObject(new Vector3(0, 0, 0), Quaternion.identity);
             bomber.GetComponent<Bomber>().SpawnEnemy().OnComplete(() =>
             {
@@ -206,7 +213,7 @@ public class SimpleSwarmSpawn : AttackWave
 
         PseudoRandArray<float> attackDelaysArray = new PseudoRandArray<float>(new float[] { 1.0f, 0.5f, 0.85f });
 
-        Vector3 spawnPoint = GameloopManager.instance.CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.5f);
+        Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.5f);
 
 
         void StartSwarmAttack()
@@ -266,6 +273,7 @@ public abstract class AttackWave
 {
     private List<Action> _spawnActions = new List<Action>();
     private int _currentActionIndex = 0;
+    protected Room CurrentRoom;
 
     public void AddSpawnAction(Action spawnAction)
     {
@@ -278,6 +286,15 @@ public abstract class AttackWave
         {
             _currentActionIndex = 0;
         }
+
+#if UNITY_EDITOR
+        if (CurrentRoom == null)
+        {
+            Debug.LogError("Current room was not set for the attack wave");
+        }
+#endif
+
+
         _spawnActions[_currentActionIndex].Invoke();
         _currentActionIndex++;
     }
@@ -285,5 +302,11 @@ public abstract class AttackWave
     public bool IsFinished()
     {
         return _currentActionIndex >= _spawnActions.Count;
+    }
+
+
+    public void SetRoomToSpawn(Room room)
+    {
+        CurrentRoom = room;
     }
 }
