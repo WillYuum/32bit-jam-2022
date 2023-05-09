@@ -240,9 +240,13 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
                 {
                     levelToUse = 1;
                 }
-                else
+                else if (momentumRatio >= 0.7f && momentumRatio < 0.9f)
                 {
                     levelToUse = 2;
+                }
+                else
+                {
+                    levelToUse = 3;
                 }
                 break;
         }
