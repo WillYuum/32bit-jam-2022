@@ -19,6 +19,27 @@ public class Room : MonoBehaviour
         return GeneratePointInsidePolygon(polygonRoom, rangeScale);
     }
 
+    public Vector3 GetRandomPositionInTopsideOfOctagon(float rangeScale = 1.0f)
+    {
+        Vector2[][] triangles = SubdivideOctagon();
+
+        List<Vector3> polygonOctagon = new List<Vector3>();
+
+        Vector2[] topSide = triangles[0];
+
+        polygonOctagon.Add(topSide[0]);
+        polygonOctagon.Add(topSide[1]);
+        polygonOctagon.Add(topSide[2]);
+
+#if UNITY_EDITOR
+        Debug.DrawLine(topSide[0], topSide[1], Color.red, 2f);
+        Debug.DrawLine(topSide[1], topSide[2], Color.red, 2f);
+        Debug.DrawLine(topSide[2], topSide[0], Color.red, 2f);
+#endif
+
+        return GeneratePointInsidePolygon(polygonOctagon, rangeScale);
+    }
+
 
     private Vector2[][] SubdivideOctagon()
     {
@@ -58,6 +79,7 @@ public class Room : MonoBehaviour
 
         return triangles;
     }
+
     private Vector3 GeneratePointInsidePolygon(List<Vector3> polygon, float rangeScale)
     {
         Vector3 MinVec = MinPointOnThePolygon(polygon);
