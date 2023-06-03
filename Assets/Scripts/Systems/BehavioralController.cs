@@ -9,6 +9,9 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
     private List<BehavioralData> _behaviorals = new List<BehavioralData>();
 
 
+    public static Action NULL_BEHAVIOR = () => { };
+
+
     void Update()
     {
         for (int i = 0; i < _behavioralsWithTimers.Count; i++)
