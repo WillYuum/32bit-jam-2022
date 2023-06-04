@@ -1,73 +1,115 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using UnityEngine;
 
-public class Sequencer
+public class Sequencer : MonoBehaviour
 {
-    private List<Func<Task>> sequenceActions = new List<Func<Task>>();
-    private int currentIndex = 0;
-    private bool isRunning = false;
-    private TaskCompletionSource<bool> sequenceCompletionSource;
-
-    public void AddSequence(Func<Task> action)
+    class SequenceAction
     {
-        sequenceActions.Add(action);
+        public SequenceAction(Func<SequenceState> action)
+        {
+            _action = action;
+        }
+
+        private Func<SequenceState> _action;
+        private SequenceState _sequenceState;
+
+        public bool IsDone
+        {
+            get
+            {
+                return _sequenceState.IsDone;
+            }
+        }
+        public void InvokeSequenceAction()
+        {
+            _sequenceState = _action.Invoke();
+        }
+
     }
 
-    public async Task StartSequence()
+    public class SequenceState
+    {
+        public bool IsDone { get; private set; }
+
+        public void FinishSequence()
+        {
+            IsDone = true;
+        }
+
+        public static SequenceState Finish()
+        {
+            return new SequenceState()
+            {
+                IsDone = true
+            };
+        }
+    }
+
+
+    public static Sequencer CreateSequencer(string name = "Sequencer")
+    {
+        return new GameObject(name).AddComponent<Sequencer>();
+    }
+
+    List<SequenceAction> _allSequences = new List<SequenceAction>();
+    private bool _isRunning = false;
+
+    private int _currentActionIndex = 0;
+
+
+    private void Update()
+    {
+        if (_isRunning == false) return;
+
+
+        if (_allSequences[_currentActionIndex].IsDone)
+        {
+            InvokeNext();
+        }
+    }
+
+    public void StartSequencer()
     {
 #if UNITY_EDITOR
-        if (isRunning)
+        if (_allSequences.Count == 0)
         {
-            Debug.LogError("Sequence is already running");
+            Debug.LogError("No actions to run");
+            return;
         }
 
-        if (sequenceActions.Count == 0)
+        if (_isRunning)
         {
-            Debug.LogError("Sequence is empty");
+            Debug.LogError("Sequencer is already running");
+            return;
         }
-
 #endif
 
-
-        if (!isRunning && sequenceActions.Count > 0)
-        {
-            currentIndex = 0;
-            isRunning = true;
-            sequenceCompletionSource = new TaskCompletionSource<bool>();
-            await InvokeNext();
-            await sequenceCompletionSource.Task;
-        }
+        _isRunning = true;
+        _currentActionIndex = 0;
+        _allSequences[_currentActionIndex].InvokeSequenceAction();
     }
 
-    public void StopSequence()
+    public void AddSequence(Func<SequenceState> action)
     {
-        currentIndex = 0;
-        isRunning = false;
-        if (sequenceCompletionSource != null)
-        {
-            sequenceCompletionSource.TrySetCanceled();
-        }
+        _allSequences.Add(new SequenceAction(action));
     }
 
-    public async Task InvokeNext()
-    {
-        if (currentIndex < sequenceActions.Count)
-        {
-            Func<Task> nextAction = sequenceActions[currentIndex];
-            await nextAction.Invoke();
-            currentIndex++;
-            await InvokeNext();
-        }
-        else
-        {
-            sequenceCompletionSource.TrySetResult(true);
-        }
-    }
 
-    public Task GetCurrentRunningTask()
+    private void InvokeNext()
     {
-        return sequenceActions[currentIndex].Target as Task;
+        _currentActionIndex++;
+
+        print("Current index: " + _currentActionIndex + " All sequences count: " + _allSequences.Count + " Is running: " + _isRunning);
+        if (_currentActionIndex >= _allSequences.Count)
+        {
+            _isRunning = false;
+            _currentActionIndex = 0;
+            Destroy(gameObject);
+            return;
+        }
+
+        _allSequences[_currentActionIndex].InvokeSequenceAction();
     }
 }
