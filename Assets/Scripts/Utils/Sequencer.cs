@@ -53,6 +53,11 @@ public class Sequencer : MonoBehaviour
         return new GameObject(name).AddComponent<Sequencer>();
     }
 
+    public static SequenceState CreateSequenceState()
+    {
+        return new SequenceState();
+    }
+
     List<SequenceAction> _allSequences = new List<SequenceAction>();
     private bool _isRunning = false;
 
