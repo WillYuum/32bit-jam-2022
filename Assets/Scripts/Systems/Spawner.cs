@@ -5,10 +5,11 @@ using Utils.GenericSingletons;
 using Utils.ArrayUtils;
 using SpawnManagerMod;
 using DG.Tweening;
+using System.Threading.Tasks;
 
 public class Spawner : MonoBehaviourSingleton<Spawner>
 {
-    private ArrayTools.PseudoRandArray<AttackWave> _waves;
+    private ArrayTools.PseudoRandArray<SpawnAction> _waves;
 
     private float _delayToNextSpawn = 5.0f;
 
@@ -20,7 +21,7 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
         {
             _currentTimer = _delayToNextSpawn;
 
-            AttackWave[] waves = new AttackWave[]{
+            SpawnAction[] waves = new SpawnAction[]{
             new SimpleSwarmSpawn(),
             new SimpleBombersAttack(),
             new SimpleSwarmSpawn(),
@@ -41,7 +42,15 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
     };
 
 
-            _waves = new ArrayTools.PseudoRandArray<AttackWave>(waves);
+            //NOTE FOR FUTURE LOGIC:
+            //I want to instead of create an array of attack waves, it should create automatically
+            //base on the variable(TimePassed since playing || Score || etc...)
+            //When all attack waves are done, create more of the them but with more difficulty
+
+            //IDEA: If x seconds passed in game, check how much enemies the player is killing,
+            //  if player is killing too much, spawn more enemies(Decrease start next wave)
+
+            _waves = new ArrayTools.PseudoRandArray<SpawnAction>(waves);
         };
 
         _currentTimer = _delayToNextSpawn;
@@ -72,36 +81,37 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
 
     public void StartSpawner(Room roomToSpawn)
     {
-        AttackWave[] waves = new AttackWave[]{
+        SpawnAction[] waves = new SpawnAction[]{
+            // new Test(),
             new SimpleSwarmSpawn(),
-            new SimpleSwarmSpawn(),
-            new SimpleSwarmSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleSwarmSpawn(),
-            new SimpleEliteSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleBombersAttack(),
-            new SimpleEliteSpawn(),
-            new SimpleSwarmSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleSwarmSpawn(),
-            new SimpleSwarmSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleBombersAttack(),
-            new SimpleSwarmSpawn(),
-            new SimpleEliteSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleEliteSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleBombersAttack(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleEliteSpawn(),
+            // new SimpleBombersAttack(),
+            // new SimpleBombersAttack(),
+            // new SimpleEliteSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleBombersAttack(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleBombersAttack(),
+            // new SimpleBombersAttack(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleEliteSpawn(),
+            // new SimpleBombersAttack(),
+            // new SimpleEliteSpawn(),
     };
 
 
-        foreach (AttackWave item in waves)
+        foreach (SpawnAction item in waves)
         {
             item.SetRoomToSpawn(roomToSpawn);
         }
 
 
-        _waves = new ArrayTools.PseudoRandArray<AttackWave>(waves);
+        _waves = new ArrayTools.PseudoRandArray<SpawnAction>(waves);
 
         _waves.PickNext().InvokNextSpawnAction();
     }
@@ -109,7 +119,7 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
 }
 
 
-public class SimpleEliteSpawn : AttackWave
+public class SimpleEliteSpawn : SpawnAction
 {
     public SimpleEliteSpawn()
     {
@@ -124,8 +134,6 @@ public class SimpleEliteSpawn : AttackWave
 
         void StartEliteAttack()
         {
-            spawnedElite.GetComponent<Elite>().ReadyToGo();
-
             var enemyProjectile = SpawnManager.instance.EliteProjectilePrefab;
             float delayToShoot = 1.7f;
             float timer = delayToShoot;
@@ -146,11 +154,11 @@ public class SimpleEliteSpawn : AttackWave
                 {
                     timer = delayToShoot;
 
-                    int amountToSpawn = 6;
+                    int amountToSpawnBullet = 6;
                     float radius = 0.75f;
-                    Vector2[] positions = SpawnerUtils.GetPositionsAroundObject(spawnedElite.transform.position, radius, amountToSpawn, angles.PickNext());
+                    Vector2[] positions = SpawnerUtils.GetPositionsAroundObject(spawnedElite.transform.position, radius, amountToSpawnBullet, angles.PickNext());
 
-                    for (int i = 0; i < amountToSpawn; i++)
+                    for (int i = 0; i < amountToSpawnBullet; i++)
                     {
                         var proj = enemyProjectile.CreateGameObject(positions[i], Quaternion.identity).transform;
                         proj.GetComponent<Projectile>().SetShootDirection((positions[i] - (Vector2)spawnedElite.transform.position).normalized);
@@ -171,7 +179,7 @@ public class SimpleEliteSpawn : AttackWave
 }
 
 
-public class SimpleBombersAttack : AttackWave
+public class SimpleBombersAttack : SpawnAction
 {
     public SimpleBombersAttack()
     {
@@ -183,93 +191,152 @@ public class SimpleBombersAttack : AttackWave
     {
         var bomberPrefab = SpawnManager.instance.BomberPrefab;
 
-        for (int i = 0; i < 4; i++)
+        int enemyCount = 4;
+        for (int i = 0; i < enemyCount; i++)
         {
             Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.7f);
             var bomber = bomberPrefab.CreateGameObject(new Vector3(0, 0, 0), Quaternion.identity);
-            bomber.GetComponent<Bomber>().SpawnEnemy().OnComplete(() =>
-            {
-                bomber.GetComponent<Bomber>().ReadyToGo();
-            });
+            bomber.GetComponent<Bomber>().SpawnEnemy();
         }
-
     }
-
 }
 
 
-public class SimpleSwarmSpawn : AttackWave
+/*
+    Swarm Spawn is made to handle spawning multiple of the dasher enemies with many types of difficulties
+*/
+public class SimpleSwarmSpawn : SpawnAction
 {
     public SimpleSwarmSpawn()
     {
-        AddSpawnAction(SpawnSwarms);
+        AddSpawnAction(EasySwarm);
     }
 
-    private void SpawnSwarms()
+    private void EasySwarm()
     {
+        Transform target = GameObject.Find("Turret").transform;
+
         var dasherPrefab = SpawnManager.instance.DasherPrefab;
         int amountToSpawn = 3;
         Transform[] dashersSpawned = new Transform[amountToSpawn];
 
         PseudoRandArray<float> attackDelaysArray = new PseudoRandArray<float>(new float[] { 1.0f, 0.5f, 0.85f });
 
-        Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.5f);
+        Vector3 centerSwarmSpawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.5f);
+        // Vector3 centerSwarmSpawnPoint = CurrentRoom.GetRandomPositionInTopsideOfOctagon(1.0f);
 
+        Sequencer sequencer = Sequencer.CreateSequencer("SmallSwarm");
 
-        void StartSwarmAttack()
+        Sequencer.SequenceState SpawnObjects()
         {
-            for (int i = 0; i < dashersSpawned.Length; i++)
+            Sequencer.SequenceState state = null;
+
+            for (int i = 0; i < amountToSpawn; i++)
             {
-                //NOTE: Need to make sure that the dasher is still alive after the spawn is done
-                if (dashersSpawned[i] != null)
-                {
-                    dashersSpawned[i].GetComponent<Dasher>().ReadyToGo(attackDelaysArray.PickNext());
-                }
+                dashersSpawned[i] = dasherPrefab.CreateGameObject(centerSwarmSpawnPoint, Quaternion.identity).transform;
             }
 
-            Vector3 centerOfSwarm = SpawnerUtils.GetCenterOfObjects(dashersSpawned, spawnPoint);
+            SpawnerUtils.PositionInCirclePattern(dashersSpawned, centerSwarmSpawnPoint);
+
+
+            for (int i = 0; i < amountToSpawn; i++)
+            {
+                state = dashersSpawned[i].GetComponent<Dasher>().ScaleUpAndSpawn();
+            }
+
+#if UNITY_EDITOR
+            if (state == null)
+            {
+                Debug.LogError("State is null");
+            }
+#endif
+
+
+            return state;
+        }
+
+        Sequencer.SequenceState GetReadyToAttackBehavior()
+        {
+            SpawnerUtils.RemoveNullsFromArray(ref dashersSpawned);
+
+            Sequencer.SequenceState state = new Sequencer.SequenceState();
+
+            Vector3 centerOfSwarm = SpawnerUtils.GetCenterOfObjects(dashersSpawned, centerSwarmSpawnPoint);
 
             float rotationAroundCenterSpeed = 150.0f;
-            BehavioralController.instance.AddBehavioral(new BehavioralDataWithTimer()
+
+            Dasher[] dasherScripts = new Dasher[dashersSpawned.Length];
+            for (int i = 0; i < dashersSpawned.Length; i++)
             {
-                DurationOfBehavior = 1.5f,
-                UpdateBehavior = () =>
+                dasherScripts[i] = dashersSpawned[i].GetComponent<Dasher>();
+            }
+
+            BehavioralDataWithTimer behaviorWithTime = new BehavioralDataWithTimer();
+            behaviorWithTime.DurationOfBehavior = 1.5f;
+            behaviorWithTime.UpdateBehavior = () =>
+            {
+                BehavioralUtils.RotateAroundObject(dashersSpawned, centerSwarmSpawnPoint, rotationAroundCenterSpeed);
+                for (int i = 0; i < dashersSpawned.Length; i++)
                 {
-                    BehavioralUtils.RotateAroundObject(dashersSpawned, centerOfSwarm, rotationAroundCenterSpeed);
-                },
-                OnBehaviorEnd = () =>
-                {
-                    for (int i = 0; i < dashersSpawned.Length; i++)
+                    if (dashersSpawned[i] != null)
                     {
-                        if (dashersSpawned[i] != null)
-                        {
-                            dashersSpawned[i].GetComponent<Dasher>().ReadyToGo(attackDelaysArray.PickNext());
-                        }
+                        dasherScripts[i].RotateTowardsTarget(target.position);
                     }
                 }
-            });
+
+            };
+
+            behaviorWithTime.OnBehaviorEnd = () =>
+            {
+                state.FinishSequence();
+            };
+
+            BehavioralController.instance.AddBehavioral(behaviorWithTime);
+
+            return state;
         }
 
 
-        for (int i = 0; i < amountToSpawn; i++)
+        Sequencer.SequenceState AttackTarget()
         {
-            dashersSpawned[i] = dasherPrefab.CreateGameObject(spawnPoint, Quaternion.identity).transform;
+            SpawnerUtils.RemoveNullsFromArray(ref dashersSpawned);
+
+
+            BehavioralData attackBehavior = new BehavioralData();
+
+            attackBehavior.UpdateBehavior = () =>
+            {
+                for (int i = 0; i < dashersSpawned.Length; i++)
+                {
+                    if (dashersSpawned[i] != null)
+                    {
+                        dashersSpawned[i].GetComponent<Dasher>().MoveTowardsTarget(target.position);
+                    }
+                }
+            };
+
+            attackBehavior.OnBehaviorEnd = BehavioralController.NULL_BEHAVIOR;
+
+            BehavioralController.instance.AddBehavioral(attackBehavior);
+
+            return Sequencer.SequenceState.Finish();
         }
 
-        SpawnerUtils.PositionInCirclePattern(dashersSpawned, spawnPoint);
-        Tweener[] tweens = new Tweener[amountToSpawn];
 
-        for (int i = 0; i < dashersSpawned.Length; i++)
-        {
-            tweens[i] = dashersSpawned[i].GetComponent<Dasher>().SpawnEnemy();
-        }
 
-        TweenerExtensions.OnCompleteAll(tweens, StartSwarmAttack);
+        sequencer.AddSequence(SpawnObjects);
+        sequencer.AddSequence(GetReadyToAttackBehavior);
+        sequencer.AddSequence(AttackTarget);
+        sequencer.StartSequencer();
+
+
+
+
     }
 }
 
 
-public abstract class AttackWave
+public abstract class SpawnAction
 {
     private List<Action> _spawnActions = new List<Action>();
     private int _currentActionIndex = 0;

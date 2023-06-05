@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class SpawnerUtils
@@ -67,4 +68,21 @@ public static class SpawnerUtils
 
         return (centerOfSwarm + center) / amountOfObjects;
     }
+
+
+
+    //take in array remove the nulls and return a new array & use ref
+    public static void RemoveNullsFromArray<T>(ref T[] array)
+    {
+        List<T> list = new List<T>();
+        for (int i = 0; i < array.Length; i++)
+        {
+            if (array[i] != null)
+            {
+                list.Add(array[i]);
+            }
+        }
+        array = list.ToArray();
+    }
+
 }

@@ -26,7 +26,7 @@ public class Bomber : EnemyCore<Bomber>
 
     public void ReadyToGo()
     {
-        SetState(new MoveToTurretState());
+        // SetState(new MoveToTurretState());
     }
 
     public void MoveToTurret()
@@ -34,10 +34,10 @@ public class Bomber : EnemyCore<Bomber>
         Vector2 direction = _target.position - transform.position;
         transform.Translate(direction.normalized * _moveSpeed * Time.deltaTime, Space.World);
 
-        if (Vector2.Distance(transform.position, _target.position) < _bombRange * 0.85f)
-        {
-            SetState(new EnterExplodeState());
-        }
+        // if (Vector2.Distance(transform.position, _target.position) < _bombRange * 0.85f)
+        // {
+        //     SetState(new EnterExplodeState());
+        // }
 
     }
 
@@ -88,32 +88,32 @@ public class Bomber : EnemyCore<Bomber>
 
 
 
-    class MoveToTurretState : EnemyStateCore<Bomber>
-    {
-        public override void EnterState(Bomber enemy)
-        {
-            base.EnterState(enemy);
-        }
+    // class MoveToTurretState : EnemyStateCore<Bomber>
+    // {
+    //     public override void EnterState(Bomber enemy)
+    //     {
+    //         base.EnterState(enemy);
+    //     }
 
-        public override void Act()
-        {
-            base.Act();
-            _owner.MoveToTurret();
-        }
-    }
+    //     public override void Act()
+    //     {
+    //         base.Act();
+    //         _owner.MoveToTurret();
+    //     }
+    // }
 
 
-    class EnterExplodeState : EnemyStateCore<Bomber>
-    {
-        public override void EnterState(Bomber enemy)
-        {
-            base.EnterState(enemy);
-            _owner.InvokeExplode();
-        }
+    // class EnterExplodeState : EnemyStateCore<Bomber>
+    // {
+    //     public override void EnterState(Bomber enemy)
+    //     {
+    //         base.EnterState(enemy);
+    //         _owner.InvokeExplode();
+    //     }
 
-        public override void Act()
-        {
-            base.Act();
-        }
-    }
+    //     public override void Act()
+    //     {
+    //         base.Act();
+    //     }
+    // }
 }

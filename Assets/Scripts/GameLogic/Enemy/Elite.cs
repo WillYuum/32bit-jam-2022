@@ -14,11 +14,6 @@ public class Elite : EnemyCore<Elite>
     }
 
 
-    public void ReadyToGo()
-    {
-        SetState(new AttackTurret());
-    }
-
 
     public void HandleShoot()
     {
@@ -27,39 +22,5 @@ public class Elite : EnemyCore<Elite>
         var projectile = SpawnManager.instance.EliteProjectilePrefab.CreateGameObject(transform.position, transform.rotation);
         projectile.GetComponent<Projectile>().SetShootDirection(directionToTarget.normalized);
         ShootController.ResetShootTimer();
-    }
-
-
-
-    class MoveAndShootState : EnemyStateCore<Elite>
-    {
-        public override void EnterState(Elite enemy)
-        {
-            base.EnterState(enemy);
-        }
-
-        public override void Act()
-        {
-            base.Act();
-        }
-    }
-
-
-    class AttackTurret : EnemyStateCore<Elite>
-    {
-        public override void EnterState(Elite enemy)
-        {
-            base.EnterState(enemy);
-        }
-
-        public override void Act()
-        {
-            base.Act();
-            _owner.ShootController.UpdateShootTimer();
-            if (_owner.ShootController.CanShoot)
-            {
-                // _owner.HandleShoot();
-            }
-        }
     }
 }
