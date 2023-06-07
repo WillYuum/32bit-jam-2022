@@ -71,18 +71,68 @@ public static class SpawnerUtils
 
 
 
-    //take in array remove the nulls and return a new array & use ref
     public static void RemoveNullsFromArray<T>(ref T[] array)
     {
-        List<T> list = new List<T>();
-        for (int i = 0; i < array.Length; i++)
+        int nonNullCount = 0;
+        int arrayLength = array.Length;
+
+        // Count the non-null elements
+        for (int i = 0; i < arrayLength; i++)
         {
             if (array[i] != null)
             {
-                list.Add(array[i]);
+                nonNullCount++;
             }
         }
-        array = list.ToArray();
+
+        // Create a new array with the correct size
+        T[] newArray = new T[nonNullCount];
+
+        // Copy the non-null elements to the new array
+        int newIndex = 0;
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                newArray[newIndex] = array[i];
+                newIndex++;
+            }
+        }
+
+        // Update the reference to the new array
+        array = newArray;
     }
+    public static T[] RemoveNullsFromArray<T>(T[] array)
+    {
+        int nonNullCount = 0;
+        int arrayLength = array.Length;
+
+        // Count the non-null elements
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                nonNullCount++;
+            }
+        }
+
+        // Create a new array with the correct size
+        T[] newArray = new T[nonNullCount];
+
+        // Copy the non-null elements to the new array
+        int newIndex = 0;
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                newArray[newIndex] = array[i];
+                newIndex++;
+            }
+        }
+
+        // Update the reference to the new array
+        return newArray;
+    }
+
 
 }

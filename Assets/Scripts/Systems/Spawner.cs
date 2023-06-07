@@ -160,15 +160,16 @@ public class SimpleEliteSpawn : SpawnAction
 
                     for (int i = 0; i < amountToSpawnBullet; i++)
                     {
-                        var proj = enemyProjectile.CreateGameObject(positions[i], Quaternion.identity).transform;
-                        proj.GetComponent<Projectile>().SetShootDirection((positions[i] - (Vector2)spawnedElite.transform.position).normalized);
+                        Transform proj = enemyProjectile.CreateGameObject(positions[i], Quaternion.identity).transform;
+                        Vector3 direction = (proj.position - spawnedElite.transform.position).normalized;
+                        proj.GetComponent<Projectile>().SetShootDirection(direction);
                     }
                 }
             }
 
 
             behavior.UpdateBehavior = UpdateBehavior;
-            behavior.OnBehaviorEnd = () => { };
+            behavior.OnBehaviorEnd = BehavioralController.NULL_BEHAVIOR;
 
             BehavioralController.instance.AddBehavioral(behavior);
         }
@@ -257,18 +258,23 @@ public class SimpleSwarmSpawn : SpawnAction
 
         Sequencer.SequenceState GetReadyToAttackBehavior()
         {
-            SpawnerUtils.RemoveNullsFromArray(ref dashersSpawned);
 
             Sequencer.SequenceState state = new Sequencer.SequenceState();
 
             Vector3 centerOfSwarm = SpawnerUtils.GetCenterOfObjects(dashersSpawned, centerSwarmSpawnPoint);
 
+            // dashersSpawned = SpawnerUtils.RemoveNullsFromArray<Transform>(dashersSpawned);
             float rotationAroundCenterSpeed = 150.0f;
+
+            Debug.Log("DashSpawned: " + dashersSpawned.Length);
 
             Dasher[] dasherScripts = new Dasher[dashersSpawned.Length];
             for (int i = 0; i < dashersSpawned.Length; i++)
             {
-                dasherScripts[i] = dashersSpawned[i].GetComponent<Dasher>();
+                if (dashersSpawned[i] != null)
+                {
+                    dasherScripts[i] = dashersSpawned[i].GetComponent<Dasher>();
+                }
             }
 
             BehavioralDataWithTimer behaviorWithTime = new BehavioralDataWithTimer();
@@ -299,18 +305,46 @@ public class SimpleSwarmSpawn : SpawnAction
 
         Sequencer.SequenceState AttackTarget()
         {
-            SpawnerUtils.RemoveNullsFromArray(ref dashersSpawned);
+            // SpawnerUtils.RemoveNullsFromArray<Transform>(ref dashersSpawned);
 
 
+            var dasherAttackSequence = Sequencer.CreateSequencer("AttackBehavior");
+            List<Dasher> dasherScriptAttacking = new List<Dasher>();
+
+
+            int amountOfAttacks = dashersSpawned.Length;
+            for (int i = 0; i < amountOfAttacks; i++)
+            {
+                if (dashersSpawned[i] == null) continue;
+
+                Dasher dasher = dashersSpawned[i].GetComponent<Dasher>();
+                dasherAttackSequence.AddSequence(() =>
+                {
+                    var future = dasher.ScaleUpAndAttack();
+
+                    future.Handle(() =>
+                    {
+                        dasherScriptAttacking.Add(dasher);
+                    });
+
+                    return future;
+                });
+            }
+
+
+            dasherAttackSequence.StartSequencer();
             BehavioralData attackBehavior = new BehavioralData();
+
 
             attackBehavior.UpdateBehavior = () =>
             {
-                for (int i = 0; i < dashersSpawned.Length; i++)
+                for (int i = 0; i < dasherScriptAttacking.Count; i++)
                 {
-                    if (dashersSpawned[i] != null)
+                    if (dasherScriptAttacking[i] != null)
                     {
-                        dashersSpawned[i].GetComponent<Dasher>().MoveTowardsTarget(target.position);
+                        var dasher = dasherScriptAttacking[i];
+                        dasher.RotateTowardsTarget(target.position);
+                        dasher.MoveTowardsTarget(target.position);
                     }
                 }
             };

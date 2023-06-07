@@ -5,15 +5,24 @@ using UnityEngine;
 
 public class Sequencer : MonoBehaviour
 {
+    List<SequenceAction> _allSequences = new List<SequenceAction>();
+    private bool _isRunning = false;
+    private int _currentActionIndex = 0;
+
+    public int Count
+    {
+        get
+        {
+            return _allSequences.Count;
+        }
+    }
+
     class SequenceAction
     {
-        public SequenceAction(Func<SequenceState> action)
-        {
-            _action = action;
-        }
-
         private Func<SequenceState> _action;
         private SequenceState _sequenceState;
+        public float DelayToStart { get; private set; }
+
 
         public bool IsDone
         {
@@ -22,6 +31,18 @@ public class Sequencer : MonoBehaviour
                 return _sequenceState.IsDone;
             }
         }
+
+        public void DecreaseDelayToStart()
+        {
+            DelayToStart -= Time.deltaTime;
+        }
+
+        public SequenceAction(Func<SequenceState> action, float delayToStart = 0.0f)
+        {
+            DelayToStart = delayToStart;
+            _action = action;
+        }
+
         public void InvokeSequenceAction()
         {
             _sequenceState = _action.Invoke();
@@ -32,10 +53,30 @@ public class Sequencer : MonoBehaviour
     public class SequenceState
     {
         public bool IsDone { get; private set; }
+        private Action _cb;
 
         public void FinishSequence()
         {
+#if UNITY_EDITOR
+            if (IsDone)
+            {
+                Debug.LogError("Sequence is already done");
+                return;
+            }
+#endif
+
+
+            if (_cb != null)
+            {
+                _cb.Invoke();
+            }
+
             IsDone = true;
+        }
+
+        public void Handle(Action cb)
+        {
+            _cb += cb;
         }
 
         public static SequenceState Finish()
@@ -58,20 +99,24 @@ public class Sequencer : MonoBehaviour
         return new SequenceState();
     }
 
-    List<SequenceAction> _allSequences = new List<SequenceAction>();
-    private bool _isRunning = false;
-
-    private int _currentActionIndex = 0;
-
 
     private void Update()
     {
         if (_isRunning == false) return;
 
+        SequenceAction currentAction = _allSequences[_currentActionIndex];
 
-        if (_allSequences[_currentActionIndex].IsDone)
+        if (currentAction.DelayToStart < 0.0f)
         {
-            InvokeNext();
+            if (currentAction.IsDone)
+            {
+                InvokeNext();
+            }
+        }
+        else
+        {
+            print("Delay to start: " + currentAction.DelayToStart);
+            currentAction.DecreaseDelayToStart();
         }
     }
 
@@ -96,9 +141,9 @@ public class Sequencer : MonoBehaviour
         _allSequences[_currentActionIndex].InvokeSequenceAction();
     }
 
-    public void AddSequence(Func<SequenceState> action)
+    public void AddSequence(Func<SequenceState> action, float delayToStart = 0.0f)
     {
-        _allSequences.Add(new SequenceAction(action));
+        _allSequences.Add(new SequenceAction(action, delayToStart));
     }
 
 
