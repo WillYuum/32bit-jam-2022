@@ -7,7 +7,7 @@ public class Dasher : EnemyCore<Dasher>
     private float _moveSpeed = 5.0f;
     [HideInInspector] public Transform _target;
     private float _angleToAttackTarget = 0.4f;
-    private float _delayToAttack = 1.65f;
+    private float _delayToAttack = 1.45f;
 
     private float _explodeRange = 1.5f;
 
@@ -47,7 +47,22 @@ public class Dasher : EnemyCore<Dasher>
 
         base.SetOnSpawnBehavior();
 
-        transform.DOScale(1.8f, _delayToAttack)
+        transform.DOScale(1.0f, _delayToAttack)
+        .SetEase(Ease.InOutExpo)
+        .OnComplete(() =>
+        {
+            transform.transform.localScale = Vector3.one;
+            sequenceState.FinishSequence();
+        });
+
+        return sequenceState;
+    }
+
+    public Sequencer.SequenceState ScaleUpAndAttack()
+    {
+        var sequenceState = Sequencer.CreateSequenceState();
+
+        transform.DOScale(1.5f, _delayToAttack)
         .SetEase(Ease.InOutExpo)
         .OnComplete(() =>
         {
