@@ -82,24 +82,24 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
     {
         SpawnAction[] waves = new SpawnAction[]{
             // new Test(),
-            new DasherSwarmSpawn(),
+            // new DasherSwarmSpawn(),
             // new SimpleSwarmSpawn(),
             // new SimpleSwarmSpawn(),
-            // new SimpleBombersAttack(),
-            // new SimpleSwarmSpawn(),
-            // new SimpleEliteSpawn(),
-            // new SimpleBombersAttack(),
-            // new SimpleBombersAttack(),
-            // new SimpleEliteSpawn(),
-            // new SimpleSwarmSpawn(),
-            // new SimpleBombersAttack(),
-            // new SimpleSwarmSpawn(),
-            // new SimpleSwarmSpawn(),
-            // new SimpleBombersAttack(),
-            // new SimpleBombersAttack(),
+            new BombrSpawn(),
             // new SimpleSwarmSpawn(),
             // new SimpleEliteSpawn(),
-            // new SimpleBombersAttack(),
+            // new BombrSpawn(),
+            // new BombrSpawn(),
+            // new SimpleEliteSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new BombrSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new BombrSpawn(),
+            // new BombrSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new SimpleEliteSpawn(),
+            // new BombrSpawn(),
             // new SimpleEliteSpawn(),
     };
 
@@ -191,13 +191,55 @@ public class BombrSpawn : SpawnAction
     {
         var bomberPrefab = SpawnManager.instance.BomberPrefab;
 
-        int enemyCount = 4;
-        for (int i = 0; i < enemyCount; i++)
+        Sequencer sequencer = Sequencer.CreateSequencer("Spawn Bomber");
+
+        Transform target = GameObject.Find("Turret").transform;
+
+        Bomber spawnedBomber = null;
+
+        Sequencer.SequenceState SpawnBomber()
         {
             Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.7f);
-            var bomber = bomberPrefab.CreateGameObject(new Vector3(0, 0, 0), Quaternion.identity);
-            bomber.GetComponent<Bomber>().SpawnEnemy();
+            spawnedBomber = bomberPrefab.CreateGameObject(new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Bomber>();
+            return spawnedBomber.ScaleUpAndSpawn();
         }
+
+
+        Sequencer.SequenceState AttackTarget()
+        {
+            var attackBehavior = new BehavioralData();
+
+            void UpdateBehavior()
+            {
+                if (target == null)
+                {
+                    BehavioralController.instance.RemoveBehavioral(attackBehavior);
+                    return;
+                }
+
+                if (spawnedBomber == null)
+                {
+                    BehavioralController.instance.RemoveBehavioral(attackBehavior);
+                    return;
+                }
+
+                spawnedBomber.HandleAttackingTarget(target.position);
+            }
+
+
+            attackBehavior.UpdateBehavior = UpdateBehavior;
+            attackBehavior.OnBehaviorEnd = BehavioralController.NULL_BEHAVIOR;
+
+            BehavioralController.instance.AddBehavioral(attackBehavior);
+
+            return Sequencer.SequenceState.Finish();
+        }
+
+
+        sequencer.AddSequence(SpawnBomber);
+        sequencer.AddSequence(AttackTarget);
+
+        sequencer.StartSequencer();
     }
 }
 
