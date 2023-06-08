@@ -135,4 +135,17 @@ public static class SpawnerUtils
     }
 
 
+    public static bool IsArrayIsFullOfNulls<T>(T[] array)
+    {
+        int arrayLength = array.Length;
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

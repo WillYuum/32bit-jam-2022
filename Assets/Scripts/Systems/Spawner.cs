@@ -5,7 +5,6 @@ using Utils.GenericSingletons;
 using Utils.ArrayUtils;
 using SpawnManagerMod;
 using DG.Tweening;
-using System.Threading.Tasks;
 
 public class Spawner : MonoBehaviourSingleton<Spawner>
 {
@@ -367,6 +366,11 @@ public class SimpleSwarmSpawn : SpawnAction
                         dasher.RotateTowardsTarget(target.position);
                         dasher.MoveTowardsTarget(target.position);
                     }
+                }
+
+                if (SpawnerUtils.IsArrayIsFullOfNulls<Transform>(dashersSpawned))
+                {
+                    BehavioralController.instance.RemoveBehavioral(attackBehavior);
                 }
             };
 
