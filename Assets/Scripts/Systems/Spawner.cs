@@ -82,25 +82,25 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
     {
         SpawnAction[] waves = new SpawnAction[]{
             // new Test(),
-            // new DasherSwarmSpawn(),
-            // new SimpleSwarmSpawn(),
-            // new SimpleSwarmSpawn(),
-            new BombrSpawn(),
-            // new SimpleSwarmSpawn(),
-            // new SimpleEliteSpawn(),
-            // new BombrSpawn(),
-            // new BombrSpawn(),
-            // new SimpleEliteSpawn(),
-            // new SimpleSwarmSpawn(),
-            // new BombrSpawn(),
+            new DasherSwarmSpawn(),
             // new SimpleSwarmSpawn(),
             // new SimpleSwarmSpawn(),
             // new BombrSpawn(),
+            // new SimpleSwarmSpawn(),
+            new EliteSpawn(),
+            // new BombrSpawn(),
+            // new BombrSpawn(),
+            // new EliteSpawn(),
+            // new SimpleSwarmSpawn(),
             // new BombrSpawn(),
             // new SimpleSwarmSpawn(),
-            // new SimpleEliteSpawn(),
+            // new SimpleSwarmSpawn(),
             // new BombrSpawn(),
-            // new SimpleEliteSpawn(),
+            // new BombrSpawn(),
+            // new SimpleSwarmSpawn(),
+            // new EliteSpawn(),
+            // new BombrSpawn(),
+            // new EliteSpawn(),
     };
 
 
@@ -127,18 +127,31 @@ public class EliteSpawn : SpawnAction
 
     private void SpawnElite()
     {
-        var elite = SpawnManager.instance.ElitePrefab;
-        Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.65f);
-        GameObject spawnedElite = elite.CreateGameObject(spawnPoint, Quaternion.identity);
+        Sequencer sequencer = Sequencer.CreateSequencer("Spawn Bomber");
 
-        void StartEliteAttack()
+
+        var elitePrefab = SpawnManager.instance.ElitePrefab;
+
+        Elite spawnedElite = null;
+
+        Sequencer.SequenceState SpawnElite()
+        {
+            Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.65f);
+            spawnedElite = elitePrefab.CreateGameObject(spawnPoint, Quaternion.identity).GetComponent<Elite>();
+            return spawnedElite.ScaleUpAndSpawn();
+        }
+
+
+        Sequencer.SequenceState EliteAttack()
         {
             var enemyProjectile = SpawnManager.instance.EliteProjectilePrefab;
             float delayToShoot = 1.7f;
             float timer = delayToShoot;
 
             ArrayTools.PseudoRandArray<float> angles = new ArrayTools.PseudoRandArray<float>(new float[] { 0, 45, 75 });
+
             BehavioralData behavior = new BehavioralData();
+
 
             void UpdateBehavior()
             {
@@ -171,10 +184,16 @@ public class EliteSpawn : SpawnAction
             behavior.OnBehaviorEnd = BehavioralController.NULL_BEHAVIOR;
 
             BehavioralController.instance.AddBehavioral(behavior);
+
+
+
+            return Sequencer.SequenceState.Finish();
         }
 
+        sequencer.AddSequence(SpawnElite);
+        sequencer.AddSequence(EliteAttack);
 
-        spawnedElite.GetComponent<Elite>().SpawnEnemy().OnComplete(StartEliteAttack);
+        sequencer.StartSequencer();
     }
 }
 
