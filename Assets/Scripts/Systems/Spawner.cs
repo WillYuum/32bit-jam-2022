@@ -213,6 +213,20 @@ public class SimpleSwarmSpawn : SpawnAction
         AddSpawnAction(EasySwarm);
     }
 
+
+    private bool CheckIfAllDashersAreDead(Transform[] dashers)
+    {
+        foreach (Transform dasher in dashers)
+        {
+            if (dasher != null)
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private void EasySwarm()
     {
         Transform target = GameObject.Find("Turret").transform;
@@ -307,6 +321,10 @@ public class SimpleSwarmSpawn : SpawnAction
         {
             // SpawnerUtils.RemoveNullsFromArray<Transform>(ref dashersSpawned);
 
+            if (CheckIfAllDashersAreDead(dashersSpawned))
+            {
+                return Sequencer.SequenceState.Finish();
+            }
 
             var dasherAttackSequence = Sequencer.CreateSequencer("AttackBehavior");
             List<Dasher> dasherScriptAttacking = new List<Dasher>();
@@ -318,6 +336,9 @@ public class SimpleSwarmSpawn : SpawnAction
                 if (dashersSpawned[i] == null) continue;
 
                 Dasher dasher = dashersSpawned[i].GetComponent<Dasher>();
+
+                if (dasher == null) continue;
+
                 dasherAttackSequence.AddSequence(() =>
                 {
                     var future = dasher.ScaleUpAndAttack();

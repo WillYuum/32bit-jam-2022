@@ -51,7 +51,11 @@ public class Dasher : EnemyCore<Dasher>
         .SetEase(Ease.InOutExpo)
         .OnComplete(() =>
         {
-            transform.transform.localScale = Vector3.one;
+            if (gameObject != null)
+            {
+                transform.transform.localScale = Vector3.one;
+            }
+
             sequenceState.FinishSequence();
         });
 
@@ -62,11 +66,21 @@ public class Dasher : EnemyCore<Dasher>
     {
         var sequenceState = Sequencer.CreateSequenceState();
 
+        if (transform == null)
+        {
+            sequenceState.FinishSequence();
+            return sequenceState;
+        }
+
         transform.DOScale(1.5f, _delayToAttack)
         .SetEase(Ease.InOutExpo)
         .OnComplete(() =>
         {
-            transform.transform.localScale = Vector3.one;
+            if (gameObject != null)
+            {
+                transform.transform.localScale = Vector3.one;
+            }
+
             sequenceState.FinishSequence();
         });
 
