@@ -4,7 +4,6 @@ using DG.Tweening;
 public class Bomber : EnemyCore<Bomber>
 {
 
-    // private Transform _target;
     private float _moveSpeed = 1.75f;
     [SerializeField] private Transform _bombRangeIndicator;
     private float _bombRange = 5.0f;
@@ -19,7 +18,6 @@ public class Bomber : EnemyCore<Bomber>
         _bombRange = GameVariables.instance.BomberExplodeRange;
 
         _bombRangeIndicator.gameObject.SetActive(false);
-        // _target = GameObject.Find("Turret").transform;
 
         _originalBombRangeScale = _bombRangeIndicator.localScale.x;
     }
@@ -112,37 +110,4 @@ public class Bomber : EnemyCore<Bomber>
 
         gameObject.GetComponent<CircleCollider2D>().enabled = false;
     }
-
-
-
-
-
-    // class MoveToTurretState : EnemyStateCore<Bomber>
-    // {
-    //     public override void EnterState(Bomber enemy)
-    //     {
-    //         base.EnterState(enemy);
-    //     }
-
-    //     public override void Act()
-    //     {
-    //         base.Act();
-    //         _owner.MoveToTurret();
-    //     }
-    // }
-
-
-    // class EnterExplodeState : EnemyStateCore<Bomber>
-    // {
-    //     public override void EnterState(Bomber enemy)
-    //     {
-    //         base.EnterState(enemy);
-    //         _owner.InvokeExplode();
-    //     }
-
-    //     public override void Act()
-    //     {
-    //         base.Act();
-    //     }
-    // }
 }
