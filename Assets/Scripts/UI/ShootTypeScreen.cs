@@ -26,22 +26,32 @@ public class ShootTypeScreen : MonoBehaviour
     [SerializeField] private ShootTypeSide _peaShootSide;
     [SerializeField] private ShootTypeSide _laserShootSide;
 
+    private TypeOfShots _currentTypeOfShots;
 
 
     private void Update()
     {
         IncreaseAlphaOnMouseOver();
 
-        if (Input.GetMouseButtonDown(0))
+
+        //switch types by pressing K or S
+        if (Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.S))
         {
-            if (Input.mousePosition.x < Screen.width / 2)
+            if (_currentTypeOfShots == TypeOfShots.PeaShots)
             {
-                SelectShotType(TypeOfShots.PeaShots);
+                _currentTypeOfShots = TypeOfShots.Laser;
             }
             else
             {
-                SelectShotType(TypeOfShots.Laser);
+                _currentTypeOfShots = TypeOfShots.PeaShots;
             }
+
+            IncreaseAlphaOnMouseOver();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            SelectShotType(_currentTypeOfShots);
         }
     }
 
@@ -51,6 +61,8 @@ public class ShootTypeScreen : MonoBehaviour
     public LoadConfig Load()
     {
         LoadConfig loadConfig = new LoadConfig();
+
+        _currentTypeOfShots = TypeOfShots.PeaShots;
 
         loadConfig.OpenScreen = (cb) =>
         {
@@ -77,7 +89,7 @@ public class ShootTypeScreen : MonoBehaviour
         Color peaShooterColor = _peaShootSide._backgroundPanel.color;
         Color laserShooterColor = _laserShootSide._backgroundPanel.color;
 
-        if (Input.mousePosition.x < Screen.width / 2)
+        if (_currentTypeOfShots == TypeOfShots.PeaShots)
         {
             peaShooterColor.a = 0.85f;
             laserShooterColor.a = 0.4f;
