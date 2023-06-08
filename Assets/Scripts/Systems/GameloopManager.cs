@@ -80,7 +80,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            InvokeLosegame();
+            InvokeLoseGame();
         }
 
 
@@ -98,10 +98,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
     public void StartGameLoop(StartGameLoopStruct startGameLoopStruct)
-
     {
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
         TurretInvisiblityWindowTracker = new InvisiblityWindowTracker();
+
+        GameloopManager.instance.LoopIsActive = true;
 
         CollectedHightScore = 0;
 
@@ -144,16 +145,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         if (_fishHitPoints.IsOutOfHP())
         {
-            InvokeLosegame();
+            InvokeLoseGame();
         }
     }
 
 
-    private void InvokeLosegame()
+    private void InvokeLoseGame()
     {
         if (LoopIsActive == false) return;
 
         GameloopManager.instance.LoopIsActive = false;
+
+        Spawner.instance.StopSpawner();
 
         AudioManager.instance.StopAllBGM();
         AudioManager.instance.PlaySFX("gameOver");
@@ -172,12 +175,16 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public void InvokeRestartGame()
     {
-        //reset events
+        // Invoke(nameof(StartGameLoop), 0.1f);
+        // LoadGameFromMainGame();
+        if (OnRestartGame != null)
+        {
+            OnRestartGame.Invoke();
+        }
+
         OnGameLoopStart = null;
         OnKillEnemy = null;
         OnRestartGame = null;
-
-        Invoke(nameof(StartGameLoop), 0.1f);
     }
 
     public void InvokeKillEnemy(EnemyType enemyType)

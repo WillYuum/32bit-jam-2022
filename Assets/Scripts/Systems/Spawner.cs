@@ -4,7 +4,6 @@ using UnityEngine;
 using Utils.GenericSingletons;
 using Utils.ArrayUtils;
 using SpawnManagerMod;
-using DG.Tweening;
 
 public class Spawner : MonoBehaviourSingleton<Spawner>
 {
@@ -80,6 +79,8 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
 
     public void StartSpawner(Room roomToSpawn)
     {
+        enabled = true;
+
         SpawnAction[] waves = new SpawnAction[]{
             // new Test(),
             new DasherSwarmSpawn(),
@@ -115,7 +116,13 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
         _waves.PickNext().InvokNextSpawnAction();
     }
 
+    public void StopSpawner()
+    {
+        _waves = null;
+        enabled = false;
+    }
 }
+
 
 
 public class EliteSpawn : SpawnAction

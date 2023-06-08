@@ -18,6 +18,15 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
 
     private GameObject _currentActiveScreen = null;
 
+
+    public void Init()
+    {
+        GameloopManager.instance.OnRestartGame += () =>
+        {
+            _currentActiveScreen = null;
+        };
+    }
+
     private void SwitchToScreen(GameUI.Screens screen)
     {
         if (_currentActiveScreen != null) _currentActiveScreen.SetActive(false);
@@ -43,7 +52,7 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
     }
 
 
-    public ShootTypeScreen.LoadConfig LoadSelectScreen()
+    public ShootTypeScreen.LoadConfig LoadSelectShootType()
     {
         SwitchToScreen(Screens.SelectShootScreen);
         return _selectShootTypeScreen.GetComponent<ShootTypeScreen>().Load();

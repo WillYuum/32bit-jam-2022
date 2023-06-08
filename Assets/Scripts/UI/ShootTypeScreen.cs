@@ -60,6 +60,9 @@ public class ShootTypeScreen : MonoBehaviour
     private Action<TypeOfShots> onSelectType;
     public LoadConfig Load()
     {
+
+        onSelectType = null;
+
         LoadConfig loadConfig = new LoadConfig();
 
         _currentTypeOfShots = TypeOfShots.PeaShots;
@@ -68,8 +71,10 @@ public class ShootTypeScreen : MonoBehaviour
         {
             gameObject.SetActive(true);
 
+
             onSelectType += (shootType) =>
             {
+
                 cb.Invoke(shootType);
             };
         };
@@ -80,8 +85,12 @@ public class ShootTypeScreen : MonoBehaviour
 
     private void SelectShotType(TypeOfShots typeOfShots)
     {
-        onSelectType?.Invoke(typeOfShots);
+        if (onSelectType != null)
+        {
+            onSelectType.Invoke(typeOfShots);
+        }
         gameObject.SetActive(false);
+        onSelectType = null;
     }
 
     private void IncreaseAlphaOnMouseOver()
