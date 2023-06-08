@@ -7,52 +7,79 @@ public class Dasher : EnemyCore<Dasher>
     private float _moveSpeed = 5.0f;
     [HideInInspector] public Transform _target;
     private float _angleToAttackTarget = 0.4f;
-    private float _delayToAttack = 1.65f;
+    private float _delayToAttack = 1.45f;
 
     private float _explodeRange = 1.5f;
 
 
     [SerializeField] private GameObject _visual;
 
-    protected override void OnAwake()
+    public void RotateTowardsTarget(Vector3 target)
     {
-        _target = GameObject.Find("Turret").transform;
-        if (_target == null) Debug.LogError("Turret not found");
-        // SetState(new DasherRotateTowardsTurret());
+        Vector3 direction = target - transform.position;
+        transform.up = direction * _rotationSpeed * Time.deltaTime;
     }
 
-
-
-    public void ReadyToGo(float delayToSwitch)
+    public bool RotateTowardsTargetAndAttack(Vector2 target)
     {
-        Invoke(nameof(SwitchFromSpawnToAttackTurret), delayToSwitch);
-    }
-
-    private void SwitchFromSpawnToAttackTurret()
-    {
-        SetState(new DasherRotateTowardsTurret());
-    }
-
-    public void RotateTowardsTargetAndAttack()
-    {
-        Vector3 direction = _target.position - transform.position;
+        Vector3 direction = (Vector3)target - transform.position;
         transform.up = direction * _rotationSpeed * Time.deltaTime;
         float angleBetween = Vector3.Dot(transform.up, direction.normalized);
         if (angleBetween > _angleToAttackTarget)
         {
-            SetState(new DasherReadyToAttackState());
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
-    public void ScaleAndAttack()
+    public void DashTowardsTarget(Vector2 target)
     {
-        transform.DOScale(1.8f, _delayToAttack)
+        transform.position = Vector2.MoveTowards(transform.position, target, _moveSpeed * Time.deltaTime);
+        _moveSpeed += 0.05f;
+    }
+
+    public Sequencer.SequenceState ScaleUpAndSpawn()
+    {
+        var sequenceState = Sequencer.CreateSequenceState();
+
+        base.SetOnSpawnBehavior();
+
+        transform.DOScale(1.0f, _delayToAttack)
         .SetEase(Ease.InOutExpo)
         .OnComplete(() =>
         {
-            transform.transform.localScale = Vector3.one;
-            SetState(new DasherAttackTurretState());
+            if (gameObject != null)
+            {
+                transform.transform.localScale = Vector3.one;
+            }
+
+            sequenceState.FinishSequence();
         });
+
+        return sequenceState;
+    }
+
+    public Sequencer.SequenceState ScaleUpAndAttack()
+    {
+        var sequenceState = Sequencer.CreateSequenceState();
+
+
+        transform.DOScale(1.5f, _delayToAttack)
+        .SetEase(Ease.InOutExpo)
+        .OnComplete(() =>
+        {
+            if (gameObject != null)
+            {
+                transform.transform.localScale = Vector3.one;
+            }
+
+            sequenceState.FinishSequence();
+        });
+
+        return sequenceState;
     }
 
     public void KeepLookingAtTurret()
@@ -63,13 +90,14 @@ public class Dasher : EnemyCore<Dasher>
 
 
 
-    public void MoveTowardsPosition(Vector2 finalPosition)
+    public void MoveTowardsTarget(Vector2 target)
     {
-        transform.position = Vector2.MoveTowards(transform.position, finalPosition, _moveSpeed * Time.deltaTime);
+        print("Moving towards target");
+        transform.position = Vector2.MoveTowards(transform.position, target, _moveSpeed * Time.deltaTime);
         _moveSpeed += 0.05f;
 
 
-        if (transform.position == (Vector3)finalPosition)
+        if (transform.position == (Vector3)target)
         {
             Explode();
         }
@@ -86,66 +114,5 @@ public class Dasher : EnemyCore<Dasher>
 
         Destroy(gameObject);
     }
-
-    class HandleSpawnState : EnemyStateCore<Dasher>
-    {
-        public override void EnterState(Dasher enemy)
-        {
-            base.EnterState(enemy);
-        }
-
-        public override void Act()
-        {
-            base.Act();
-            _owner.KeepLookingAtTurret();
-        }
-    }
-
-    class DasherReadyToAttackState : EnemyStateCore<Dasher>
-    {
-        public override void EnterState(Dasher enemy)
-        {
-            base.EnterState(enemy);
-            _owner.ScaleAndAttack();
-        }
-
-        public override void Act()
-        {
-            base.Act();
-            _owner.KeepLookingAtTurret();
-        }
-    }
-
-    class DasherRotateTowardsTurret : EnemyStateCore<Dasher>
-    {
-        public override void EnterState(Dasher enemy)
-        {
-            base.EnterState(enemy);
-        }
-
-        public override void Act()
-        {
-            base.Act();
-            _owner.RotateTowardsTargetAndAttack();
-        }
-    }
-
-
-    class DasherAttackTurretState : EnemyStateCore<Dasher>
-    {
-        private Vector2 _finalPosition;
-        public override void EnterState(Dasher enemy)
-        {
-            base.EnterState(enemy);
-            _finalPosition = _owner._target.position;
-        }
-
-        public override void Act()
-        {
-            base.Act();
-            _owner.MoveTowardsPosition(_finalPosition);
-        }
-    }
-
 }
 

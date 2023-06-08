@@ -1,5 +1,6 @@
 using UnityEngine;
 using SpawnManagerMod;
+using DG.Tweening;
 
 public class Elite : EnemyCore<Elite>
 {
@@ -7,17 +8,14 @@ public class Elite : EnemyCore<Elite>
     [field: SerializeField] public ShootController ShootController { get; private set; }
     [HideInInspector] public Transform _target;
 
+    private float _delayToAttack = 1.85f;
+
     protected override void OnAwake()
     {
         ShootController = new ShootController(1.0f);
         _target = GameObject.Find("Turret").transform;
     }
 
-
-    public void ReadyToGo()
-    {
-        SetState(new AttackTurret());
-    }
 
 
     public void HandleShoot()
@@ -30,36 +28,24 @@ public class Elite : EnemyCore<Elite>
     }
 
 
-
-    class MoveAndShootState : EnemyStateCore<Elite>
+    public Sequencer.SequenceState ScaleUpAndSpawn()
     {
-        public override void EnterState(Elite enemy)
-        {
-            base.EnterState(enemy);
-        }
+        var sequenceState = Sequencer.CreateSequenceState();
 
-        public override void Act()
-        {
-            base.Act();
-        }
-    }
+        base.SetOnSpawnBehavior();
 
-
-    class AttackTurret : EnemyStateCore<Elite>
-    {
-        public override void EnterState(Elite enemy)
+        transform.DOScale(1.0f, _delayToAttack)
+        .SetEase(Ease.InOutExpo)
+        .OnComplete(() =>
         {
-            base.EnterState(enemy);
-        }
-
-        public override void Act()
-        {
-            base.Act();
-            _owner.ShootController.UpdateShootTimer();
-            if (_owner.ShootController.CanShoot)
+            if (gameObject != null)
             {
-                // _owner.HandleShoot();
+                transform.transform.localScale = Vector3.one;
             }
-        }
+
+            sequenceState.FinishSequence();
+        });
+
+        return sequenceState;
     }
 }

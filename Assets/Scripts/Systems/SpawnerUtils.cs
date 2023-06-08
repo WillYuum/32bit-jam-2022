@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public static class SpawnerUtils
@@ -67,4 +68,84 @@ public static class SpawnerUtils
 
         return (centerOfSwarm + center) / amountOfObjects;
     }
+
+
+
+    public static void RemoveNullsFromArray<T>(ref T[] array)
+    {
+        int nonNullCount = 0;
+        int arrayLength = array.Length;
+
+        // Count the non-null elements
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                nonNullCount++;
+            }
+        }
+
+        // Create a new array with the correct size
+        T[] newArray = new T[nonNullCount];
+
+        // Copy the non-null elements to the new array
+        int newIndex = 0;
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                newArray[newIndex] = array[i];
+                newIndex++;
+            }
+        }
+
+        // Update the reference to the new array
+        array = newArray;
+    }
+    public static T[] RemoveNullsFromArray<T>(T[] array)
+    {
+        int nonNullCount = 0;
+        int arrayLength = array.Length;
+
+        // Count the non-null elements
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                nonNullCount++;
+            }
+        }
+
+        // Create a new array with the correct size
+        T[] newArray = new T[nonNullCount];
+
+        // Copy the non-null elements to the new array
+        int newIndex = 0;
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                newArray[newIndex] = array[i];
+                newIndex++;
+            }
+        }
+
+        // Update the reference to the new array
+        return newArray;
+    }
+
+
+    public static bool IsArrayIsFullOfNulls<T>(T[] array)
+    {
+        int arrayLength = array.Length;
+        for (int i = 0; i < arrayLength; i++)
+        {
+            if (array[i] != null)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

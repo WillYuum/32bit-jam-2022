@@ -80,7 +80,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            InvokeLosegame();
+            InvokeLoseGame();
         }
 
 
@@ -98,10 +98,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
     public void StartGameLoop(StartGameLoopStruct startGameLoopStruct)
-
     {
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
         TurretInvisiblityWindowTracker = new InvisiblityWindowTracker();
+
+        GameloopManager.instance.LoopIsActive = true;
 
         CollectedHightScore = 0;
 
@@ -115,7 +116,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 
-        float increaseRatio = 0.08f;
+        float increaseRatio = 0.05f;
         float decreaseRatio = 0.02f;
         KillMomentunTracker = new KillMomentum(increaseRatio, decreaseRatio);
 
@@ -144,16 +145,18 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         if (_fishHitPoints.IsOutOfHP())
         {
-            InvokeLosegame();
+            InvokeLoseGame();
         }
     }
 
 
-    private void InvokeLosegame()
+    private void InvokeLoseGame()
     {
         if (LoopIsActive == false) return;
 
         GameloopManager.instance.LoopIsActive = false;
+
+        Spawner.instance.StopSpawner();
 
         AudioManager.instance.StopAllBGM();
         AudioManager.instance.PlaySFX("gameOver");
@@ -172,12 +175,16 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public void InvokeRestartGame()
     {
-        //reset events
+        // Invoke(nameof(StartGameLoop), 0.1f);
+        // LoadGameFromMainGame();
+        if (OnRestartGame != null)
+        {
+            OnRestartGame.Invoke();
+        }
+
         OnGameLoopStart = null;
         OnKillEnemy = null;
         OnRestartGame = null;
-
-        Invoke(nameof(StartGameLoop), 0.1f);
     }
 
     public void InvokeKillEnemy(EnemyType enemyType)
@@ -221,11 +228,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         switch (SelectedShootType)
         {
             case TypeOfShots.PeaShots:
-                if (momentumRatio < 0.5f)
+                if (UtilityHelper.InRange<float>(momentumRatio, 0.0f, 0.5f))
                 {
                     levelToUse = 1;
                 }
-                else if (momentumRatio >= 0.75f && momentumRatio < 0.9f)
+                else if (UtilityHelper.InRange<float>(momentumRatio, 0.75f, 0.9f))
                 {
                     levelToUse = 2;
                 }
@@ -236,11 +243,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
                 break;
 
             case TypeOfShots.Laser:
-                if (momentumRatio < 0.5f)
+                if (UtilityHelper.InRange<float>(momentumRatio, 0.0f, 0.5f))
                 {
                     levelToUse = 1;
                 }
-                else if (momentumRatio >= 0.7f && momentumRatio < 0.9f)
+                else if (UtilityHelper.InRange<float>(momentumRatio, 0.75f, 0.8f))
                 {
                     levelToUse = 2;
                 }

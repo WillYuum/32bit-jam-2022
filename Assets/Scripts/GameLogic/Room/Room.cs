@@ -19,6 +19,67 @@ public class Room : MonoBehaviour
         return GeneratePointInsidePolygon(polygonRoom, rangeScale);
     }
 
+    public Vector3 GetRandomPositionInTopsideOfOctagon(float rangeScale = 1.0f)
+    {
+        Vector2[][] triangles = SubdivideOctagon();
+
+        List<Vector3> polygonOctagon = new List<Vector3>();
+
+        Vector2[] topSide = triangles[0];
+
+        polygonOctagon.Add(topSide[0]);
+        polygonOctagon.Add(topSide[1]);
+        polygonOctagon.Add(topSide[2]);
+
+#if UNITY_EDITOR
+        Debug.DrawLine(topSide[0], topSide[1], Color.red, 2f);
+        Debug.DrawLine(topSide[1], topSide[2], Color.red, 2f);
+        Debug.DrawLine(topSide[2], topSide[0], Color.red, 2f);
+#endif
+
+        return GeneratePointInsidePolygon(polygonOctagon, rangeScale);
+    }
+
+
+    private Vector2[][] SubdivideOctagon()
+    {
+        int trianglesount = 8;
+        int octagonVerts = trianglesount * 2;
+        Vector2[] vertices = new Vector2[octagonVerts];
+
+        //Got the value from checking the edges position of the octagon in the editor
+        float radius = 10.4f;
+        float fullCircle = Mathf.PI * 2;
+        for (int i = 0; i < octagonVerts; i++)
+        {
+            float angle = fullCircle / trianglesount * i;
+
+            vertices[i] = new Vector2(radius * Mathf.Sin(angle), radius * Mathf.Cos(angle));
+        }
+
+        // Define the vertices of the triangles
+        Vector2[][] triangles = new Vector2[octagonVerts][];
+        for (int i = 0; i < octagonVerts; i++)
+        {
+            triangles[i] = new Vector2[3];
+
+            // Triangle vertex 1 is always the center of the octagon
+            triangles[i][0] = Vector3.zero;
+
+            // Triangle vertices 2 and 3 are two adjacent vertices of the octagon
+            triangles[i][1] = vertices[i];
+            triangles[i][2] = vertices[(i + 1) % octagonVerts];
+
+            // #if UNITY_EDITOR
+            //             Debug.DrawLine(triangles[i][0], triangles[i][1], Color.red, 2f);
+            //             Debug.DrawLine(triangles[i][1], triangles[i][2], Color.red, 2f);
+            //             Debug.DrawLine(triangles[i][2], triangles[i][0], Color.red, 2f);
+            // #endif
+        }
+
+        return triangles;
+    }
+
     private Vector3 GeneratePointInsidePolygon(List<Vector3> polygon, float rangeScale)
     {
         Vector3 MinVec = MinPointOnThePolygon(polygon);

@@ -41,7 +41,7 @@ public class PlayerBomb : MonoBehaviour
         {
             if (transform.localScale.x > 10)
             {
-                BehavioralController.instance.RemoveBehavioral(behavioralData);
+                BehavioralController.instance.RemoveBehavioral(behavioralData, true);
             }
 
             currentRadius += speedIncreaseRadius * Time.deltaTime;

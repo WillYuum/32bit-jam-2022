@@ -32,4 +32,9 @@ public static class UtilityHelper
             array[randIndex] = tmp;
         }
     }
+
+    public static bool InRange<T>(this T val, T min, T max) where T : System.IComparable<T>
+    {
+        return val.CompareTo(min) >= 0 && val.CompareTo(max) <= 0;
+    }
 }

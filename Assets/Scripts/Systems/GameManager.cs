@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     void Start()
     {
-
+        print("GameManager Start");
 #if UNITY_EDITOR
         //check current scene and load the correct screen
         if (SceneManager.GetActiveScene().name == "MainMenu")
@@ -38,7 +38,9 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     private void LoadGameFromMainGame()
     {
-        var selectScreenUI = GameUI.instance.LoadSelectScreen();
+        GameUI.instance.Init();
+
+        var selectScreenUI = GameUI.instance.LoadSelectShootType();
         selectScreenUI.OpenScreen((shootType) =>
         {
             var gameScreen = GameUI.instance.LoadGameScreen();
@@ -58,7 +60,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     {
         void startGameScene()
         {
-            var selectScreenUI = GameUI.instance.LoadSelectScreen();
+            var selectScreenUI = GameUI.instance.LoadSelectShootType();
             selectScreenUI.OpenScreen((shootType) =>
             {
                 var gameScreen = GameUI.instance.LoadGameScreen();
@@ -87,6 +89,14 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         GameloopManager.instance.InvokeRestartGame();
+
+        //Looks like a race condition bug that I need to fix later
+        Invoke(nameof(DelayStartGame), 0.1f);
+    }
+
+    private void DelayStartGame()
+    {
+        LoadGameFromMainGame();
     }
 
     public void LoseGame()

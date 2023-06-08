@@ -22,7 +22,6 @@ where T : MonoBehaviour
     [SerializeField] private SimpleFlash _simpleFlash;
 
     protected HitPoint _hitPoint;
-    private EnemyStateCore<T> _currentState;
 
     private void Awake()
     {
@@ -55,23 +54,10 @@ where T : MonoBehaviour
         return transform.DOScale(Vector3.one, 3.5f);
     }
 
-    private void Update()
-    {
-        if (_currentState != null)
-        {
-            _currentState.Act();
-        }
-    }
 
-    public void SetState(EnemyStateCore<T> newState)
+    protected void SetOnSpawnBehavior()
     {
-        if (_currentState != null)
-        {
-            _currentState.ExitState();
-        }
-
-        _currentState = newState;
-        _currentState.EnterState(this as T);
+        transform.localScale = Vector3.zero;
     }
 
     public void TakeDamage(int damage)
@@ -96,18 +82,3 @@ where T : MonoBehaviour
         Destroy(gameObject);
     }
 }
-
-
-public class EnemyStateCore<T>
-{
-    protected T _owner;
-    public virtual void EnterState(T enemy)
-    {
-        _owner = enemy;
-    }
-
-    public virtual void ExitState() { }
-
-    public virtual void Act() { }
-}
-

@@ -9,6 +9,9 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
     private List<BehavioralData> _behaviorals = new List<BehavioralData>();
 
 
+    public static Action NULL_BEHAVIOR = () => { };
+
+
     void Update()
     {
         for (int i = 0; i < _behavioralsWithTimers.Count; i++)
@@ -52,21 +55,40 @@ public class BehavioralController : MonoBehaviourSingleton<BehavioralController>
         _behaviorals.Add(behavioral);
     }
 
-    public void RemoveBehavioral(BehavioralDataWithTimer behavioral)
+    public void RemoveBehavioral(BehavioralDataWithTimer behavioral, bool invokeOnBehaviorEnd = false)
     {
+        if (invokeOnBehaviorEnd) behavioral.OnBehaviorEnd.Invoke();
+
         _behavioralsWithTimers.Remove(behavioral);
     }
 
-    public void RemoveBehavioral(BehavioralData behavioral)
+    public void RemoveBehavioral(BehavioralData behavioral, bool invokeOnBehaviorEnd = false)
     {
-        behavioral.OnBehaviorEnd.Invoke();
+        if (invokeOnBehaviorEnd) behavioral.OnBehaviorEnd.Invoke();
+
         _behaviorals.Remove(behavioral);
     }
 
     public void Reset()
     {
-        _behavioralsWithTimers.Clear();
-        _behaviorals.Clear();
+
+        if (_behavioralsWithTimers.Count > 0)
+        {
+            for (int i = 0; i < _behavioralsWithTimers.Count; i++)
+            {
+                BehavioralDataWithTimer behavior = _behavioralsWithTimers[i];
+                RemoveBehavioral(behavior);
+            }
+        }
+
+        if (_behaviorals.Count > 0)
+        {
+            for (int i = 0; i < _behaviorals.Count; i++)
+            {
+                BehavioralData behavior = _behaviorals[i];
+                RemoveBehavioral(behavior);
+            }
+        }
     }
 }
 

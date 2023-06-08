@@ -4,10 +4,10 @@ using DG.Tweening;
 public class Bomber : EnemyCore<Bomber>
 {
 
-    private Transform _target;
     private float _moveSpeed = 1.75f;
     [SerializeField] private Transform _bombRangeIndicator;
     private float _bombRange = 5.0f;
+    private float _delayToAttack = 1.15f;
 
     [SerializeField] private GameObject _visuals;
 
@@ -18,27 +18,53 @@ public class Bomber : EnemyCore<Bomber>
         _bombRange = GameVariables.instance.BomberExplodeRange;
 
         _bombRangeIndicator.gameObject.SetActive(false);
-        _target = GameObject.Find("Turret").transform;
 
         _originalBombRangeScale = _bombRangeIndicator.localScale.x;
     }
 
 
-    public void ReadyToGo()
+
+
+    public Sequencer.SequenceState ScaleUpAndSpawn()
     {
-        SetState(new MoveToTurretState());
+        var sequenceState = Sequencer.CreateSequenceState();
+
+        base.SetOnSpawnBehavior();
+
+        transform.DOScale(1.0f, _delayToAttack)
+        .SetEase(Ease.InOutExpo)
+        .OnComplete(() =>
+        {
+            if (gameObject != null)
+            {
+                transform.transform.localScale = Vector3.one;
+            }
+
+            sequenceState.FinishSequence();
+        });
+
+        return sequenceState;
     }
 
-    public void MoveToTurret()
+    public void HandleAttackingTarget(Vector3 target)
     {
-        Vector2 direction = _target.position - transform.position;
+        if (IsGoingToExplode()) return;
+
+
+        Vector2 direction = target - transform.position;
         transform.Translate(direction.normalized * _moveSpeed * Time.deltaTime, Space.World);
 
-        if (Vector2.Distance(transform.position, _target.position) < _bombRange * 0.85f)
+        if (Vector2.Distance(transform.position, target) < _bombRange * 0.85f)
         {
-            SetState(new EnterExplodeState());
+            InvokeExplode();
         }
+    }
 
+
+    //Temp solution, should have another way to check if the enemy is going to explode
+    private bool IsGoingToExplode()
+    {
+        return _bombRangeIndicator.gameObject.activeSelf;
     }
 
     public void InvokeExplode()
@@ -83,37 +109,5 @@ public class Bomber : EnemyCore<Bomber>
         }
 
         gameObject.GetComponent<CircleCollider2D>().enabled = false;
-    }
-
-
-
-
-    class MoveToTurretState : EnemyStateCore<Bomber>
-    {
-        public override void EnterState(Bomber enemy)
-        {
-            base.EnterState(enemy);
-        }
-
-        public override void Act()
-        {
-            base.Act();
-            _owner.MoveToTurret();
-        }
-    }
-
-
-    class EnterExplodeState : EnemyStateCore<Bomber>
-    {
-        public override void EnterState(Bomber enemy)
-        {
-            base.EnterState(enemy);
-            _owner.InvokeExplode();
-        }
-
-        public override void Act()
-        {
-            base.Act();
-        }
     }
 }

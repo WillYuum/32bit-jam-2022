@@ -1817,6 +1817,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 239555358, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 375541666, guid: 7c7776b197c40394a848e83e31eba36b, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -1883,6 +1887,11 @@ PrefabInstance:
       propertyPath: _boomImage
       value: 
       objectReference: {fileID: 1910901997}
+    - target: {fileID: 795391346528548936, guid: 7c7776b197c40394a848e83e31eba36b,
+        type: 3}
+      propertyPath: _bigBoomCanvas
+      value: 
+      objectReference: {fileID: 1369701919}
     - target: {fileID: 795391346528548936, guid: 7c7776b197c40394a848e83e31eba36b,
         type: 3}
       propertyPath: _explosionSlider
