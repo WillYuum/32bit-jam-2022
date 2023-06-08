@@ -382,6 +382,8 @@ public class DasherSwarmSpawn : SpawnAction
 
                 dasherAttackSequence.AddSequence(() =>
                 {
+                    if (dasher == null) return Sequencer.SequenceState.Finish();
+
                     var future = dasher.ScaleUpAndAttack();
 
                     future.Handle(() =>

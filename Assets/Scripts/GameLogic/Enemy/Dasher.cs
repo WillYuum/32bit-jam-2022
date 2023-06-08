@@ -66,11 +66,6 @@ public class Dasher : EnemyCore<Dasher>
     {
         var sequenceState = Sequencer.CreateSequenceState();
 
-        if (transform == null)
-        {
-            sequenceState.FinishSequence();
-            return sequenceState;
-        }
 
         transform.DOScale(1.5f, _delayToAttack)
         .SetEase(Ease.InOutExpo)
