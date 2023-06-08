@@ -21,23 +21,23 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
             _currentTimer = _delayToNextSpawn;
 
             SpawnAction[] waves = new SpawnAction[]{
-            new SimpleSwarmSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleSwarmSpawn(),
-            new SimpleEliteSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleBombersAttack(),
-            new SimpleEliteSpawn(),
-            new SimpleSwarmSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleSwarmSpawn(),
-            new SimpleSwarmSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleBombersAttack(),
-            new SimpleSwarmSpawn(),
-            new SimpleEliteSpawn(),
-            new SimpleBombersAttack(),
-            new SimpleEliteSpawn(),
+            new DasherSwarmSpawn(),
+            new BombrSpawn(),
+            new DasherSwarmSpawn(),
+            new EliteSpawn(),
+            new BombrSpawn(),
+            new BombrSpawn(),
+            new EliteSpawn(),
+            new DasherSwarmSpawn(),
+            new BombrSpawn(),
+            new DasherSwarmSpawn(),
+            new DasherSwarmSpawn(),
+            new BombrSpawn(),
+            new BombrSpawn(),
+            new DasherSwarmSpawn(),
+            new EliteSpawn(),
+            new BombrSpawn(),
+            new EliteSpawn(),
     };
 
 
@@ -82,7 +82,7 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
     {
         SpawnAction[] waves = new SpawnAction[]{
             // new Test(),
-            new SimpleSwarmSpawn(),
+            new DasherSwarmSpawn(),
             // new SimpleSwarmSpawn(),
             // new SimpleSwarmSpawn(),
             // new SimpleBombersAttack(),
@@ -118,9 +118,9 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
 }
 
 
-public class SimpleEliteSpawn : SpawnAction
+public class EliteSpawn : SpawnAction
 {
-    public SimpleEliteSpawn()
+    public EliteSpawn()
     {
         AddSpawnAction(SpawnElite);
     }
@@ -179,9 +179,9 @@ public class SimpleEliteSpawn : SpawnAction
 }
 
 
-public class SimpleBombersAttack : SpawnAction
+public class BombrSpawn : SpawnAction
 {
-    public SimpleBombersAttack()
+    public BombrSpawn()
     {
         AddSpawnAction(SpawnBombers);
     }
@@ -205,9 +205,9 @@ public class SimpleBombersAttack : SpawnAction
 /*
     Swarm Spawn is made to handle spawning multiple of the dasher enemies with many types of difficulties
 */
-public class SimpleSwarmSpawn : SpawnAction
+public class DasherSwarmSpawn : SpawnAction
 {
-    public SimpleSwarmSpawn()
+    public DasherSwarmSpawn()
     {
         AddSpawnAction(EasySwarm);
     }
