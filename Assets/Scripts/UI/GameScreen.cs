@@ -20,17 +20,25 @@ public class GameScreen : MonoBehaviour
     [SerializeField] private RectMask2D _explosionSlider;
     private Color _orangeLightColor = new Color(238.0f / 255.0f, 189.0f / 255.0f, 92.0f / 255.0f, 255.0f / 255.0f);
 
+    [SerializeField] private GameObject _bigBoomCanvas;
 
     [SerializeField] private Slider _momentumBar;
 
     private void OnEnable()
     {
         print("GameScreen.OnEnable");
+
+
+        _bigBoomCanvas.SetActive(true);
+
     }
 
     private void OnDisable()
     {
         print("GameScreen.OnDisable");
+
+        _bigBoomCanvas.SetActive(false);
+
     }
 
     public LoadConfig Load()
