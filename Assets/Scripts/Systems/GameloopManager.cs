@@ -116,7 +116,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 
-        float increaseRatio = 0.08f;
+        float increaseRatio = 0.05f;
         float decreaseRatio = 0.02f;
         KillMomentunTracker = new KillMomentum(increaseRatio, decreaseRatio);
 
@@ -228,11 +228,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         switch (SelectedShootType)
         {
             case TypeOfShots.PeaShots:
-                if (momentumRatio < 0.5f)
+                if (UtilityHelper.InRange<float>(momentumRatio, 0.0f, 0.5f))
                 {
                     levelToUse = 1;
                 }
-                else if (momentumRatio >= 0.75f && momentumRatio < 0.9f)
+                else if (UtilityHelper.InRange<float>(momentumRatio, 0.75f, 0.9f))
                 {
                     levelToUse = 2;
                 }
@@ -243,11 +243,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
                 break;
 
             case TypeOfShots.Laser:
-                if (momentumRatio < 0.5f)
+                if (UtilityHelper.InRange<float>(momentumRatio, 0.0f, 0.5f))
                 {
                     levelToUse = 1;
                 }
-                else if (momentumRatio >= 0.7f && momentumRatio < 0.9f)
+                else if (UtilityHelper.InRange<float>(momentumRatio, 0.75f, 0.8f))
                 {
                     levelToUse = 2;
                 }
