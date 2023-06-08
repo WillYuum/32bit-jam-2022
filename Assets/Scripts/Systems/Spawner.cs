@@ -393,7 +393,7 @@ public class DasherSwarmSpawn : SpawnAction
             }
 
             var dasherAttackSequence = Sequencer.CreateSequencer("AttackBehavior");
-            List<Dasher> dasherScriptAttacking = new List<Dasher>();
+            // List<Dasher> dasherScriptAttacking = new List<Dasher>();
 
 
             int amountOfAttacks = dashersSpawned.Length;
@@ -413,7 +413,8 @@ public class DasherSwarmSpawn : SpawnAction
 
                     future.Handle(() =>
                     {
-                        dasherScriptAttacking.Add(dasher);
+                        // dasherScriptAttacking.Add(dasher);
+                        dasher.SetDashTarget(target.position);
                     });
 
                     return future;
@@ -422,30 +423,7 @@ public class DasherSwarmSpawn : SpawnAction
 
 
             dasherAttackSequence.StartSequencer();
-            BehavioralData attackBehavior = new BehavioralData();
 
-
-            attackBehavior.UpdateBehavior = () =>
-            {
-                for (int i = 0; i < dasherScriptAttacking.Count; i++)
-                {
-                    if (dasherScriptAttacking[i] != null)
-                    {
-                        var dasher = dasherScriptAttacking[i];
-                        dasher.RotateTowardsTarget(target.position);
-                        dasher.MoveTowardsTarget(target.position);
-                    }
-                }
-
-                if (SpawnerUtils.IsArrayIsFullOfNulls<Transform>(dashersSpawned))
-                {
-                    BehavioralController.instance.RemoveBehavioral(attackBehavior);
-                }
-            };
-
-            attackBehavior.OnBehaviorEnd = BehavioralController.NULL_BEHAVIOR;
-
-            BehavioralController.instance.AddBehavioral(attackBehavior);
 
             return Sequencer.SequenceState.Finish();
         }
