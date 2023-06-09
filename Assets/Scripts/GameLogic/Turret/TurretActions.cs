@@ -58,27 +58,24 @@ public class TurretActions : MonoBehaviour
         if (GameloopManager.instance.LoopIsActive == false) return;
         _turretShootController.UpdateShootTimer();
 
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            _currentRotationDirection = RotationDirection.ClockWise;
+            _turretActions.SetTurretMoveDirection(TurretMoveDirection.ClockWise);
+
+        }
+        else if (Input.GetKeyDown(KeyCode.D))
+        {
+            _currentRotationDirection = RotationDirection.AntiClockWise;
+            _turretActions.SetTurretMoveDirection(TurretMoveDirection.AntiClockWise);
+        }
 
 
-        if (Input.GetKey(KeyCode.K))
+        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
             Move();
         }
 
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-            switch (_currentRotationDirection)
-            {
-                case RotationDirection.ClockWise:
-                    _currentRotationDirection = RotationDirection.AntiClockWise;
-                    _turretActions.SetTurretMoveDirection(TurretMoveDirection.AntiClockWise);
-                    break;
-                case RotationDirection.AntiClockWise:
-                    _currentRotationDirection = RotationDirection.ClockWise;
-                    _turretActions.SetTurretMoveDirection(TurretMoveDirection.ClockWise);
-                    break;
-            }
-        }
 
 
         if (Input.GetKey(KeyCode.Space))
