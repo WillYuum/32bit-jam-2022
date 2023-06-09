@@ -9,10 +9,27 @@ public class Dasher : EnemyCore<Dasher>
     private float _angleToAttackTarget = 0.4f;
     private float _delayToAttack = 1.45f;
 
+    private Vector2 _dashToPosition;
+
     private float _explodeRange = 1.5f;
 
 
     [SerializeField] private GameObject _visual;
+
+
+    void Update()
+    {
+        if (_dashToPosition != Vector2.zero)
+        {
+            RotateTowardsTarget(_dashToPosition);
+            MoveTowardsTarget(_dashToPosition);
+        }
+    }
+
+    public void SetDashTarget(Vector2 dashPosition)
+    {
+        _dashToPosition = dashPosition;
+    }
 
     public void RotateTowardsTarget(Vector3 target)
     {

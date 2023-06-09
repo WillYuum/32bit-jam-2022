@@ -117,7 +117,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 
         float increaseRatio = 0.05f;
-        float decreaseRatio = 0.02f;
+        float decreaseRatio = 0.03f;
         KillMomentunTracker = new KillMomentum(increaseRatio, decreaseRatio);
 
         enabled = true;
@@ -217,8 +217,35 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     }
 
 
+    private Tuple<float, int>[] _peaShooterLevelConfig = new Tuple<float, int>[]
+    {
+        new Tuple< float, int>(0.0f, 1),
+        new Tuple< float, int>(0.55f, 2),
+        new Tuple< float, int>(0.75f, 3),
+    };
+
+    private Tuple<float, int>[] _laserShooterLevelConfig = new Tuple<float, int>[]
+    {
+        new Tuple< float, int>(0.5f, 1),
+        new Tuple< float, int>(0.75f, 2),
+        new Tuple< float, int>(0.9f, 3),
+    };
+
     private void DetermineShootLevel()
     {
+
+        int GetSelectedLevel(float momentumRatio, Tuple<float, int>[] levelConfig)
+        {
+            int index = (int)(levelConfig.Length * momentumRatio);
+            index = Math.Min(index, levelConfig.Length - 1);
+
+            if (momentumRatio >= levelConfig[index].Item1)
+            {
+                return levelConfig[index].Item2;
+            }
+
+            return CurrentShootBehavior.CurrentLevel;
+        }
 
         int currentShootLevel = CurrentShootBehavior.CurrentLevel;
         float momentumRatio = KillMomentunTracker.GetMomentumRatio();
@@ -228,33 +255,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         switch (SelectedShootType)
         {
             case TypeOfShots.PeaShots:
-                if (UtilityHelper.InRange<float>(momentumRatio, 0.0f, 0.5f))
-                {
-                    levelToUse = 1;
-                }
-                else if (UtilityHelper.InRange<float>(momentumRatio, 0.75f, 0.9f))
-                {
-                    levelToUse = 2;
-                }
-                else
-                {
-                    levelToUse = 3;
-                }
+                levelToUse = GetSelectedLevel(momentumRatio, _peaShooterLevelConfig);
                 break;
 
             case TypeOfShots.Laser:
-                if (UtilityHelper.InRange<float>(momentumRatio, 0.0f, 0.5f))
-                {
-                    levelToUse = 1;
-                }
-                else if (UtilityHelper.InRange<float>(momentumRatio, 0.75f, 0.8f))
-                {
-                    levelToUse = 2;
-                }
-                else
-                {
-                    levelToUse = 3;
-                }
+                levelToUse = GetSelectedLevel(momentumRatio, _laserShooterLevelConfig);
                 break;
         }
 
