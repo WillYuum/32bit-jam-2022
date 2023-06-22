@@ -77,6 +77,12 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
         }
     }
 
+
+    public void ResetSpawnerProps()
+    {
+        _currentTimer = _delayToNextSpawn;
+    }
+
     public void StartSpawner(Room roomToSpawn)
     {
         enabled = true;

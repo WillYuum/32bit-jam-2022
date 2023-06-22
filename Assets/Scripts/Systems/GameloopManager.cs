@@ -123,6 +123,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         enabled = true;
         LoopIsActive = true;
+        Spawner.instance.ResetSpawnerProps();
         Spawner.instance.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)
