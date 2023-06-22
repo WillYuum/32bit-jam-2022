@@ -72,6 +72,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         if (GameloopManager.instance.LoopIsActive == false) return;
 
 
+
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.P))
         {

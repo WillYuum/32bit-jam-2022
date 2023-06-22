@@ -66,7 +66,7 @@ public class Spawner : MonoBehaviourSingleton<Spawner>
         if (_currentTimer <= 0.0f)
         {
             _currentTimer = _delayToNextSpawn;
-            _delayToNextSpawn -= 0.15f;
+            _delayToNextSpawn -= 0.25f;
 
             if (_delayToNextSpawn < 2.5f)
             {
@@ -481,5 +481,34 @@ public abstract class SpawnAction
     public void SetRoomToSpawn(Room room)
     {
         CurrentRoom = room;
+    }
+}
+
+
+
+class PositionLogic
+{
+
+
+    private Vector2[][] _customMadeSpawnPosition;
+
+
+    public PositionLogic()
+    {
+        _customMadeSpawnPosition = new Vector2[][]{
+            new Vector2[] {
+                new Vector2(0.0f, 0.0f),
+                new Vector2(0.5f, 0.0f),
+                },
+
+
+        };
+    }
+
+
+
+    public Vector2[] GetSpawnPrefabPosition()
+    {
+        return _customMadeSpawnPosition[0];
     }
 }
