@@ -72,6 +72,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         if (GameloopManager.instance.LoopIsActive == false) return;
 
 
+
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.P))
         {
@@ -122,6 +123,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         enabled = true;
         LoopIsActive = true;
+        Spawner.instance.ResetSpawnerProps();
         Spawner.instance.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)

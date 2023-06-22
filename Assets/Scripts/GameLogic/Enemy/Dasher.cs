@@ -109,7 +109,7 @@ public class Dasher : EnemyCore<Dasher>
 
     public void MoveTowardsTarget(Vector2 target)
     {
-        print("Moving towards target");
+        // print("Moving towards target");
         transform.position = Vector2.MoveTowards(transform.position, target, _moveSpeed * Time.deltaTime);
         _moveSpeed += 0.05f;
 

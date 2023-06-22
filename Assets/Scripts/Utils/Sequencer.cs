@@ -115,7 +115,6 @@ public class Sequencer : MonoBehaviour
         }
         else
         {
-            print("Delay to start: " + currentAction.DelayToStart);
             currentAction.DecreaseDelayToStart();
         }
     }
@@ -151,7 +150,6 @@ public class Sequencer : MonoBehaviour
     {
         _currentActionIndex++;
 
-        print("Current index: " + _currentActionIndex + " All sequences count: " + _allSequences.Count + " Is running: " + _isRunning);
         if (_currentActionIndex >= _allSequences.Count)
         {
             _isRunning = false;

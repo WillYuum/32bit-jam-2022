@@ -22,6 +22,8 @@ public class TurretActions : MonoBehaviour
 
     private RotationDirection _currentRotationDirection;
 
+    private bool _toggleShoot = false;
+
 
     private void Awake()
     {
@@ -78,7 +80,12 @@ public class TurretActions : MonoBehaviour
 
 
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _toggleShoot = !_toggleShoot;
+        }
+
+        if (_toggleShoot)
         {
             Shoot();
         }
