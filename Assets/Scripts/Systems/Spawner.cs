@@ -5,7 +5,7 @@ using Utils.GenericSingletons;
 using Utils.ArrayUtils;
 using SpawnManagerMod;
 
-public class Spawner : MonoBehaviourSingleton<Spawner>
+public class Spawner : MonoBehaviour
 {
     private ArrayTools.PseudoRandArray<SpawnAction> _waves;
 
@@ -487,34 +487,5 @@ public abstract class SpawnAction
     public void SetRoomToSpawn(Room room)
     {
         CurrentRoom = room;
-    }
-}
-
-
-
-class PositionLogic
-{
-
-
-    private Vector2[][] _customMadeSpawnPosition;
-
-
-    public PositionLogic()
-    {
-        _customMadeSpawnPosition = new Vector2[][]{
-            new Vector2[] {
-                new Vector2(0.0f, 0.0f),
-                new Vector2(0.5f, 0.0f),
-                },
-
-
-        };
-    }
-
-
-
-    public Vector2[] GetSpawnPrefabPosition()
-    {
-        return _customMadeSpawnPosition[0];
     }
 }

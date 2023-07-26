@@ -310,7 +310,6 @@ GameObject:
   m_Component:
   - component: {fileID: 2262050771470766969}
   - component: {fileID: 971245074632831342}
-  - component: {fileID: 3107206055660616943}
   - component: {fileID: 2396159078966004655}
   m_Layer: 0
   m_Name: GameloopManager
@@ -344,19 +343,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d8b446a03c7f1374fbcd2acdd65a1eba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CurrentRoom: {fileID: 0}
---- !u!114 &3107206055660616943
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6185868911793546644}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e1a0e8616b844e4a91907e636e7355c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &2396159078966004655

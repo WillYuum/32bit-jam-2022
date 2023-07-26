@@ -45,6 +45,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public KillMomentum KillMomentunTracker { get; private set; }
     public ShootBehavior CurrentShootBehavior { get; private set; }
 
+    private Spawner _spawner;
+
     private void Awake()
     {
         print("AWAKE");
@@ -123,8 +125,14 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         enabled = true;
         LoopIsActive = true;
-        Spawner.instance.ResetSpawnerProps();
-        Spawner.instance.StartSpawner(GameObject.FindObjectOfType<Room>());
+
+        if (_spawner != null)
+        {
+            Destroy(_spawner.gameObject);
+        }
+
+        _spawner = new GameObject("Spawner").AddComponent<Spawner>();
+        _spawner.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)
         {
@@ -158,7 +166,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         GameloopManager.instance.LoopIsActive = false;
 
-        Spawner.instance.StopSpawner();
+        _spawner.StopSpawner();
 
         AudioManager.instance.StopAllBGM();
         AudioManager.instance.PlaySFX("gameOver");
