@@ -360,7 +360,7 @@ public class ExplosionBarTracker
         OnUpdate.Invoke();
     }
 
-    public bool IsExplosionBarFull()
+    public bool CanUseBigBoom()
     {
         return _currentExplosionBarValue >= _maxExplosionBarValue;
     }

@@ -122,7 +122,7 @@ public class TurretActions : MonoBehaviour
     {
         ExplosionBarTracker explosionBarTracker = GameloopManager.instance.ExplosionBarTracker;
 
-        if (explosionBarTracker.IsExplosionBarFull())
+        if (explosionBarTracker.CanUseBigBoom())
         {
             AudioManager.instance.PlaySFX("playerSpecial");
 
