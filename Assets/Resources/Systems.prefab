@@ -285,7 +285,7 @@ MonoBehaviour:
     <Bomber>k__BackingField: 5
     <Dasher>k__BackingField: 1
   <ExplosionBarData>k__BackingField:
-    <MaxExplosionBarValue>k__BackingField: 40
+    <MaxExplosionBarValue>k__BackingField: 50
     <Elite>k__BackingField: 15
     <Bomber>k__BackingField: 4
     <Dasher>k__BackingField: 2

@@ -40,16 +40,7 @@ public class PlayerBomb : MonoBehaviour
             IDamageable damageable = damageables[i];
             if (damageable != null)
             {
-                int damageAmount;
-                if (damageable.transform.TryGetComponent(out EnemyCore<Elite> enemyCore))
-                {
-                    damageAmount = (int)(GameVariables.instance.EnemyHPData.Elite * 0.15f);
-                }
-                else
-                {
-                    damageAmount = 999;
-                }
-
+                int damageAmount = 999;
                 damageable.TakeDamage(damageAmount);
                 damageables.Remove(damageable);
             }
