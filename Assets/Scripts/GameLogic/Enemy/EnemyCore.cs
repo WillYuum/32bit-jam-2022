@@ -47,12 +47,6 @@ where T : MonoBehaviour
     }
 
 
-    public virtual Tweener SpawnEnemy()
-    {
-        //tween scale up then enemy then invoke onSpawnComplete
-        transform.localScale = Vector3.zero;
-        return transform.DOScale(Vector3.one, 3.5f);
-    }
 
 
     protected void SetOnSpawnBehavior()

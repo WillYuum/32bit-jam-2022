@@ -35,40 +35,46 @@ public class PlayerBomb : MonoBehaviour
         transform.localScale += Vector3.one * currentRadius;
 
 
+        for (int i = 0; i < damageables.Count; i++)
+        {
+            IDamageable damageable = damageables[i];
+            if (damageable != null)
+            {
+                int damageAmount;
+                if (damageable.transform.TryGetComponent(out EnemyCore<Elite> enemyCore))
+                {
+                    damageAmount = (int)(GameVariables.instance.EnemyHPData.Elite * 0.15f);
+                }
+                else
+                {
+                    damageAmount = 999;
+                }
+
+                damageable.TakeDamage(damageAmount);
+                damageables.Remove(damageable);
+            }
+            else
+            {
+                damageables.Remove(damageable);
+            }
+        }
+
+
+
+
+
         BehavioralData behavioralData = new BehavioralData();
 
         void ScaleUpExplosion()
         {
-            if (transform.localScale.x > 10)
-            {
-                BehavioralController.instance.RemoveBehavioral(behavioralData, true);
-            }
-
             currentRadius += speedIncreaseRadius * Time.deltaTime;
             transform.localScale += Vector3.one * currentRadius;
 
-            for (int i = 0; i < damageables.Count; i++)
-            {
-                IDamageable damageable = damageables[i];
-                if (damageable != null)
-                {
-                    int damageAmount;
-                    if (damageable.transform.TryGetComponent(out EnemyCore<Elite> enemyCore))
-                    {
-                        damageAmount = (int)(GameVariables.instance.EnemyHPData.Elite * 0.15f);
-                    }
-                    else
-                    {
-                        damageAmount = 999;
-                    }
 
-                    damageable.TakeDamage(damageAmount);
-                    damageables.Remove(damageable);
-                }
-                else
-                {
-                    damageables.Remove(damageable);
-                }
+            bool bigBoomEnded = transform.localScale.x > 10;
+            if (bigBoomEnded)
+            {
+                BehavioralController.instance.RemoveBehavioral(behavioralData, true);
             }
         }
 

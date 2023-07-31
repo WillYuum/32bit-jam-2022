@@ -97,6 +97,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             KillMomentunTracker.DecreaseMomentum();
             DetermineShootLevel();
         }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            ExplosionBarTracker.IncreaseValue(ExplosionBarTracker.MaxExplosionBarValue);
+        }
 #endif
     }
 
