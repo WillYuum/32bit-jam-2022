@@ -12,7 +12,19 @@ public enum EnemyType
 interface IDamageable
 {
     Transform transform { get; }
-    void TakeDamage(int damage);
+    void TakeDamage(TakeDamageData damage);
+}
+
+public struct TakeDamageData
+{
+    public int DamageAmount;
+    public EnemyTakeDamageData TakeDamageType;
+}
+
+public enum EnemyTakeDamageData
+{
+    Explosion,
+    BulletFromPlayer,
 }
 
 public class EnemyCore<T> : MonoBehaviour, IDamageable
@@ -20,11 +32,13 @@ where T : MonoBehaviour
 {
     [field: SerializeField] public EnemyType EnemyType { get; private set; }
     [SerializeField] private SimpleFlash _simpleFlash;
+    public bool Stunned { get; private set; }
 
     protected HitPoint _hitPoint;
 
     private void Awake()
     {
+        Stunned = false;
         switch (EnemyType)
         {
             case EnemyType.Elite:
@@ -54,20 +68,47 @@ where T : MonoBehaviour
         transform.localScale = Vector3.zero;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(TakeDamageData damageData)
     {
-        AudioManager.instance.PlaySFX("enemyHurt");
+        _hitPoint.TakeDamage(damageData.DamageAmount);
+        bool isDead = _hitPoint.IsOutOfHP();
 
-        print("damage" + damage);
-
-        _simpleFlash.Flash();
-
-        _hitPoint.TakeDamage(damage);
-        if (_hitPoint.IsOutOfHP())
+        if (isDead)
         {
             GameloopManager.instance.InvokeKillEnemy(EnemyType);
             Die();
         }
+        else
+        {
+            if (damageData.TakeDamageType == EnemyTakeDamageData.BulletFromPlayer)
+            {
+                InvokeStunBehaviorOnEnemy();
+            }
+            else
+            {
+                _simpleFlash.Flash();
+            }
+        }
+
+
+        AudioManager.instance.PlaySFX("enemyHurt");
+    }
+
+    protected virtual void InvokeStunBehaviorOnEnemy()
+    {
+        if (Stunned == false)
+        {
+            float stunDuration = 3.0f;
+            _simpleFlash.FlashForSeconds(stunDuration);
+            Stunned = true;
+            InvokeStunBehaviorOnEnemy();
+            Invoke(nameof(ResetFromStun), stunDuration);
+        }
+    }
+
+    private void ResetFromStun(float stunDuration)
+    {
+        Stunned = false;
     }
 
     protected void Die()

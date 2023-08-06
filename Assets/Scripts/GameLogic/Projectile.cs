@@ -35,7 +35,11 @@ public class Projectile : MonoBehaviour
         // print("Projectile hit " + other.name + "by " + this.name);
         if (other.gameObject.TryGetComponent(out IDamageable damageable))
         {
-            damageable.TakeDamage(_damage);
+            damageable.TakeDamage(new TakeDamageData
+            {
+                DamageAmount = _damage,
+                TakeDamageType = EnemyTakeDamageData.BulletFromPlayer,
+            });
         }
 
         Destroy(gameObject);

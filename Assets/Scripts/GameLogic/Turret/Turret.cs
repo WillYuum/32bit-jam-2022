@@ -3,7 +3,9 @@ using SpawnManagerMod;
 using DG.Tweening;
 using System;
 
-public class Turret : MonoBehaviour, ITurretActions, IDamageable
+
+
+public class Turret : MonoBehaviour, ITurretActions
 {
     public TurretMoveDirection MoveDirection { get; private set; }
 
@@ -55,7 +57,7 @@ public class Turret : MonoBehaviour, ITurretActions, IDamageable
         GameloopManager.instance.CurrentShootBehavior.Shoot();
     }
 
-    public void TakeDamage(int damageCount = 1)
+    public void TakeDamage(int damageCount)
     {
         if (GameloopManager.instance.LoopIsActive == false) return;
 
@@ -205,7 +207,11 @@ public class LaserShootBehavior : ShootBehavior
             int damageAmount = 1;
             foreach (RaycastHit2D hit in hits)
             {
-                hit.collider.GetComponent<IDamageable>().TakeDamage(damageAmount);
+                hit.collider.GetComponent<IDamageable>().TakeDamage(new TakeDamageData
+                {
+                    DamageAmount = damageAmount,
+                    TakeDamageType = EnemyTakeDamageData.BulletFromPlayer
+                });
             }
         }
     }

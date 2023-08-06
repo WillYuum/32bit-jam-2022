@@ -47,4 +47,25 @@ public class SimpleFlash : MonoBehaviour
         // Set the routine to null, signaling that it's finished.
         _flashRoutine = null;
     }
+
+    public void FlashForSeconds(float seconds)
+    {
+        int flashCount = (int)(seconds / _duration);
+        StartCoroutine(FlashForSecondsRoutine(flashCount));
+    }
+
+    private IEnumerator FlashForSecondsRoutine(int flashCount)
+    {
+        float flashRate = 1.0f;
+        print("flashCount" + flashCount);
+
+        WaitForSeconds waitForSeconds = new WaitForSeconds(flashRate);
+
+        while (flashCount > 0)
+        {
+            Flash();
+            yield return new WaitForSeconds(flashRate);
+            flashCount--;
+        }
+    }
 }

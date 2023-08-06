@@ -126,6 +126,7 @@ public class Dasher : EnemyCore<Dasher>
         var hit = Physics2D.CircleCast(transform.position, _explodeRange, Vector2.zero, 1.0f, LayerMask.GetMask("Player"));
         if (hit.collider != null)
         {
+            int damageAmount = 1;
             hit.collider.GetComponent<Turret>().TakeDamage(1);
         }
 

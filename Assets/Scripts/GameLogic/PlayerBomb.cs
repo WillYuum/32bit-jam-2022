@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using SpawnManagerMod;
 using UnityEngine;
 using DG.Tweening;
 
@@ -35,19 +33,20 @@ public class PlayerBomb : MonoBehaviour
         transform.localScale += Vector3.one * currentRadius;
 
 
+        int damageAmount = 999;
         for (int i = 0; i < damageables.Count; i++)
         {
             IDamageable damageable = damageables[i];
             if (damageable != null)
             {
-                int damageAmount = 999;
-                damageable.TakeDamage(damageAmount);
-                damageables.Remove(damageable);
+                damageable.TakeDamage(new TakeDamageData
+                {
+                    DamageAmount = damageAmount,
+                    TakeDamageType = EnemyTakeDamageData.Explosion,
+                });
             }
-            else
-            {
-                damageables.Remove(damageable);
-            }
+
+            damageables.Remove(damageable);
         }
 
 
