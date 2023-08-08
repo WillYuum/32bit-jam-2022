@@ -172,6 +172,8 @@ public class EliteSpawn : SpawnAction
                     BehavioralController.instance.RemoveBehavioral(behavior);
                 }
 
+                if (spawnedElite.Stunned) return;
+
                 timer -= Time.deltaTime;
 
                 if (timer <= 0.0f)

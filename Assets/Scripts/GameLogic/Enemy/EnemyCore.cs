@@ -80,13 +80,14 @@ where T : MonoBehaviour
         }
         else
         {
-            if (damageData.TakeDamageType == EnemyTakeDamageData.BulletFromPlayer)
+            switch (damageData.TakeDamageType)
             {
-                InvokeStunBehaviorOnEnemy();
-            }
-            else
-            {
-                _simpleFlash.Flash();
+                case EnemyTakeDamageData.BulletFromPlayer:
+                    _simpleFlash.Flash();
+                    break;
+                case EnemyTakeDamageData.Explosion:
+                    InvokeStunBehaviorOnEnemy();
+                    break;
             }
         }
 
@@ -98,15 +99,15 @@ where T : MonoBehaviour
     {
         if (Stunned == false)
         {
-            float stunDuration = 3.0f;
-            _simpleFlash.FlashForSeconds(stunDuration);
+            int flashCount = 3;
+            _simpleFlash.FlashForSeconds(flashCount);
             Stunned = true;
             InvokeStunBehaviorOnEnemy();
-            Invoke(nameof(ResetFromStun), stunDuration);
+            Invoke(nameof(this.ResetFromStun), flashCount);
         }
     }
 
-    private void ResetFromStun(float stunDuration)
+    private void ResetFromStun()
     {
         Stunned = false;
     }

@@ -48,23 +48,23 @@ public class SimpleFlash : MonoBehaviour
         _flashRoutine = null;
     }
 
-    public void FlashForSeconds(float seconds)
+
+
+    //Flash count happens every second
+    public void FlashForSeconds(int flashCount)
     {
-        int flashCount = (int)(seconds / _duration);
         StartCoroutine(FlashForSecondsRoutine(flashCount));
     }
 
     private IEnumerator FlashForSecondsRoutine(int flashCount)
     {
         float flashRate = 1.0f;
-        print("flashCount" + flashCount);
-
-        WaitForSeconds waitForSeconds = new WaitForSeconds(flashRate);
+        WaitForSeconds waitForSeconds = new(flashRate);
 
         while (flashCount > 0)
         {
             Flash();
-            yield return new WaitForSeconds(flashRate);
+            yield return waitForSeconds;
             flashCount--;
         }
     }
