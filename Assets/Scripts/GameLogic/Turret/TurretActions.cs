@@ -122,12 +122,12 @@ public class TurretActions : MonoBehaviour
     {
         ExplosionBarTracker explosionBarTracker = GameloopManager.instance.ExplosionBarTracker;
 
-        if (explosionBarTracker.IsExplosionBarFull())
+        if (explosionBarTracker.CanUseBigBoom())
         {
             AudioManager.instance.PlaySFX("playerSpecial");
 
             var explosion = SpawnManager.instance.ExplosionPrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
-            explosion.GetComponent<PlayerBomb>().Explode();
+            explosion.GetComponent<BigBoomBehavior>().Explode();
             explosion.transform.position = Vector3.zero;
         }
 

@@ -1,6 +1,7 @@
 using UnityEngine;
 using Utils.GenericSingletons;
 using System;
+using GameLogic.Spawner;
 
 
 
@@ -44,6 +45,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
     public KillMomentum KillMomentunTracker { get; private set; }
     public ShootBehavior CurrentShootBehavior { get; private set; }
+
+    private Spawner _spawner;
 
     private void Awake()
     {
@@ -95,6 +98,11 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             KillMomentunTracker.DecreaseMomentum();
             DetermineShootLevel();
         }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            ExplosionBarTracker.IncreaseValue(ExplosionBarTracker.MaxExplosionBarValue);
+        }
 #endif
     }
 
@@ -123,8 +131,14 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         enabled = true;
         LoopIsActive = true;
-        Spawner.instance.ResetSpawnerProps();
-        Spawner.instance.StartSpawner(GameObject.FindObjectOfType<Room>());
+
+        if (_spawner != null)
+        {
+            Destroy(_spawner.gameObject);
+        }
+
+        _spawner = new GameObject("Spawner").AddComponent<Spawner>();
+        _spawner.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)
         {
@@ -158,7 +172,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         GameloopManager.instance.LoopIsActive = false;
 
-        Spawner.instance.StopSpawner();
+        _spawner.StopSpawner();
 
         AudioManager.instance.StopAllBGM();
         AudioManager.instance.PlaySFX("gameOver");
@@ -347,7 +361,7 @@ public class ExplosionBarTracker
         OnUpdate.Invoke();
     }
 
-    public bool IsExplosionBarFull()
+    public bool CanUseBigBoom()
     {
         return _currentExplosionBarValue >= _maxExplosionBarValue;
     }

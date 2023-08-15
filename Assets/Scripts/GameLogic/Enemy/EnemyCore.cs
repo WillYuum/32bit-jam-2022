@@ -12,7 +12,19 @@ public enum EnemyType
 interface IDamageable
 {
     Transform transform { get; }
-    void TakeDamage(int damage);
+    void TakeDamage(TakeDamageData damage);
+}
+
+public struct TakeDamageData
+{
+    public int DamageAmount;
+    public EnemyTakeDamageData TakeDamageType;
+}
+
+public enum EnemyTakeDamageData
+{
+    Explosion,
+    BulletFromPlayer,
 }
 
 public class EnemyCore<T> : MonoBehaviour, IDamageable
@@ -20,11 +32,13 @@ where T : MonoBehaviour
 {
     [field: SerializeField] public EnemyType EnemyType { get; private set; }
     [SerializeField] private SimpleFlash _simpleFlash;
+    public bool Stunned { get; private set; }
 
     protected HitPoint _hitPoint;
 
     private void Awake()
     {
+        Stunned = false;
         switch (EnemyType)
         {
             case EnemyType.Elite:
@@ -47,12 +61,6 @@ where T : MonoBehaviour
     }
 
 
-    public virtual Tweener SpawnEnemy()
-    {
-        //tween scale up then enemy then invoke onSpawnComplete
-        transform.localScale = Vector3.zero;
-        return transform.DOScale(Vector3.one, 3.5f);
-    }
 
 
     protected void SetOnSpawnBehavior()
@@ -60,20 +68,48 @@ where T : MonoBehaviour
         transform.localScale = Vector3.zero;
     }
 
-    public void TakeDamage(int damage)
+    public void TakeDamage(TakeDamageData damageData)
     {
-        AudioManager.instance.PlaySFX("enemyHurt");
+        _hitPoint.TakeDamage(damageData.DamageAmount);
+        bool isDead = _hitPoint.IsOutOfHP();
 
-        print("damage" + damage);
-
-        _simpleFlash.Flash();
-
-        _hitPoint.TakeDamage(damage);
-        if (_hitPoint.IsOutOfHP())
+        if (isDead)
         {
             GameloopManager.instance.InvokeKillEnemy(EnemyType);
             Die();
         }
+        else
+        {
+            switch (damageData.TakeDamageType)
+            {
+                case EnemyTakeDamageData.BulletFromPlayer:
+                    _simpleFlash.Flash();
+                    break;
+                case EnemyTakeDamageData.Explosion:
+                    InvokeStunBehaviorOnEnemy();
+                    break;
+            }
+        }
+
+
+        AudioManager.instance.PlaySFX("enemyHurt");
+    }
+
+    protected virtual void InvokeStunBehaviorOnEnemy()
+    {
+        if (Stunned == false)
+        {
+            int flashCount = 3;
+            _simpleFlash.FlashForSeconds(flashCount);
+            Stunned = true;
+            InvokeStunBehaviorOnEnemy();
+            Invoke(nameof(this.ResetFromStun), flashCount);
+        }
+    }
+
+    private void ResetFromStun()
+    {
+        Stunned = false;
     }
 
     protected void Die()

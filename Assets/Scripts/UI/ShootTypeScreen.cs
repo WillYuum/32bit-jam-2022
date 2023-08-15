@@ -35,7 +35,7 @@ public class ShootTypeScreen : MonoBehaviour
 
 
         //switch types by pressing K or S
-        if (Input.GetKeyDown(KeyCode.K) || Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.D))
         {
             if (_currentTypeOfShots == TypeOfShots.PeaShots)
             {
