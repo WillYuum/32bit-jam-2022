@@ -72,7 +72,7 @@ namespace GameLogic.Spawner
                     _delayToNextSpawn = 2.5f;
                 }
 
-                _waves.PickNext().InvokNextSpawnAction();
+                _waves.PickNext().InvokSpawnAction();
             }
         }
 
@@ -117,7 +117,7 @@ namespace GameLogic.Spawner
 
             _waves = new ArrayTools.PseudoRandArray<SpawnAction>(waves);
 
-            _waves.PickNext().InvokNextSpawnAction();
+            _waves.PickNext().InvokSpawnAction();
         }
 
         public void StopSpawner()

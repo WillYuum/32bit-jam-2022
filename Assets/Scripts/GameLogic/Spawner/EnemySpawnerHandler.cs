@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using GameLogic.Spawner.Utils;
 using SpawnManagerMod;
 using UnityEngine;
@@ -332,39 +331,19 @@ namespace GameLogic.Spawner.EnemySpawner
 
         public abstract class SpawnAction
         {
-            private List<Action> _spawnActions = new List<Action>();
-            private int _currentActionIndex = 0;
             protected Room CurrentRoom;
+            private Action _spawnAction;
 
             public void AddSpawnAction(Action spawnAction)
             {
-                _spawnActions.Add(spawnAction);
+                _spawnAction = spawnAction;
             }
 
-            public void InvokNextSpawnAction()
+            public void InvokSpawnAction()
             {
-                if (_currentActionIndex >= _spawnActions.Count)
-                {
-                    _currentActionIndex = 0;
-                }
 
-#if UNITY_EDITOR
-                if (CurrentRoom == null)
-                {
-                    Debug.LogError("Current room was not set for the attack wave");
-                }
-#endif
-
-
-                _spawnActions[_currentActionIndex].Invoke();
-                _currentActionIndex++;
+                _spawnAction?.Invoke();
             }
-
-            public bool IsFinished()
-            {
-                return _currentActionIndex >= _spawnActions.Count;
-            }
-
 
             public void SetRoomToSpawn(Room room)
             {
