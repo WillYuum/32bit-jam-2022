@@ -127,7 +127,7 @@ public class TurretActions : MonoBehaviour
             AudioManager.instance.PlaySFX("playerSpecial");
 
             var explosion = SpawnManager.instance.ExplosionPrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
-            explosion.GetComponent<PlayerBomb>().Explode();
+            explosion.GetComponent<BigBoomBehavior>().Explode();
             explosion.transform.position = Vector3.zero;
         }
 

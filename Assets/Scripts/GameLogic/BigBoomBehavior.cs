@@ -2,10 +2,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 
-public class PlayerBomb : MonoBehaviour
+public class BigBoomBehavior : MonoBehaviour
 {
 
-    [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private SpriteRenderer _bigBoomVisual;
 
     public void Explode()
     {
@@ -33,7 +33,7 @@ public class PlayerBomb : MonoBehaviour
         transform.localScale += Vector3.one * currentRadius;
 
 
-        int damageAmount = 999;
+        int damageAmount = 0;
         for (int i = 0; i < damageables.Count; i++)
         {
             IDamageable damageable = damageables[i];
@@ -72,7 +72,7 @@ public class PlayerBomb : MonoBehaviour
 
         void FadeOutExplosion()
         {
-            _spriteRenderer.DOColor(Color.clear, 0.5f).OnComplete(() =>
+            _bigBoomVisual.DOColor(Color.clear, 0.5f).OnComplete(() =>
             {
                 Destroy(gameObject);
             });

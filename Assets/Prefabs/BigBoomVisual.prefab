@@ -9,9 +9,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4514348531954860479}
-  - component: {fileID: 1825466704}
+  - component: {fileID: 7325486232732415299}
   m_Layer: 0
-  m_Name: ExplosionVisual
+  m_Name: BigBoomVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -33,7 +33,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1825466704
+--- !u!114 &7325486232732415299
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,7 +45,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc843957d89f9574a859007ae48e586e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 4514348532113134850}
+  _bigBoomVisual: {fileID: 4514348532113134850}
 --- !u!1 &4514348532113134848
 GameObject:
   m_ObjectHideFlags: 0
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 4514348532113134849}
   - component: {fileID: 4514348532113134850}
   m_Layer: 0
-  m_Name: visual
+  m_Name: bigBoomVisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
