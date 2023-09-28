@@ -27,7 +27,7 @@ namespace GameLogic.Spawner.EnemySpawner
 
                 Sequencer.SequenceState SpawnElite()
                 {
-                    Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.65f);
+                    Vector3 spawnPoint = base.GetCalculatedPosition();
                     spawnedElite = elitePrefab.CreateGameObject(spawnPoint, Quaternion.identity).GetComponent<Elite>();
                     return spawnedElite.ScaleUpAndSpawn();
                 }
@@ -111,7 +111,7 @@ namespace GameLogic.Spawner.EnemySpawner
 
                 Sequencer.SequenceState SpawnBomber()
                 {
-                    Vector3 spawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.7f);
+                    Vector3 spawnPoint = base.GetCalculatedPosition();
                     spawnedBomber = bomberPrefab.CreateGameObject(new Vector3(0, 0, 0), Quaternion.identity).GetComponent<Bomber>();
                     return spawnedBomber.ScaleUpAndSpawn();
                 }
@@ -190,7 +190,7 @@ namespace GameLogic.Spawner.EnemySpawner
 
                 PseudoRandArray<float> attackDelaysArray = new PseudoRandArray<float>(new float[] { 1.0f, 0.5f, 0.85f });
 
-                Vector3 centerSwarmSpawnPoint = CurrentRoom.GetRandomSpawnPositionWithinRoomRange(0.5f);
+                Vector3 centerSwarmSpawnPoint = base.GetCalculatedPosition();
                 // Vector3 centerSwarmSpawnPoint = CurrentRoom.GetRandomPositionInTopsideOfOctagon(1.0f);
 
                 Sequencer sequencer = Sequencer.CreateSequencer("SmallSwarm");
@@ -331,7 +331,7 @@ namespace GameLogic.Spawner.EnemySpawner
 
         public abstract class SpawnAction
         {
-            protected Room CurrentRoom;
+            private Room _currentRoom;
             private Action _spawnAction;
 
             public void AddSpawnAction(Action spawnAction)
@@ -347,7 +347,12 @@ namespace GameLogic.Spawner.EnemySpawner
 
             public void SetRoomToSpawn(Room room)
             {
-                CurrentRoom = room;
+                _currentRoom = room;
+            }
+
+            protected Vector3 GetCalculatedPosition()
+            {
+                return _currentRoom.GetRandomSpawnPositionWithinRoomRange(0.65f);
             }
         }
     }

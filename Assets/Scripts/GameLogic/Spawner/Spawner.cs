@@ -7,16 +7,13 @@ namespace GameLogic.Spawner
     public class Spawner : MonoBehaviour
     {
         private ArrayTools.PseudoRandArray<SpawnAction> _waves;
-
-        private float _delayToNextSpawn = 5.0f;
-
         private float _currentTimer;
 
         private void Awake()
         {
             GameloopManager.instance.OnRestartGame += () =>
             {
-                _currentTimer = _delayToNextSpawn;
+                _currentTimer = GameloopManager.instance.GameDiffVariables.GetSpawnDelay();
 
                 SpawnAction[] waves = new SpawnAction[]{
             new DasherSwarmSpawn(),
@@ -50,7 +47,7 @@ namespace GameLogic.Spawner
                 _waves = new ArrayTools.PseudoRandArray<SpawnAction>(waves);
             };
 
-            _currentTimer = _delayToNextSpawn;
+            _currentTimer = GameloopManager.instance.GameDiffVariables.GetSpawnDelay();
         }
 
         private void Update()
@@ -64,13 +61,7 @@ namespace GameLogic.Spawner
 
             if (_currentTimer <= 0.0f)
             {
-                _currentTimer = _delayToNextSpawn;
-                _delayToNextSpawn -= 0.25f;
-
-                if (_delayToNextSpawn < 2.5f)
-                {
-                    _delayToNextSpawn = 2.5f;
-                }
+                _currentTimer = GameloopManager.instance.GameDiffVariables.GetSpawnDelay();
 
                 _waves.PickNext().InvokSpawnAction();
             }
@@ -79,7 +70,7 @@ namespace GameLogic.Spawner
 
         public void ResetSpawnerProps()
         {
-            _currentTimer = _delayToNextSpawn;
+
         }
 
         public void StartSpawner(Room roomToSpawn)
