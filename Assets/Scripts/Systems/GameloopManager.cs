@@ -41,6 +41,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public bool LoopIsActive { get; private set; }
 
 
+    public EnemyHpCalculator EnemyHpCalculator { get; private set; }
+
     public KillMomentum KillMomentunTracker { get; private set; }
     public ShootBehavior CurrentShootBehavior { get; private set; }
 
@@ -134,6 +136,15 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
 
         EnemiesKilled = 0;
+
+
+        EnemyHpCalculator = new EnemyHpCalculator(new BoxGameVariable<EnemyHpCalculator.RequiredVariables>
+        {
+            GetDataFromGameLoop = () => new EnemyHpCalculator.RequiredVariables
+            {
+                EnemiesKilled = EnemiesKilled,
+            }
+        });
 
 
 
@@ -543,6 +554,56 @@ public class GameDiffVariables
         float spawnDelay = _spawnDelayCalculator.SpawnDelayValue;
         Debug.Log("Spawn Delay: " + spawnDelay);
         return spawnDelay;
+    }
+}
+
+public class EnemyHpCalculator
+{
+    private BoxGameVariable<RequiredVariables> _gameDiffVariables;
+    private const int _maxDasherKills = 164;
+    private const int _maxBomberKills = 190;
+    private const int _maxEliteKills = 150;
+
+    private int[] _dasherHp = new int[3] { 1, 1, 2 };
+    private int[] _bomberHp = new int[3] { 5, 6, 7 };
+    private int[] _eliteHp = new int[3] { 10, 11, 12 };
+
+    public struct RequiredVariables
+    {
+        public int EnemiesKilled;
+    }
+
+
+    public EnemyHpCalculator(BoxGameVariable<RequiredVariables> gameDiffVariables)
+    {
+        _gameDiffVariables = gameDiffVariables;
+
+    }
+
+    public int GetEnemyHP(EnemyType enemyType)
+    {
+        //I want to get the HP from the array variable and the calculation should be percentage of the max kills
+        int enemiesKilled = _gameDiffVariables.GetDataFromGameLoop().EnemiesKilled;
+        int enemyLevel = GetEnemyLevel(enemiesKilled, _maxDasherKills);
+
+        switch (enemyType)
+        {
+            case EnemyType.Dasher:
+                return _dasherHp[enemyLevel];
+            case EnemyType.Bomber:
+                return _bomberHp[enemyLevel];
+            case EnemyType.Elite:
+                return _eliteHp[enemyLevel];
+            default:
+                return 0;
+        }
+    }
+
+    private int GetEnemyLevel(int enemiesKilled, int maxKills)
+    {
+        float percentage = (float)enemiesKilled / maxKills;
+        int level = (int)(percentage * 3);
+        return Mathf.Min(level, 2);
     }
 }
 

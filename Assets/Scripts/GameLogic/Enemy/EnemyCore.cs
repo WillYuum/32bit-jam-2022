@@ -38,18 +38,8 @@ where T : MonoBehaviour
     private void Awake()
     {
         Stunned = false;
-        switch (EnemyType)
-        {
-            case EnemyType.Elite:
-                _hitPoint = new HitPoint(GameVariables.instance.EnemyHPData.Elite);
-                break;
-            case EnemyType.Dasher:
-                _hitPoint = new HitPoint(GameVariables.instance.EnemyHPData.Dasher);
-                break;
-            case EnemyType.Bomber:
-                _hitPoint = new HitPoint(GameVariables.instance.EnemyHPData.Bomber);
-                break;
-        }
+        int hp = GameloopManager.instance.EnemyHpCalculator.GetEnemyHP(EnemyType);
+        _hitPoint = new HitPoint(hp);
 
         OnAwake();
     }
