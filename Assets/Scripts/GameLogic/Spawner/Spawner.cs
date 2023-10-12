@@ -8,6 +8,7 @@ namespace GameLogic.Spawner
     {
         private ArrayTools.PseudoRandArray<SpawnAction> _waves;
         private float _currentTimer;
+        private int _maxAllowedEnemies = 7;
 
         private void Awake()
         {
@@ -52,6 +53,15 @@ namespace GameLogic.Spawner
 
         private void Update()
         {
+#if UNITY_EDITOR
+            if (Input.GetKeyDown(KeyCode.Backslash))
+            {
+
+                SpawnEnemy();
+            }
+#endif
+
+
             if (_waves == null)
             {
                 return;
@@ -61,9 +71,11 @@ namespace GameLogic.Spawner
 
             if (_currentTimer <= 0.0f)
             {
-                _currentTimer = GameloopManager.instance.GameDiffVariables.GetSpawnDelay();
-
-                _waves.PickNext().InvokSpawnAction();
+                if (GameloopManager.instance.EnemyTracker.EnemiesActive <= _maxAllowedEnemies)
+                {
+                    SpawnEnemy();
+                    print("Amount allowed enemies: " + _maxAllowedEnemies + " Current enemies: " + GameloopManager.instance.EnemyTracker.EnemiesActive);
+                }
             }
         }
 
@@ -108,7 +120,23 @@ namespace GameLogic.Spawner
 
             _waves = new ArrayTools.PseudoRandArray<SpawnAction>(waves);
 
-            _waves.PickNext().InvokSpawnAction();
+            SpawnEnemy();
+        }
+
+
+        private void SpawnEnemy()
+        {
+
+            SpawnAction spawnAction = _waves.PickNext();
+            int amountWillSpawn = spawnAction.GetSpawnAmount();
+            for (int i = 0; i < amountWillSpawn; i++)
+            {
+                GameloopManager.instance.EnemyTracker.IncreaseActive();
+            }
+
+            spawnAction.InvokSpawnAction();
+            _maxAllowedEnemies = GameloopManager.instance.MaxAmountEnemySpawned.GetMaxToSpawn();
+            _currentTimer = GameloopManager.instance.GameDiffVariables.GetSpawnDelay();
         }
 
         public void StopSpawner()

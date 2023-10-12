@@ -46,9 +46,12 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public KillMomentum KillMomentunTracker { get; private set; }
     public ShootBehavior CurrentShootBehavior { get; private set; }
 
-    public int EnemiesKilled { get; private set; }
 
     private Spawner _spawner;
+
+    public MaxAmountEnemySpawned MaxAmountEnemySpawned;
+
+    public EnemyTracker EnemyTracker { get; private set; }
 
     private void Awake()
     {
@@ -122,12 +125,16 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         _inBattleTimer = new InBattleTimer();
 
+
+        EnemyTracker = new EnemyTracker();
+
+
         var gameVariableFromGameLoop = new BoxGameVariable<SpawnDelayCalculator.RequiredVariables>
         {
             GetDataFromGameLoop = () => new SpawnDelayCalculator.RequiredVariables
             {
                 TimePlayed = _inBattleTimer.CurrentTime,
-                EnemiesKilled = EnemiesKilled,
+                EnemiesKilled = EnemyTracker.EnemiesKilled,
             }
         };
 
@@ -135,18 +142,22 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         GameDiffVariables = new GameDiffVariables(gameVariableFromGameLoop);
 
 
-        EnemiesKilled = 0;
-
-
         EnemyHpCalculator = new EnemyHpCalculator(new BoxGameVariable<EnemyHpCalculator.RequiredVariables>
         {
             GetDataFromGameLoop = () => new EnemyHpCalculator.RequiredVariables
             {
-                EnemiesKilled = EnemiesKilled,
+                EnemiesKilled = EnemyTracker.EnemiesKilled,
             }
         });
 
 
+        MaxAmountEnemySpawned = new MaxAmountEnemySpawned(new BoxGameVariable<MaxAmountEnemySpawned.RequiredVariables>
+        {
+            GetDataFromGameLoop = () => new MaxAmountEnemySpawned.RequiredVariables
+            {
+                EnemiesKilled = EnemyTracker.EnemiesKilled,
+            }
+        });
 
         CollectedHightScore = 0;
 
@@ -243,7 +254,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         KillMomentunTracker.IncreaseMomentum();
         GameloopManager.instance.OnMomentumChange.Invoke(KillMomentunTracker.GetMomentumRatio());
 
-        EnemiesKilled += 1;
+        EnemyTracker.IncreaseKilled();
 
         DetermineShootLevel();
 
@@ -655,5 +666,74 @@ public class SpawnDelayCalculator
 
         return spawnDelay;
     }
-
 }
+
+
+public class MaxAmountEnemySpawned
+{
+    public struct RequiredVariables
+    {
+        public int EnemiesKilled;
+    }
+
+
+    private BoxGameVariable<RequiredVariables> _gameDiffVariables;
+
+
+    public MaxAmountEnemySpawned(BoxGameVariable<RequiredVariables> gameDiffVariables)
+    {
+        _gameDiffVariables = gameDiffVariables;
+    }
+
+
+    public int GetMaxToSpawn()
+    {
+        RequiredVariables requiredVariables = _gameDiffVariables.GetDataFromGameLoop();
+        int maxEnemyKilled = 185;
+
+        switch (requiredVariables.EnemiesKilled)
+        {
+            case int n when n >= 185:
+                return 13;
+            case int n when n >= (int)(maxEnemyKilled * 0.5):
+                return 9;
+            default:
+                return 7;
+        }
+    }
+}
+
+
+public class EnemyTracker
+{
+    public int EnemiesKilled { get; private set; }
+    public int EnemiesActive { get; private set; }
+
+    public EnemyTracker()
+    {
+        EnemiesKilled = 0;
+        EnemiesActive = 0;
+    }
+
+
+    public void IncreaseKilled()
+    {
+        EnemiesKilled += 1;
+        DecreaseActive();
+    }
+
+    public void IncreaseActive()
+    {
+        EnemiesActive += 1;
+    }
+
+    private void DecreaseActive()
+    {
+        EnemiesActive -= 1;
+        if (EnemiesActive < 0)
+        {
+            EnemiesActive = 0;
+        }
+    }
+}
+

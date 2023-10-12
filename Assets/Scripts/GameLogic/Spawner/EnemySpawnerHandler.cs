@@ -166,6 +166,12 @@ namespace GameLogic.Spawner.EnemySpawner
                 AddSpawnAction(EasySwarm);
             }
 
+            public override int GetSpawnAmount()
+            {
+                return 3;
+            }
+
+
 
             private bool CheckIfAllDashersAreDead(Transform[] dashers)
             {
@@ -337,6 +343,11 @@ namespace GameLogic.Spawner.EnemySpawner
             public void AddSpawnAction(Action spawnAction)
             {
                 _spawnAction = spawnAction;
+            }
+
+            public virtual int GetSpawnAmount()
+            {
+                return 1;
             }
 
             public void InvokSpawnAction()
