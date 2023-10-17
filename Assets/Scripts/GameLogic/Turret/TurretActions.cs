@@ -24,6 +24,8 @@ public class TurretActions : MonoBehaviour
 
     private bool _toggleShoot = false;
 
+    public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
+
 
     private void Awake()
     {
@@ -35,6 +37,10 @@ public class TurretActions : MonoBehaviour
 
 
         _currentRotationDirection = RotationDirection.ClockWise;
+
+        Turret turret = gameObject.GetComponent<Turret>();
+        TurretPlatfromTracker = new TurretPlatfromTracker(turret);
+
 
         //This is to set the fish on the plaform as soon as the game starts
         // GameloopManager.instance.OnGameLoopStart += () =>
@@ -57,7 +63,7 @@ public class TurretActions : MonoBehaviour
 
     private void Update()
     {
-        if (GameloopManager.instance.LoopIsActive == false) return;
+        // if (GameloopManager.instance.LoopIsActive == false) return;
         _turretShootController.UpdateShootTimer();
 
         if (Input.GetKeyDown(KeyCode.A))
@@ -114,7 +120,7 @@ public class TurretActions : MonoBehaviour
 
     public void Move()
     {
-        Transform turretIndicatorTransform = GameloopManager.instance.TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
+        Transform turretIndicatorTransform = TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
         _turretActions.UpdateTransformProps(turretIndicatorTransform.position, turretIndicatorTransform.up);
     }
 

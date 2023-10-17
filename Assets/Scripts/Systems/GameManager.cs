@@ -1,4 +1,5 @@
 ﻿using System;
+using SpawnManagerMod.Configs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utils.GenericSingletons;
@@ -35,14 +36,22 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 #endif
     }
 
+    [SerializeField] private PrefabConfig _pickShootTypePrefab;
 
     private void LoadGameFromMainGame()
     {
         GameUI.instance.Init();
+        EnterPickShootTypeState();
+    }
 
-        var selectScreenUI = GameUI.instance.LoadSelectShootType();
-        selectScreenUI.OpenScreen((shootType) =>
+    private void EnterPickShootTypeState()
+    {
+        GameObject pickScreenLogicObject = _pickShootTypePrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
+        PickShootType.LoadConfig loadConfig = pickScreenLogicObject.GetComponent<PickShootType>().Load();
+
+        loadConfig.WaitToSelectShootType((shootType) =>
         {
+
             var gameScreen = GameUI.instance.LoadGameScreen();
             gameScreen.OpenScreen(() =>
             {
@@ -55,28 +64,11 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     }
 
 
-
     private void LoadGameFromMainMenu()
     {
-        void startGameScene()
-        {
-            var selectScreenUI = GameUI.instance.LoadSelectShootType();
-            selectScreenUI.OpenScreen((shootType) =>
-            {
-                var gameScreen = GameUI.instance.LoadGameScreen();
-                gameScreen.OpenScreen(() =>
-                {
-                    GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
-                    {
-                        SelectTypeShot = shootType
-                    });
-                });
-            });
-        }
-
         void onClickPlay()
         {
-            GameManager.instance.SwitchToScene(GameScenes.Game, startGameScene);
+            GameManager.instance.SwitchToScene(GameScenes.Game, EnterPickShootTypeState);
         }
 
         var mainMenuActions = GameObject.FindObjectOfType<MainMenuScene.MainMenu>().LoadUpScreen(onClickPlay);

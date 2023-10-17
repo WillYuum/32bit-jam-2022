@@ -18,7 +18,7 @@ public struct StartGameLoopStruct
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
 
-    public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
+    // public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
 
     public event Action OnGameLoopStart;
     public event Action<int> OnFishTakeHit;
@@ -167,7 +167,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         _fishHitPoints = new HitPoint(startingHP);
 
         Turret turret = FindObjectOfType<Turret>();
-        TurretPlatfromTracker = new TurretPlatfromTracker(turret);
+        // TurretPlatfromTracker = new TurretPlatfromTracker(turret);
 
         SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 
@@ -184,7 +184,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
 
         _spawner = new GameObject("Spawner").AddComponent<Spawner>();
-        _spawner.StartSpawner(GameObject.FindObjectOfType<Room>());
+        // _spawner.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)
         {

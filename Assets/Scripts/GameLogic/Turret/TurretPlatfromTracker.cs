@@ -28,7 +28,6 @@ public class TurretPlatfromTracker
 
     public Transform MoveIndicator(RotationDirection direction)
     {
-        Vector2 newPos = _turretIndicatorPosition.localPosition;
         switch (direction)
         {
             case RotationDirection.ClockWise:
