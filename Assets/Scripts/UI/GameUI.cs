@@ -8,13 +8,11 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
         PauseScreen,
         GameUI,
         LoseScreen,
-        SelectShootScreen,
     }
 
     [SerializeField] private GameObject _pauseScreen;
     [SerializeField] private GameObject _gameUI;
     [SerializeField] private GameObject _loseScreen;
-    [SerializeField] private GameObject _selectShootTypeScreen;
 
     private GameObject _currentActiveScreen = null;
 
@@ -42,20 +40,10 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
             case Screens.LoseScreen:
                 _currentActiveScreen = _loseScreen.gameObject;
                 break;
-            case Screens.SelectShootScreen:
-                _currentActiveScreen = _selectShootTypeScreen.gameObject;
-                break;
 
         }
 
         _currentActiveScreen.SetActive(true);
-    }
-
-
-    public ShootTypeScreen.LoadConfig LoadSelectShootType()
-    {
-        SwitchToScreen(Screens.SelectShootScreen);
-        return _selectShootTypeScreen.GetComponent<ShootTypeScreen>().Load();
     }
 
 
