@@ -1,23 +1,21 @@
 using System;
 using UnityEngine;
+using DG.Tweening;
 
 public class PickShootType : MonoBehaviour
 {
     private Action<TypeOfShots> _onSelectType;
+    [SerializeField] private GameObject[] shotTypeVisuals;
 
     public struct LoadConfig
     {
         public Action<Action<TypeOfShots>> WaitToSelectShootType;
     }
 
-
-    private void Awake()
-    {
-        enabled = true; //Don't want to spawn the gameobject and be disabled by mistake
-    }
-
     public LoadConfig Load()
     {
+        EnableVisuals();
+
         _onSelectType = null;
         return new LoadConfig
         {
@@ -32,6 +30,32 @@ public class PickShootType : MonoBehaviour
         };
     }
 
+    private void EnableVisuals()
+    {
+        gameObject.SetActive(true);
+        enabled = true;
+
+        //tween scale up and down in loop for shotTypeVisuals
+        foreach (var shotTypeVisual in shotTypeVisuals)
+        {
+            shotTypeVisual.transform.DOScale(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+        }
+    }
+
+    private void HideVisuals()
+    {
+        gameObject.SetActive(false);
+        enabled = false;
+
+        //stop tweening on shotTypeVisuals
+        foreach (var shotTypeVisual in shotTypeVisuals)
+        {
+            shotTypeVisual.transform.DOKill();
+        }
+
+
+    }
+
 
     private TypeOfShots GetTypeShotFromPosition(Vector2 playerPosition)
     {
@@ -44,7 +68,7 @@ public class PickShootType : MonoBehaviour
         {
             TypeOfShots typeOfShot = GetTypeShotFromPosition(other.transform.position);
             _onSelectType.Invoke(typeOfShot);
-            Destroy(gameObject);
+            HideVisuals();
         }
     }
 }
