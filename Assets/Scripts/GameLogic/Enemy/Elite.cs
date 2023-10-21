@@ -1,5 +1,4 @@
 using UnityEngine;
-using SpawnManagerMod;
 using DG.Tweening;
 
 public class Elite : EnemyCore<Elite>
@@ -15,18 +14,6 @@ public class Elite : EnemyCore<Elite>
         ShootController = new ShootController(1.0f);
         _target = GameObject.Find("Turret").transform;
     }
-
-
-
-    public void HandleShoot()
-    {
-        Vector3 directionToTarget = _target.position - transform.position;
-
-        var projectile = SpawnManager.instance.EliteProjectilePrefab.CreateGameObject(transform.position, transform.rotation);
-        projectile.GetComponent<Projectile>().SetShootDirection(directionToTarget.normalized);
-        ShootController.ResetShootTimer();
-    }
-
 
     public Sequencer.SequenceState ScaleUpAndSpawn()
     {

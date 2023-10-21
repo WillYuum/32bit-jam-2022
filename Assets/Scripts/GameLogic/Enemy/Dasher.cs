@@ -127,7 +127,7 @@ public class Dasher : EnemyCore<Dasher>
         if (hit.collider != null)
         {
             int damageAmount = 1;
-            hit.collider.GetComponent<Turret>().TakeDamage(1);
+            hit.collider.GetComponent<Turret>().TakeDamage(damageAmount);
         }
 
         Destroy(gameObject);
