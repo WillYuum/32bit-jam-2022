@@ -2,6 +2,7 @@ using UnityEngine;
 using SpawnManagerMod;
 using DG.Tweening;
 using System;
+using SpawnManagerMod.Configs;
 
 
 
@@ -14,12 +15,18 @@ public class Turret : MonoBehaviour, ITurretActions
     [SerializeField] private Transform _pointOfShot;
 
     [SerializeField] private SpriteRenderer _spriteRenderer;
+    [SerializeField] private TurretEvents _turretEvents;
 
 
 
     public void SetTurretMoveDirection(TurretMoveDirection direction)
     {
         MoveDirection = direction;
+    }
+
+    public TurretEvents GetTurretEvents()
+    {
+        return _turretEvents;
     }
 
 
@@ -50,7 +57,7 @@ public class Turret : MonoBehaviour, ITurretActions
     }
 
 
-    public void shoot()
+    public void ShootProjectile()
     {
         AudioManager.instance.PlaySFX("playerFire");
 
@@ -126,7 +133,7 @@ public interface ITurretActions
     void PlayAnim();
     void SetTurretMoveDirection(TurretMoveDirection direction);
     void UpdateTransformProps(Vector2 position, Vector3 normal);
-    void shoot();
+    void ShootProjectile();
 
 }
 
@@ -142,14 +149,15 @@ public class LaserShootBehavior : ShootBehavior
 
     public override void OnLevelChange()
     {
-
-        GameObject beam = CurrentLevel switch
+        PrefabConfig selectedPrefab = CurrentLevel switch
         {
-            0 => SpawnManager.instance.BeamLevelOnePrefab.GetPrefabConfig(),
-            1 => SpawnManager.instance.BeamLevelTwoPrefab.GetPrefabConfig(),
-            2 => SpawnManager.instance.BeamLevelThreePrefab.GetPrefabConfig(),
-            _ => SpawnManager.instance.BeamLevelOnePrefab.GetPrefabConfig()
+            0 => SpawnManager.instance.BeamLevelOnePrefab,
+            1 => SpawnManager.instance.BeamLevelTwoPrefab,
+            2 => SpawnManager.instance.BeamLevelThreePrefab,
+            _ => SpawnManager.instance.BeamLevelOnePrefab,
         };
+
+        GameObject beam = selectedPrefab.GetPrefabConfig();
 
         SpriteRenderer beamSpriteRenderer = beam.GetComponentInChildren<SpriteRenderer>();
 

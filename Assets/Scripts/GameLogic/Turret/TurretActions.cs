@@ -1,188 +1,97 @@
 using UnityEngine;
-using SpawnManagerMod;
 
-public enum RotationDirection
+public abstract class PlayerActionStates
 {
-    ClockWise,
-    AntiClockWise,
+    public abstract void Update();
+    public abstract void OnEnter();
+    public abstract void OnExit();
 }
 
-public enum TurretMoveDirection
+
+public class MainMenuStage : PlayerActionStates
 {
-    None,
-    ClockWise,
-    AntiClockWise,
+    public override void OnEnter()
+    {
+
+    }
+
+    public override void OnExit()
+    {
+
+    }
+
+    public override void Update()
+    {
+
+    }
 }
 
-public class TurretActions : MonoBehaviour
+
+
+
+public class SelectShootTypeState : PlayerActionStates
 {
+    private TurretMoveLogic _turretMoveLogic;
+
+
+    public SelectShootTypeState(Turret turret)
+    {
+        _turretMoveLogic = new(turret, turret.GetComponent<ITurretActions>());
+    }
+
+    public override void OnEnter()
+    {
+    }
+
+    public override void OnExit()
+    {
+
+    }
+
+    public override void Update()
+    {
+        _turretMoveLogic.Update();
+    }
+}
+
+public class GameState : PlayerActionStates
+{
+    private TurretShootLogic _turrestShootLogic;
+    private TurretMoveLogic _turretMoveLogic;
     private ITurretActions _turretActions;
-    private ShootController _turretShootController;
-    [SerializeField] private TurretEvents _turretAnimationEvents;
+    private TurretEvents _turretEvents;
 
-    private RotationDirection _currentRotationDirection;
-
-    private bool _toggleShoot = false;
-
-    public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
-
-
-    private void Awake()
+    public GameState(Turret turret)
     {
-        print("Init turret actions");
-        _turretActions = gameObject.GetComponent<ITurretActions>();
-
-        float turretShootInterval = GameVariables.instance.PlayerShootInterval;
-        _turretShootController = new ShootController(turretShootInterval);
-
-
-        _currentRotationDirection = RotationDirection.ClockWise;
-
-        Turret turret = gameObject.GetComponent<Turret>();
-        TurretPlatfromTracker = new TurretPlatfromTracker(turret);
-
-
-        //This is to set the fish on the plaform as soon as the game starts
-        // GameloopManager.instance.OnGameLoopStart += () =>
-        // {
-        //     Move(RotationDirection.ClockWise);
-        // };
-    }
-    private void Start()
-    {
-        _turretAnimationEvents.OnTurretShoot += InvokeTurretShoot;
-
-        GameloopManager.instance.OnGameLoopStart += () =>
-        {
-            Move();
-        };
+        _turretActions = turret.GetComponent<ITurretActions>();
+        _turrestShootLogic = new TurretShootLogic(_turretActions);
+        _turretMoveLogic = new(turret, _turretActions);
+        _turretEvents = turret.GetTurretEvents();
     }
 
-
-
-
-    private void Update()
+    public override void OnEnter()
     {
-        // if (GameloopManager.instance.LoopIsActive == false) return;
-        _turretShootController.UpdateShootTimer();
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            _currentRotationDirection = RotationDirection.ClockWise;
-            _turretActions.SetTurretMoveDirection(TurretMoveDirection.ClockWise);
-
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            _currentRotationDirection = RotationDirection.AntiClockWise;
-            _turretActions.SetTurretMoveDirection(TurretMoveDirection.AntiClockWise);
-        }
-
-
-        if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
-        {
-            Move();
-        }
-
-
-
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            _toggleShoot = !_toggleShoot;
-        }
-
-        if (_toggleShoot)
-        {
-            Shoot();
-        }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            UseExplosionAbility();
-        }
+        _turretEvents.OnTurretShoot += ShootProjectile;
     }
 
-    public void Shoot()
+    public override void OnExit()
     {
-        if (_turretShootController.CanShoot)
-        {
-            _turretShootController.SetPaused();
-            _turretActions.PlayAnim();
-        }
+        _turretEvents.OnTurretShoot -= ShootProjectile;
     }
 
-
-    private void InvokeTurretShoot()
+    public override void Update()
     {
-        _turretShootController.ResetShootTimer();
-        _turretActions.shoot();
+        _turrestShootLogic.Update();
+        _turretMoveLogic.Update();
     }
 
-    public void Move()
+    private void ShootProjectile()
     {
-        Transform turretIndicatorTransform = TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
-        _turretActions.UpdateTransformProps(turretIndicatorTransform.position, turretIndicatorTransform.up);
-    }
-
-    private void UseExplosionAbility()
-    {
-        ExplosionBarTracker explosionBarTracker = GameloopManager.instance.ExplosionBarTracker;
-
-        if (explosionBarTracker.CanUseBigBoom())
-        {
-            AudioManager.instance.PlaySFX("playerSpecial");
-
-            var explosion = SpawnManager.instance.ExplosionPrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
-            explosion.GetComponent<BigBoomBehavior>().Explode();
-            explosion.transform.position = Vector3.zero;
-        }
-
-
+        _turretActions.ShootProjectile();
+        _turrestShootLogic.ShootController.SetWaitTillShootAnimation(false);
     }
 }
 
 
-public class ShootController
-{
-    public float ShootInterval { get; private set; }
-    public float ShootTimer { get; private set; }
-    public bool CanShoot { get; private set; }
-    private bool _paused = false;
-
-    public ShootController(float shootInterval)
-    {
-        ShootInterval = shootInterval;
-        ShootTimer = 0;
-        CanShoot = false;
-    }
-
-
-    public void UpdateShootTimer()
-    {
-        if (_paused) return;
-
-        if (ShootTimer < ShootInterval)
-        {
-            ShootTimer += Time.deltaTime;
-        }
-        else
-        {
-            CanShoot = true;
-        }
-    }
-
-    public void SetPaused()
-    {
-        CanShoot = false;
-        _paused = true;
-    }
-
-    public void ResetShootTimer()
-    {
-        _paused = false;
-        ShootTimer = 0.0f;
-        CanShoot = false;
-    }
-}
 
 
