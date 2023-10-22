@@ -52,4 +52,11 @@ public class TurretPlatfromTracker
         _turretIndicatorPosition.position = _vertexPath.GetClosestPointOnPath(startingPosition);
         _turretIndicatorPosition.up = _vertexPath.GetNormalAtDistance(_distanceTravelled);
     }
+
+    public void SetToPosition(Vector3 position)
+    {
+        _distanceTravelled = _vertexPath.GetClosestDistanceAlongPath(position);
+        _turretIndicatorPosition.position = _vertexPath.GetClosestPointOnPath(position);
+        _turretIndicatorPosition.up = _vertexPath.GetNormalAtDistance(_distanceTravelled);
+    }
 }

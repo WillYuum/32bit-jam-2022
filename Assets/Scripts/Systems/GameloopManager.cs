@@ -17,9 +17,6 @@ public struct StartGameLoopStruct
 
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
-
-    // public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
-
     public event Action OnGameLoopStart;
     public event Action<int> OnFishTakeHit;
     public event Action OnKillEnemy;
@@ -165,9 +162,6 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
-
-        Turret turret = FindObjectOfType<Turret>();
-        // TurretPlatfromTracker = new TurretPlatfromTracker(turret);
 
         SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 

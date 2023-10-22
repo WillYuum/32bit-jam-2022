@@ -1,3 +1,4 @@
+using UnityEngine;
 
 public abstract class PlayerActionStates
 {
@@ -71,6 +72,10 @@ public class GameState : PlayerActionStates
 
     public override void OnEnter()
     {
+        //Set tracker to turret position since the tracker is being initialized after select shoot type
+        Vector3 turretPosition = GameObject.FindGameObjectWithTag("Player").transform.position;
+        _turretMoveLogic.TurretPlatfromTracker.SetToPosition(turretPosition);
+
         _turretEvents.OnTurretShoot += ShootProjectile;
     }
 
