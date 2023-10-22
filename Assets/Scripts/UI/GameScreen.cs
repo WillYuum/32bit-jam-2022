@@ -38,7 +38,6 @@ public class GameScreen : MonoBehaviour
         print("GameScreen.OnDisable");
 
         _bigBoomCanvas.SetActive(false);
-
     }
 
     public LoadConfig Load()

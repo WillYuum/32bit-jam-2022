@@ -65,11 +65,16 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         PickShootType.LoadConfig loadConfig = pickScreenLogicObject.GetComponent<PickShootType>().Load();
 
         _turretActionsController.SwitchToActions(GameFlowState.PickShootType);
+        var pickShooTypeUI = GameUI.instance.LoadPickShotTypeScreen();
+
+
+        pickShooTypeUI.OpenScreen();
         loadConfig.WaitToSelectShootType((shootType) =>
         {
-            var gameScreen = GameUI.instance.LoadGameScreen();
-            gameScreen.OpenScreen(() =>
+
+            pickShooTypeUI.StartCountDown(() =>
             {
+                var gameScreen = GameUI.instance.LoadGameScreen();
                 _turretActionsController.SwitchToActions(GameFlowState.Game);
                 GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
                 {

@@ -109,6 +109,7 @@ MonoBehaviour:
   shotTypeVisuals:
   - {fileID: 142981666710041085}
   - {fileID: 142981665819971656}
+  tutorialText: {fileID: 0}
 --- !u!50 &142981666691131951
 Rigidbody2D:
   serializedVersion: 4

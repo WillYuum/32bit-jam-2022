@@ -8,11 +8,13 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
         PauseScreen,
         GameUI,
         LoseScreen,
+        PickShootType,
     }
 
     [SerializeField] private GameObject _pauseScreen;
     [SerializeField] private GameObject _gameUI;
     [SerializeField] private GameObject _loseScreen;
+    [SerializeField] private GameObject _pickShootTypePrefab;
 
     private GameObject _currentActiveScreen = null;
 
@@ -23,6 +25,13 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
         {
             _currentActiveScreen = null;
         };
+
+
+        //Hide all screens
+        _pauseScreen.SetActive(false);
+        _gameUI.SetActive(false);
+        _loseScreen.SetActive(false);
+        _pickShootTypePrefab.SetActive(false);
     }
 
     private void SwitchToScreen(GameUI.Screens screen)
@@ -40,10 +49,18 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
             case Screens.LoseScreen:
                 _currentActiveScreen = _loseScreen.gameObject;
                 break;
-
+            case Screens.PickShootType:
+                _currentActiveScreen = _pickShootTypePrefab.gameObject;
+                break;
         }
 
-        _currentActiveScreen.SetActive(true);
+        _currentActiveScreen?.SetActive(true);
+    }
+
+    public PickShootTypeScreen.LoadConfig LoadPickShotTypeScreen()
+    {
+        SwitchToScreen(Screens.PickShootType);
+        return _pickShootTypePrefab.GetComponent<PickShootTypeScreen>().Load();
     }
 
 

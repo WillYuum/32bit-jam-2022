@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using DG.Tweening;
+using TMPro;
 
 public class PickShootType : MonoBehaviour
 {
@@ -38,8 +39,9 @@ public class PickShootType : MonoBehaviour
         //tween scale up and down in loop for shotTypeVisuals
         foreach (var shotTypeVisual in shotTypeVisuals)
         {
-            shotTypeVisual.transform.DOScale(1.2f, 0.5f).SetLoops(-1, LoopType.Yoyo);
+            shotTypeVisual.transform.DOScale(1.8f, 0.5f).SetLoops(-1, LoopType.Yoyo);
         }
+
     }
 
     private void HideVisuals()
