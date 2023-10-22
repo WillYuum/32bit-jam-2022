@@ -40,6 +40,7 @@ public class SelectShootTypeState : PlayerActionStates
 
     public override void OnEnter()
     {
+        _turretMoveLogic.TurretPlatfromTracker.SetToStartingPosition();
     }
 
     public override void OnExit()

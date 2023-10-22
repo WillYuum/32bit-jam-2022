@@ -44,8 +44,6 @@ public class TurretMoveLogic
         Transform turretIndicatorTransform = TurretPlatfromTracker.MoveIndicator(_currentRotationDirection);
         _turretActions.UpdateTransformProps(turretIndicatorTransform.position, turretIndicatorTransform.up);
     }
-
-
 }
 
 public class TurretShootLogic
