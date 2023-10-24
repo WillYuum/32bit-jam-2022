@@ -101,7 +101,6 @@ public class TurretShootLogic
 
             var explosion = SpawnManager.instance.ExplosionPrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
             explosion.GetComponent<BigBoomBehavior>().Explode();
-            explosion.transform.position = Vector3.zero;
         }
     }
 }

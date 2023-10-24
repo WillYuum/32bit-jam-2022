@@ -29,29 +29,21 @@ public class BigBoomBehavior : MonoBehaviour
         float currentRadius = 0;
         float speedIncreaseRadius = 0.5f;
 
-
-        transform.localScale += Vector3.one * currentRadius;
-
-
-        int damageAmount = 0;
+        int damageAmount = 999;
         for (int i = 0; i < damageables.Count; i++)
         {
             IDamageable damageable = damageables[i];
-            if (damageable != null)
-            {
-                damageable.TakeDamage(new TakeDamageData
-                {
-                    DamageAmount = damageAmount,
-                    TakeDamageType = EnemyTakeDamageData.Explosion,
-                });
-            }
 
-            damageables.Remove(damageable);
+            damageable.TakeDamage(new TakeDamageData
+            {
+                DamageAmount = damageAmount,
+                TakeDamageType = EnemyTakeDamageData.Explosion,
+            });
         }
 
 
 
-
+        transform.localScale += Vector3.one * currentRadius;
 
         BehavioralData behavioralData = new BehavioralData();
 
