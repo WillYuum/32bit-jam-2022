@@ -178,7 +178,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
         }
 
         _spawner = new GameObject("Spawner").AddComponent<Spawner>();
-        // _spawner.StartSpawner(GameObject.FindObjectOfType<Room>());
+        _spawner.StartSpawner(GameObject.FindObjectOfType<Room>());
 
         if (OnGameLoopStart != null)
         {
