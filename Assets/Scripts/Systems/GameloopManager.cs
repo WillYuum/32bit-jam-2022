@@ -3,8 +3,6 @@ using Utils.GenericSingletons;
 using System;
 using GameLogic.Spawner;
 
-
-
 public enum TypeOfShots
 {
     PeaShots,
@@ -19,16 +17,13 @@ public struct StartGameLoopStruct
 
 public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 {
-    public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
-    // public Room CurrentRoom;
-
     public event Action OnGameLoopStart;
     public event Action<int> OnFishTakeHit;
     public event Action OnKillEnemy;
     public event Action OnRestartGame;
     public event Action<float> OnMomentumChange;
 
-
+    private InBattleTimer _inBattleTimer;
 
     public TypeOfShots SelectedShootType { get; private set; }
 
@@ -43,10 +38,17 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     public bool LoopIsActive { get; private set; }
 
 
+    public EnemyHpCalculator EnemyHpCalculator { get; private set; }
+
     public KillMomentum KillMomentunTracker { get; private set; }
     public ShootBehavior CurrentShootBehavior { get; private set; }
 
+
     private Spawner _spawner;
+
+    public MaxAmountEnemySpawned MaxAmountEnemySpawned;
+
+    public EnemyTracker EnemyTracker { get; private set; }
 
     private void Awake()
     {
@@ -64,7 +66,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
             enabled = false;
         }
 #else
-            enabled = false;
+        enabled = false;
 #endif
 
     }
@@ -74,6 +76,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         if (GameloopManager.instance.LoopIsActive == false) return;
 
+
+        _inBattleTimer.IncrementTime(Time.deltaTime);
 
 
 #if UNITY_EDITOR
@@ -106,6 +110,9 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 #endif
     }
 
+
+
+    public GameDiffVariables GameDiffVariables { get; private set; }
     public void StartGameLoop(StartGameLoopStruct startGameLoopStruct)
     {
         ExplosionBarTracker = new ExplosionBarTracker(GameVariables.instance.ExplosionBarData.MaxExplosionBarValue);
@@ -113,15 +120,48 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         GameloopManager.instance.LoopIsActive = true;
 
+        _inBattleTimer = new InBattleTimer();
+
+
+        EnemyTracker = new EnemyTracker();
+
+
+        var gameVariableFromGameLoop = new BoxGameVariable<SpawnDelayCalculator.RequiredVariables>
+        {
+            GetDataFromGameLoop = () => new SpawnDelayCalculator.RequiredVariables
+            {
+                TimePlayed = _inBattleTimer.CurrentTime,
+                EnemiesKilled = EnemyTracker.EnemiesKilled,
+            }
+        };
+
+
+        GameDiffVariables = new GameDiffVariables(gameVariableFromGameLoop);
+
+
+        EnemyHpCalculator = new EnemyHpCalculator(new BoxGameVariable<EnemyHpCalculator.RequiredVariables>
+        {
+            GetDataFromGameLoop = () => new EnemyHpCalculator.RequiredVariables
+            {
+                EnemiesKilled = EnemyTracker.EnemiesKilled,
+            }
+        });
+
+
+        MaxAmountEnemySpawned = new MaxAmountEnemySpawned(new BoxGameVariable<MaxAmountEnemySpawned.RequiredVariables>
+        {
+            GetDataFromGameLoop = () => new MaxAmountEnemySpawned.RequiredVariables
+            {
+                EnemiesKilled = EnemyTracker.EnemiesKilled,
+            }
+        });
+
         CollectedHightScore = 0;
 
         AudioManager.instance.PlayBGM("Main");
 
         int startingHP = 5;
         _fishHitPoints = new HitPoint(startingHP);
-
-        Turret turret = FindObjectOfType<Turret>();
-        TurretPlatfromTracker = new TurretPlatfromTracker(turret);
 
         SetShootTypeOnTurret(startGameLoopStruct.SelectTypeShot);
 
@@ -207,6 +247,8 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
     {
         KillMomentunTracker.IncreaseMomentum();
         GameloopManager.instance.OnMomentumChange.Invoke(KillMomentunTracker.GetMomentumRatio());
+
+        EnemyTracker.IncreaseKilled();
 
         DetermineShootLevel();
 
@@ -310,9 +352,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         CurrentShootBehavior.SetLevel(1);
     }
-
 }
-
 
 
 public class ExplosionBarTracker
@@ -477,3 +517,217 @@ public class RatioValue
         return CurrentValue / MaxValue;
     }
 }
+
+public class InBattleTimer
+{
+    public float CurrentTime;
+
+    public InBattleTimer()
+    {
+        CurrentTime = 0;
+    }
+
+    public void IncrementTime(float deltaTime)
+    {
+        CurrentTime += deltaTime;
+    }
+}
+
+
+
+public class BoxGameVariable<T> where T : struct
+{
+    public Func<T> GetDataFromGameLoop;
+}
+
+
+
+public class GameDiffVariables
+{
+
+    private SpawnDelayCalculator _spawnDelayCalculator;
+
+
+    public GameDiffVariables(BoxGameVariable<SpawnDelayCalculator.RequiredVariables> gameVariableFromGameLoop)
+    {
+        _spawnDelayCalculator = new(gameVariableFromGameLoop);
+    }
+
+
+    public float GetSpawnDelay()
+    {
+        float spawnDelay = _spawnDelayCalculator.SpawnDelayValue;
+        Debug.Log("Spawn Delay: " + spawnDelay);
+        return spawnDelay;
+    }
+}
+
+public class EnemyHpCalculator
+{
+    private BoxGameVariable<RequiredVariables> _gameDiffVariables;
+    private const int _maxDasherKills = 164;
+    private const int _maxBomberKills = 190;
+    private const int _maxEliteKills = 150;
+
+    private int[] _dasherHp = new int[3] { 1, 1, 2 };
+    private int[] _bomberHp = new int[3] { 5, 6, 7 };
+    private int[] _eliteHp = new int[3] { 10, 11, 12 };
+
+    public struct RequiredVariables
+    {
+        public int EnemiesKilled;
+    }
+
+
+    public EnemyHpCalculator(BoxGameVariable<RequiredVariables> gameDiffVariables)
+    {
+        _gameDiffVariables = gameDiffVariables;
+
+    }
+
+    public int GetEnemyHP(EnemyType enemyType)
+    {
+        //I want to get the HP from the array variable and the calculation should be percentage of the max kills
+        int enemiesKilled = _gameDiffVariables.GetDataFromGameLoop().EnemiesKilled;
+        int enemyLevel = GetEnemyLevel(enemiesKilled, _maxDasherKills);
+
+        switch (enemyType)
+        {
+            case EnemyType.Dasher:
+                return _dasherHp[enemyLevel];
+            case EnemyType.Bomber:
+                return _bomberHp[enemyLevel];
+            case EnemyType.Elite:
+                return _eliteHp[enemyLevel];
+            default:
+                return 0;
+        }
+    }
+
+    private int GetEnemyLevel(int enemiesKilled, int maxKills)
+    {
+        float percentage = (float)enemiesKilled / maxKills;
+        int level = (int)(percentage * 3);
+        return Mathf.Min(level, 2);
+    }
+}
+
+public class SpawnDelayCalculator
+{
+    private BoxGameVariable<RequiredVariables> _gameDiffVariables;
+
+
+    public struct RequiredVariables
+    {
+        public float TimePlayed;
+        public int EnemiesKilled;
+    }
+
+    private const float _minDelay = 1.5f;    // Minimum SpawnDelay in seconds
+    private const float _maxDelay = 5.5f;    // Maximum SpawnDelay in seconds
+    private const float _timePlayedFactor = 50.0f;   // The factor for time played
+    private const float _enemiesKilledFactor = 5.0f; // The factor for enemies killed
+
+    public float SpawnDelayValue
+    {
+        get
+        {
+            return CalculateSpawnDelay();
+        }
+    }
+
+    public SpawnDelayCalculator(BoxGameVariable<RequiredVariables> gameDiffVariables)
+    {
+        _gameDiffVariables = gameDiffVariables;
+    }
+
+
+
+    // Calculate the SpawnDelay with modifiers
+    private float CalculateSpawnDelay()
+    {
+        RequiredVariables requiredVariables = _gameDiffVariables.GetDataFromGameLoop();
+
+        float timePlayed = requiredVariables.TimePlayed;
+        int enemiesKilled = requiredVariables.EnemiesKilled;
+
+        Debug.Log("Time played: " + timePlayed);
+        Debug.Log("Enemies killed: " + enemiesKilled);
+
+        // Time played & enemies killed are the modifiers for the SpawnDelay variable and
+        // used timePlayedFactor & enemiesKilledFactor to add scaling to the value calculated.
+        float spawnDelay = Mathf.Max(_minDelay, Mathf.Min(_maxDelay, _maxDelay - (timePlayed / _timePlayedFactor + enemiesKilled / _enemiesKilledFactor)));
+
+        return spawnDelay;
+    }
+}
+
+
+public class MaxAmountEnemySpawned
+{
+    public struct RequiredVariables
+    {
+        public int EnemiesKilled;
+    }
+
+
+    private BoxGameVariable<RequiredVariables> _gameDiffVariables;
+
+
+    public MaxAmountEnemySpawned(BoxGameVariable<RequiredVariables> gameDiffVariables)
+    {
+        _gameDiffVariables = gameDiffVariables;
+    }
+
+
+    public int GetMaxToSpawn()
+    {
+        RequiredVariables requiredVariables = _gameDiffVariables.GetDataFromGameLoop();
+        int maxEnemyKilled = 185;
+
+        switch (requiredVariables.EnemiesKilled)
+        {
+            case int n when n >= 185:
+                return 13;
+            case int n when n >= (int)(maxEnemyKilled * 0.5):
+                return 9;
+            default:
+                return 7;
+        }
+    }
+}
+
+
+public class EnemyTracker
+{
+    public int EnemiesKilled { get; private set; }
+    public int EnemiesActive { get; private set; }
+
+    public EnemyTracker()
+    {
+        EnemiesKilled = 0;
+        EnemiesActive = 0;
+    }
+
+
+    public void IncreaseKilled()
+    {
+        EnemiesKilled += 1;
+        DecreaseActive();
+    }
+
+    public void IncreaseActive()
+    {
+        EnemiesActive += 1;
+    }
+
+    private void DecreaseActive()
+    {
+        EnemiesActive -= 1;
+        if (EnemiesActive < 0)
+        {
+            EnemiesActive = 0;
+        }
+    }
+}
+

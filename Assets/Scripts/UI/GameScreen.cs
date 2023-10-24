@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
+using System.Runtime.CompilerServices;
 
 public class GameScreen : MonoBehaviour
 {
@@ -16,34 +17,18 @@ public class GameScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _currentHPText;
 
 
-    [SerializeField] private GameObject _boomImage;
-    [SerializeField] private RectMask2D _explosionSlider;
-    private Color _orangeLightColor = new Color(238.0f / 255.0f, 189.0f / 255.0f, 92.0f / 255.0f, 255.0f / 255.0f);
+    private Color _orangeLightColor = new(238.0f / 255.0f, 189.0f / 255.0f, 92.0f / 255.0f, 255.0f / 255.0f);
 
-    [SerializeField] private GameObject _bigBoomCanvas;
+    private BigBoomCanvas _bigBoomCanvas;
 
     [SerializeField] private Slider _momentumBar;
-
-    private void OnEnable()
-    {
-        print("GameScreen.OnEnable");
-
-
-        _bigBoomCanvas.SetActive(true);
-
-    }
-
-    private void OnDisable()
-    {
-        print("GameScreen.OnDisable");
-
-        _bigBoomCanvas.SetActive(false);
-
-    }
 
     public LoadConfig Load()
     {
         GameloopManager.instance.OnFishTakeHit += UpdateCurrentHPText;
+
+        _bigBoomCanvas = GameObject.FindObjectOfType<BigBoomCanvas>(true);
+        _bigBoomCanvas.Toggle(true);
 
         void UpdateHighScoreOnStart()
         {
@@ -55,9 +40,9 @@ public class GameScreen : MonoBehaviour
         GameloopManager.instance.OnGameLoopStart += () =>
         {
             GameloopManager.instance.OnKillEnemy += UpdateHighScoreText;
-            GameloopManager.instance.ExplosionBarTracker.OnUpdate += UpdateExplosionBar;
+            GameloopManager.instance.ExplosionBarTracker.OnUpdate += _bigBoomCanvas.UpdateExplosionBar;
             UpdateHighScoreOnStart();
-            UpdateExplosionBar();
+            _bigBoomCanvas.UpdateExplosionBar();
         };
 
         GameloopManager.instance.OnMomentumChange += UpdateMomentumBar;
@@ -94,26 +79,6 @@ public class GameScreen : MonoBehaviour
     {
         _currentHPText.text = _currentHPTextPrefix + currentHP.ToString();
         _currentHPText.DOColor(_orangeLightColor, 0.1f).OnComplete(ResetToColorWhite);
-    }
-
-    private void UpdateExplosionBar()
-    {
-        float ratio = GameloopManager.instance.ExplosionBarTracker.GetRatio();
-
-        Vector4 finalVal = Vector4.zero;
-        finalVal.w = Mathf.Lerp(153, 0, ratio);
-        _explosionSlider.padding = finalVal;
-
-
-        if (ratio >= 1)
-        {
-            _boomImage.SetActive(true);
-            _boomImage.transform.DOShakeScale(0.5f, 0.5f, 10, 90, false);
-        }
-        else
-        {
-            _boomImage.SetActive(false);
-        }
     }
 
     private void UpdateMomentumBar(float ratio)

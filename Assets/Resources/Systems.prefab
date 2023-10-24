@@ -127,6 +127,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2421195834010728132}
   - component: {fileID: 751500218}
+  - component: {fileID: 5728842501699572644}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -161,6 +162,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8578cdfcd7aca34b934de2d7460b82f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _pickShootTypePrefab:
+    _prefab: {fileID: 142981666691131938, guid: 15f42d7634ec1b349a89c72426726e87,
+      type: 3}
+--- !u!114 &5728842501699572644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2421195834010728133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 557d98f9e19afa2429d1779f58c14f8b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _turretAnimationEvents: {fileID: 0}
 --- !u!1 &3854204994801163369
 GameObject:
   m_ObjectHideFlags: 0

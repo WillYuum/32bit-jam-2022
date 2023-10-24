@@ -1,4 +1,5 @@
 ﻿using System;
+using SpawnManagerMod.Configs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Utils.GenericSingletons;
@@ -9,17 +10,32 @@ public enum GameScenes
     Game,
 }
 
+public enum GameFlowState
+{
+    MainMenu,
+    PickShootType,
+    Game,
+    Lose,
+}
+
 public class GameManager : MonoBehaviourSingleton<GameManager>
 {
+
+    private PlayerActionsController _turretActionsController;
 
     private void Awake()
     {
         AudioManager.instance.Load();
+
+        _turretActionsController = gameObject.GetComponent<PlayerActionsController>();
+        _turretActionsController.Init();
     }
 
     void Start()
     {
         print("GameManager Start");
+
+
 #if UNITY_EDITOR
         //check current scene and load the correct screen
         if (SceneManager.GetActiveScene().name == "MainMenu")
@@ -35,17 +51,31 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 #endif
     }
 
+    [SerializeField] private PrefabConfig _pickShootTypePrefab;
 
     private void LoadGameFromMainGame()
     {
         GameUI.instance.Init();
+        EnterPickShootTypeState();
+    }
 
-        var selectScreenUI = GameUI.instance.LoadSelectShootType();
-        selectScreenUI.OpenScreen((shootType) =>
+    private void EnterPickShootTypeState()
+    {
+        GameObject pickScreenLogicObject = _pickShootTypePrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
+        PickShootType.LoadConfig loadConfig = pickScreenLogicObject.GetComponent<PickShootType>().Load();
+
+        _turretActionsController.SwitchToActions(GameFlowState.PickShootType);
+        var pickShooTypeUI = GameUI.instance.LoadPickShotTypeScreen();
+
+
+        pickShooTypeUI.OpenScreen();
+        loadConfig.WaitToSelectShootType((shootType) =>
         {
-            var gameScreen = GameUI.instance.LoadGameScreen();
-            gameScreen.OpenScreen(() =>
+
+            pickShooTypeUI.StartCountDown(() =>
             {
+                var gameScreen = GameUI.instance.LoadGameScreen();
+                _turretActionsController.SwitchToActions(GameFlowState.Game);
                 GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
                 {
                     SelectTypeShot = shootType
@@ -55,29 +85,14 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     }
 
 
-
     private void LoadGameFromMainMenu()
     {
-        void startGameScene()
-        {
-            var selectScreenUI = GameUI.instance.LoadSelectShootType();
-            selectScreenUI.OpenScreen((shootType) =>
-            {
-                var gameScreen = GameUI.instance.LoadGameScreen();
-                gameScreen.OpenScreen(() =>
-                {
-                    GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
-                    {
-                        SelectTypeShot = shootType
-                    });
-                });
-            });
-        }
-
         void onClickPlay()
         {
-            GameManager.instance.SwitchToScene(GameScenes.Game, startGameScene);
+            GameManager.instance.SwitchToScene(GameScenes.Game, EnterPickShootTypeState);
         }
+
+        _turretActionsController.SwitchToActions(GameFlowState.MainMenu);
 
         var mainMenuActions = GameObject.FindObjectOfType<MainMenuScene.MainMenu>().LoadUpScreen(onClickPlay);
         mainMenuActions.OpenScreen();

@@ -5,7 +5,7 @@ using PathCreation;
 
 public class TurretPlatfromTracker
 {
-    private PathCreator _pathCreator;
+    private VertexPath _vertexPath;
     private Turret _turret;
     private float _moveSpeed = 7.0f;
 
@@ -18,7 +18,7 @@ public class TurretPlatfromTracker
     {
         _moveSpeed = GameVariables.instance.PlayerSpeed;
 
-        _pathCreator = GameObject.FindObjectOfType<PathCreator>();
+        _vertexPath = GameObject.FindObjectOfType<PathCreator>().path;
 
         _turret = turret;
 
@@ -28,7 +28,6 @@ public class TurretPlatfromTracker
 
     public Transform MoveIndicator(RotationDirection direction)
     {
-        Vector2 newPos = _turretIndicatorPosition.localPosition;
         switch (direction)
         {
             case RotationDirection.ClockWise:
@@ -39,9 +38,25 @@ public class TurretPlatfromTracker
                 break;
         }
 
-        _turretIndicatorPosition.position = _pathCreator.path.GetPointAtDistance(_distanceTravelled);
-        _turretIndicatorPosition.up = _pathCreator.path.GetNormalAtDistance(_distanceTravelled);
+        _turretIndicatorPosition.position = _vertexPath.GetPointAtDistance(_distanceTravelled);
+        _turretIndicatorPosition.up = _vertexPath.GetNormalAtDistance(_distanceTravelled);
 
         return _turretIndicatorPosition;
+    }
+
+
+    public void SetToStartingPosition()
+    {
+        Vector3 startingPosition = new Vector3(-0.3f, -10.3f, 0f);
+        _distanceTravelled = _vertexPath.GetClosestDistanceAlongPath(startingPosition);
+        _turretIndicatorPosition.position = _vertexPath.GetClosestPointOnPath(startingPosition);
+        _turretIndicatorPosition.up = _vertexPath.GetNormalAtDistance(_distanceTravelled);
+    }
+
+    public void SetToPosition(Vector3 position)
+    {
+        _distanceTravelled = _vertexPath.GetClosestDistanceAlongPath(position);
+        _turretIndicatorPosition.position = _vertexPath.GetClosestPointOnPath(position);
+        _turretIndicatorPosition.up = _vertexPath.GetNormalAtDistance(_distanceTravelled);
     }
 }
