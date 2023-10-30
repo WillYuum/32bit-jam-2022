@@ -29,6 +29,12 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
         _turretActionsController = gameObject.GetComponent<PlayerActionsController>();
         _turretActionsController.Init();
+
+        string deviceId = SystemInfo.deviceUniqueIdentifier;
+        transform.parent.GetComponentInChildren<AnalyticsManager>().SendAnalyticsData(deviceId, (result, context) =>
+        {
+            print("Analtyics result: " + result + " context: " + context);
+        });
     }
 
     void Start()
