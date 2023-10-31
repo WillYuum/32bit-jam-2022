@@ -14,6 +14,11 @@ public enum TurretMoveDirection
     AntiClockWise,
 }
 
+
+/**
+**   Class will be responsibe for connecting player input to turret actions
+**  It will be responsible too for switching between different player actions states
+**/
 public class PlayerActionsController : MonoBehaviour
 {
     private PlayerActionStates _currentPlayerActionsInStage;
