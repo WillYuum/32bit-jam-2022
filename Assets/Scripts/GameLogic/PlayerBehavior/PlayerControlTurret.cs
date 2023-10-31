@@ -1,7 +1,6 @@
 using System;
 using SpawnManagerMod;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TurretMoveLogic
 {
@@ -52,46 +51,43 @@ public class TurretShootLogic
     private bool _shootToggle = false;
     public ShootController ShootController { get; private set; }
     private ITurretActions _turretActions;
-
-    private InputConnector.InputActionsHandler _inputActionsHandler;
-
     public TurretShootLogic(ITurretActions turretActions)
     {
         ShootController = new ShootController(GameVariables.instance.PlayerShootInterval);
 
         _turretActions = turretActions;
         if (_turretActions == null) Debug.LogError("Turret actions is null");
-
-        _inputActionsHandler = InputConnector.Create()
-        .MapInput(KeyCode.Space, ToggleShooting, KeyEventType.OnKeyDown)
-        .MapInput(KeyCode.R, UseExplosionAbility, KeyEventType.OnKeyDown)
-        .Build();
     }
 
     public void Update()
     {
         ShootController.UpdateTimer();
 
-        _inputActionsHandler.CheckForInput();
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _shootToggle = !_shootToggle;
+            Debug.Log("Switching shoot toggle to: " + _shootToggle);
+        }
 
-        if (_shootToggle && ShootController.CanShootProjectile)
+        if (_shootToggle)
         {
             Shoot();
         }
-    }
 
-
-    private void ToggleShooting()
-    {
-        _shootToggle = !_shootToggle;
-        Debug.Log("Switching shoot toggle to: " + _shootToggle);
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            UseExplosionAbility();
+        }
     }
 
 
     private void Shoot()
     {
-        _turretActions.PlayAnim();
-        ShootController.SetWaitTillShootAnimation(true);
+        if (ShootController.CanShootProjectile)
+        {
+            _turretActions.PlayAnim();
+            ShootController.SetWaitTillShootAnimation(true);
+        }
     }
 
 
