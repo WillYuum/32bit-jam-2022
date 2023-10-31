@@ -31,7 +31,7 @@ public class MainMenuStage : PlayerActionStates
 
 public class SelectShootTypeState : PlayerActionStates
 {
-    private TurretMoveLogic _turretMoveLogic;
+    private FishMoveLogic _turretMoveLogic;
 
 
     public SelectShootTypeState(Turret turret)
@@ -57,15 +57,15 @@ public class SelectShootTypeState : PlayerActionStates
 
 public class GameState : PlayerActionStates
 {
-    private TurretShootLogic _turrestShootLogic;
-    private TurretMoveLogic _turretMoveLogic;
+    private FishShootLogic _turrestShootLogic;
+    private FishMoveLogic _turretMoveLogic;
     private ITurretActions _turretActions;
     private TurretEvents _turretEvents;
 
     public GameState(Turret turret)
     {
         _turretActions = turret.GetComponent<ITurretActions>();
-        _turrestShootLogic = new TurretShootLogic(_turretActions);
+        _turrestShootLogic = new FishShootLogic(_turretActions);
         _turretMoveLogic = new(turret, _turretActions);
         _turretEvents = turret.GetTurretEvents();
     }

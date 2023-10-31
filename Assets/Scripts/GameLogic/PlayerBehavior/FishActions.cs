@@ -2,13 +2,13 @@ using System;
 using SpawnManagerMod;
 using UnityEngine;
 
-public class TurretMoveLogic
+public class FishMoveLogic
 {
     private RotationDirection _currentRotationDirection;
     public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
 
     private ITurretActions _turretActions;
-    public TurretMoveLogic(Turret turret, ITurretActions turretActions)
+    public FishMoveLogic(Turret turret, ITurretActions turretActions)
     {
         _currentRotationDirection = RotationDirection.ClockWise;
         TurretPlatfromTracker = new TurretPlatfromTracker(turret);
@@ -46,12 +46,12 @@ public class TurretMoveLogic
     }
 }
 
-public class TurretShootLogic
+public class FishShootLogic
 {
     private bool _shootToggle = false;
     public ShootController ShootController { get; private set; }
     private ITurretActions _turretActions;
-    public TurretShootLogic(ITurretActions turretActions)
+    public FishShootLogic(ITurretActions turretActions)
     {
         ShootController = new ShootController(GameVariables.instance.PlayerShootInterval);
 
