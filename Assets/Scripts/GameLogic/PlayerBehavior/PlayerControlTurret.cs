@@ -1,7 +1,5 @@
-using System;
 using SpawnManagerMod;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class TurretMoveLogic
 {
@@ -9,12 +7,24 @@ public class TurretMoveLogic
     public TurretPlatfromTracker TurretPlatfromTracker { get; private set; }
 
     private ITurretActions _turretActions;
+
+    private InputConnector.InputActionsHandler _inputActionsHandler;
+
     public TurretMoveLogic(Turret turret, ITurretActions turretActions)
     {
         _currentRotationDirection = RotationDirection.ClockWise;
         TurretPlatfromTracker = new TurretPlatfromTracker(turret);
 
         _turretActions = turretActions;
+
+        _inputActionsHandler = InputConnector.Create()
+    .MapInput(KeyCode.A, () => SetMoveDirection(TurretMoveDirection.ClockWise), KeyEventType.OnKeyDown)
+    .MapInput(KeyCode.D, () => SetMoveDirection(TurretMoveDirection.AntiClockWise), KeyEventType.OnKeyDown)
+    .MapInput(KeyCode.A, () => SetMoveDirection(TurretMoveDirection.None), KeyEventType.OnKeyUp)
+    .MapInput(KeyCode.D, () => SetMoveDirection(TurretMoveDirection.None), KeyEventType.OnKeyUp)
+    .MapInput(KeyCode.A, Move, KeyEventType.OnKeyHold)
+    .MapInput(KeyCode.D, Move, KeyEventType.OnKeyHold)
+    .Build();
     }
 
 
@@ -22,21 +32,29 @@ public class TurretMoveLogic
     {
         if (Input.GetKeyDown(KeyCode.A))
         {
-            _currentRotationDirection = RotationDirection.ClockWise;
-            _turretActions.SetTurretMoveDirection(TurretMoveDirection.ClockWise);
-
+            SetMoveDirection(TurretMoveDirection.ClockWise);
         }
         else if (Input.GetKeyDown(KeyCode.D))
         {
-            _currentRotationDirection = RotationDirection.AntiClockWise;
-            _turretActions.SetTurretMoveDirection(TurretMoveDirection.AntiClockWise);
+            SetMoveDirection(TurretMoveDirection.AntiClockWise);
         }
 
+        if (Input.GetKeyUp(KeyCode.A) || Input.GetKeyUp(KeyCode.D))
+        {
+            _turretActions.SetTurretMoveDirection(TurretMoveDirection.None);
+        }
 
         if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.D))
         {
             Move();
         }
+
+    }
+
+    private void SetMoveDirection(TurretMoveDirection turretMoveDirection)
+    {
+        _currentRotationDirection = turretMoveDirection == TurretMoveDirection.ClockWise ? RotationDirection.ClockWise : RotationDirection.AntiClockWise;
+        _turretActions.SetTurretMoveDirection(turretMoveDirection);
     }
 
 

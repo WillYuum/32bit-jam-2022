@@ -5,15 +5,15 @@ using UnityEngine;
 
 public enum KeyEventType
 {
-    OnKeyDown,
-    OnKeyHold,
-    OnKeyUp,
+    OnKeyDown = 0,
+    OnKeyHold = 1,
+    OnKeyUp = 2,
 }
 
 
 public class InputConnector
 {
-    private List<Action> _createInputActions = new();
+    private List<InputEvent> _createdInputActions = new();
 
     public static InputConnector Create()
     {
@@ -22,8 +22,9 @@ public class InputConnector
 
     public InputActionsHandler Build()
     {
-        OrganizeActions();
-        return new InputActionsHandler(_createInputActions);
+        _createdInputActions.Sort((x, y) => x.Order.CompareTo(y.Order));
+        var inputActions = _createdInputActions.Select(inputEvent => inputEvent.Action).ToList();
+        return new InputActionsHandler(inputActions);
     }
 
 
@@ -56,11 +57,24 @@ public class InputConnector
         };
 
         void inputAction() { if (inputCheck(keyCode)) action.Invoke(); }
-        _createInputActions.Add(inputAction);
+
+        _createdInputActions.Add(new InputEvent
+        {
+            KeyCode = keyCode,
+            Action = inputAction,
+            EventType = conditionType,
+            Order = (int)conditionType
+        });
+
         return this;
     }
-    private void OrganizeActions()
-    {
-        _createInputActions = _createInputActions.Where(action => action != null).ToList();
-    }
+}
+
+
+public class InputEvent
+{
+    public KeyCode KeyCode { get; set; }
+    public Action Action { get; set; }
+    public KeyEventType EventType { get; set; }
+    public int Order { get; set; }
 }
