@@ -125,6 +125,17 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     }
 
 
+    public bool PlayedOnMobileBrowser()
+    {
+        // print("Application.isMobilePlatform: " + Application.isMobilePlatform);
+        // print("Input.touchSupported: " + Input.touchSupported);
+        // return Application.isMobilePlatform || Input.touchSupported;
+
+        //TODO: Implement logic later to check if the game is played on mobile browser since last logic isn't working
+        return false;
+    }
+
+
     public void SwitchToScene(GameScenes scene, Action cb = null)
     {
 
