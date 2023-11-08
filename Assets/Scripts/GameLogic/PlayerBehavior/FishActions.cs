@@ -19,25 +19,39 @@ public class FishMoveLogic
 
         _turretActions = turretActions;
 
-        bool isMobile = Application.isMobilePlatform;
+        bool isMobile = GameManager.instance.PlayedOnMobileBrowser();
+
+        // #if UNITY_EDITOR
+        //         isMobile = true;
+        // #endif
+
+
 
         if (isMobile)
         {
+            InputHandler InputHandler = new();
+
             Vector2 leftSideScreen = new Vector2(Screen.width / 2, 0);
             UpdateAction = () =>
             {
-                //if click left side switch to anti clockwise
-                //if click right side switch to clockwise
-                if (Input.GetTouch(0).position.x > leftSideScreen.x)
-                {
-                    SetMoveDirection(TurretMoveDirection.AntiClockWise);
-                }
-                else
+
+                if (!InputHandler.Pressed()) return;
+
+                if (InputHandler.ClickedOnLeftSide())
                 {
                     SetMoveDirection(TurretMoveDirection.ClockWise);
                 }
+                else
+                {
+                    SetMoveDirection(TurretMoveDirection.AntiClockWise);
+                }
 
-                if (Input.GetTouch(0).phase == TouchPhase.Ended)
+                if (InputHandler.Holding())
+                {
+                    Move();
+                }
+
+                if (InputHandler.Exited())
                 {
                     _turretActions.SetTurretMoveDirection(TurretMoveDirection.None);
                 }
@@ -107,7 +121,7 @@ public class FishShootLogic
         _turretActions = turretActions;
         if (_turretActions == null) Debug.LogError("Turret actions is null");
 
-        bool isMobile = Application.isMobilePlatform;
+        bool isMobile = GameManager.instance.PlayedOnMobileBrowser();
 
         if (isMobile)
         {
@@ -219,3 +233,85 @@ public class ShootController
     }
 }
 
+
+
+public class InputHandler
+{
+
+    public bool ClickedOnLeftSide()
+    {
+#if UNITY_EDITOR
+        return ClickedOnLeftSideInEditor();
+#else
+        return ClickedOnLeftSideOnMobile();
+#endif
+    }
+
+
+    public bool Pressed()
+    {
+#if UNITY_EDITOR
+        return Input.GetMouseButton(0);
+#else
+        return Input.touchCount > 0;
+#endif
+    }
+
+    public bool Holding()
+    {
+
+#if UNITY_EDITOR
+        return Input.GetMouseButton(0);
+#else
+        return CheckIfHoldingOnMobole();
+#endif
+    }
+
+
+    private bool CheckIfHoldingOnMobole()
+    {
+        return Input.GetTouch(0).phase == TouchPhase.Stationary || Input.GetTouch(0).phase == TouchPhase.Moved;
+    }
+
+
+    public bool Exited()
+    {
+#if UNITY_EDITOR
+        return Input.GetMouseButtonUp(0);
+#else
+        return Input.GetTouch(0).phase == TouchPhase.Ended;
+#endif
+    }
+
+    private bool ClickedOnLeftSideInEditor()
+    {
+        Vector2 mousePosition = Input.mousePosition;
+        return PositionIsOnLeftSide(mousePosition);
+    }
+
+
+    private bool ClickedOnLeftSideOnMobile()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            Vector2 touchPosition = touch.position;
+            return PositionIsOnLeftSide(touchPosition);
+        }
+        return false;
+    }
+
+
+    private bool PositionIsOnLeftSide(Vector2 position)
+    {
+        Vector2 leftSideScreen = new Vector2(Screen.width / 2, 0);
+        if (position.x > leftSideScreen.x)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+}
