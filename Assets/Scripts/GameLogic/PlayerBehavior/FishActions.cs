@@ -29,15 +29,15 @@ public class FishMoveLogic
 
         if (isMobile)
         {
-            InputHandler InputHandler = new();
+            InputHandler mobileInputHandler = new();
 
             Vector2 leftSideScreen = new Vector2(Screen.width / 2, 0);
             UpdateAction = () =>
             {
 
-                if (!InputHandler.Pressed()) return;
+                if (!mobileInputHandler.Pressed()) return;
 
-                if (InputHandler.ClickedOnLeftSide())
+                if (mobileInputHandler.ClickedOnLeftSide())
                 {
                     SetMoveDirection(TurretMoveDirection.ClockWise);
                 }
@@ -46,12 +46,12 @@ public class FishMoveLogic
                     SetMoveDirection(TurretMoveDirection.AntiClockWise);
                 }
 
-                if (InputHandler.Holding())
+                if (mobileInputHandler.Holding())
                 {
                     Move();
                 }
 
-                if (InputHandler.Exited())
+                if (mobileInputHandler.Exited())
                 {
                     _turretActions.SetTurretMoveDirection(TurretMoveDirection.None);
                 }
@@ -238,6 +238,8 @@ public class ShootController
 public class InputHandler
 {
 
+    private bool _isHolding = false;
+
     public bool ClickedOnLeftSide()
     {
 #if UNITY_EDITOR
@@ -253,6 +255,7 @@ public class InputHandler
 #if UNITY_EDITOR
         return Input.GetMouseButton(0);
 #else
+        _isHolding = Input.touchCount > 0;
         return Input.touchCount > 0;
 #endif
     }
@@ -270,7 +273,8 @@ public class InputHandler
 
     private bool CheckIfHoldingOnMobole()
     {
-        return Input.GetTouch(0).phase == TouchPhase.Stationary || Input.GetTouch(0).phase == TouchPhase.Moved;
+        return _isHolding;
+        // return Input.GetTouch(0).phase == TouchPhase.Stationary || Input.GetTouch(0).phase == TouchPhase.Moved;
     }
 
 
@@ -279,6 +283,7 @@ public class InputHandler
 #if UNITY_EDITOR
         return Input.GetMouseButtonUp(0);
 #else
+_isHolding = false;
         return Input.GetTouch(0).phase == TouchPhase.Ended;
 #endif
     }
