@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using SpawnManagerMod.Configs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -124,15 +125,19 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         Application.Quit();
     }
 
+#if !UNITY_EDITOR && UNITY_WEBGL
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern bool IsMobile();
+#endif
 
     public bool PlayedOnMobileBrowser()
     {
-        // print("Application.isMobilePlatform: " + Application.isMobilePlatform);
-        // print("Input.touchSupported: " + Input.touchSupported);
-        // return Application.isMobilePlatform || Input.touchSupported;
-
-        //TODO: Implement logic later to check if the game is played on mobile browser since last logic isn't working
+#if !UNITY_EDITOR && UNITY_WEBGL
+        print("isMoble: " + (IsMobile()));
+        return IsMobile();
+#else
         return false;
+#endif
     }
 
 
