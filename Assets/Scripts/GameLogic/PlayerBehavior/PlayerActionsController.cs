@@ -43,14 +43,14 @@ public class PlayerActionsController : MonoBehaviour
 
 
 
-    public void SwitchToActions(GameFlowState gameFlowState)
+    public void SwitchToActions(PlayerStates newPlyerState)
     {
-        PlayerActionStates newActions = gameFlowState switch
+        PlayerActionStates newActions = newPlyerState switch
         {
-            GameFlowState.MainMenu => new MainMenuStage(),
-            GameFlowState.PickShootType => new SelectShootTypeState(GetTurret()),
-            GameFlowState.Game => new GameState(GetTurret()),
-            GameFlowState.Lose => new MainMenuStage(),
+            PlayerStates.MainMenu => new MainMenuStage(),
+            PlayerStates.PickShootType => new SelectShootTypeState(GetTurret()),
+            PlayerStates.Game => new GameState(GetTurret()),
+            PlayerStates.Lose => new MainMenuStage(),
             _ => throw new NotImplementedException(),
         };
 

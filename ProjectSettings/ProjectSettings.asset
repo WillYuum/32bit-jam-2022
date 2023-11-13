@@ -156,7 +156,7 @@ PlayerSettings:
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
-    Standalone: com.Boring-Games.GameJam-Template
+    Standalone: com.Poppa-N-Ash.Sea-Defender
   buildNumber:
     Standalone: 0
     iPhone: 0

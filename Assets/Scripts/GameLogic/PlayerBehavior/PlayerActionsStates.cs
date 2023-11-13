@@ -82,6 +82,7 @@ public class GameState : PlayerActionStates
     public override void OnExit()
     {
         _turretEvents.OnTurretShoot -= ShootProjectile;
+        _turrestShootLogic.CleanUp();
     }
 
     public override void Update()

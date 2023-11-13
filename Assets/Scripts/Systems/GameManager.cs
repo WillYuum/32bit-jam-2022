@@ -11,7 +11,7 @@ public enum GameScenes
     Game,
 }
 
-public enum GameFlowState
+public enum PlayerStates
 {
     MainMenu,
     PickShootType,
@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         GameObject pickScreenLogicObject = _pickShootTypePrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
         PickShootType.LoadConfig loadConfig = pickScreenLogicObject.GetComponent<PickShootType>().Load();
 
-        _turretActionsController.SwitchToActions(GameFlowState.PickShootType);
+        _turretActionsController.SwitchToActions(PlayerStates.PickShootType);
         var pickShooTypeUI = GameUI.instance.LoadPickShotTypeScreen();
 
 
@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
             pickShooTypeUI.StartCountDown(() =>
             {
                 var gameScreen = GameUI.instance.LoadGameScreen();
-                _turretActionsController.SwitchToActions(GameFlowState.Game);
+                _turretActionsController.SwitchToActions(PlayerStates.Game);
                 GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
                 {
                     SelectTypeShot = shootType
@@ -93,7 +93,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
             GameManager.instance.SwitchToScene(GameScenes.Game, EnterPickShootTypeState);
         }
 
-        _turretActionsController.SwitchToActions(GameFlowState.MainMenu);
+        _turretActionsController.SwitchToActions(PlayerStates.MainMenu);
 
         var mainMenuActions = GameObject.FindObjectOfType<MainMenuScene.MainMenu>().LoadUpScreen(onClickPlay);
         mainMenuActions.OpenScreen();

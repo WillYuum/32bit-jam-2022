@@ -123,6 +123,9 @@ public class FishShootLogic
 
         if (isMobile)
         {
+            GameScreen gameScreen = GameUI.instance.GetCurrentScreen<GameScreen>();
+            gameScreen.EnableTapOnButton(UseExplosionAbility);
+
             _shootToggle = true;
             UpdateAction = () =>
             {
@@ -181,6 +184,12 @@ public class FishShootLogic
             var explosion = SpawnManager.instance.ExplosionPrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
             explosion.GetComponent<BigBoomBehavior>().Explode();
         }
+    }
+
+    public void CleanUp()
+    {
+        GameScreen gameScreen = GameUI.instance.GetCurrentScreen<GameScreen>();
+        gameScreen.DisableTapOnButton();
     }
 }
 

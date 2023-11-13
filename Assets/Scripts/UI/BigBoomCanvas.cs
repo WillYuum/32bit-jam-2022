@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +7,7 @@ public class BigBoomCanvas : MonoBehaviour
 {
     [SerializeField] private GameObject _boomImage;
     [SerializeField] private RectMask2D _explosionSlider;
+    [SerializeField] private Button _triggerBoomButton;
 
     public void Toggle(bool toggle)
     {
@@ -36,5 +36,17 @@ public class BigBoomCanvas : MonoBehaviour
         }
     }
 
+    public void EnableTapOnButton(Action cb)
+    {
+        DisableTapOnButton();
+        _triggerBoomButton.onClick.AddListener(() =>
+        {
+            cb.Invoke();
+        });
+    }
 
+    public void DisableTapOnButton()
+    {
+        _triggerBoomButton.onClick.RemoveAllListeners();
+    }
 }

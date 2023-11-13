@@ -76,4 +76,10 @@ public class GameUI : MonoBehaviourSingleton<GameUI>
         return _loseScreen.GetComponent<LoseScreen>().Load();
     }
 
+
+
+    public T GetCurrentScreen<T>() where T : MonoBehaviour
+    {
+        return _currentActiveScreen.GetComponent<T>();
+    }
 }
