@@ -64,8 +64,6 @@ public class FishMoveLogic
                 if (Input.GetKeyDown(KeyCode.A))
                 {
                     SetMoveDirection(TurretMoveDirection.ClockWise);
-
-
                 }
                 else if (Input.GetKeyDown(KeyCode.D))
                 {
@@ -141,15 +139,14 @@ public class FishShootLogic
                 if (Input.GetKeyDown(KeyCode.Space))
                 {
                     _shootToggle = !_shootToggle;
-                    Debug.Log("Switching shoot toggle to: " + _shootToggle);
                 }
 
-                if (_shootToggle)
+                if (_shootToggle && ShootController.CanShootProjectile)
                 {
                     Shoot();
                 }
 
-                if (Input.GetKeyDown(KeyCode.R) && ShootController.CanShootProjectile)
+                if (Input.GetKeyDown(KeyCode.R))
                 {
                     UseExplosionAbility();
                 }
