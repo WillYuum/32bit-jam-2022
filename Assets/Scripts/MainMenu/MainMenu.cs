@@ -17,7 +17,6 @@ namespace MainMenuScene
         [SerializeField] private MainMenuScreens _mainMenuScreens;
 
         [SerializeField] private Button _playButton;
-        [SerializeField] private Button _creditsButton;
         [SerializeField] private Button _exitButton;
 
 
@@ -29,7 +28,6 @@ namespace MainMenuScene
             {
                 gameObject.SetActive(true);
 
-                _creditsButton.onClick.AddListener(OnCreditsButtonClicked);
                 _exitButton.onClick.AddListener(OnExitButtonClicked);
 
                 _mainMenuScreens.ShowScreen(MainMenuScreens.ScreenType.MainScreen);
@@ -38,7 +36,6 @@ namespace MainMenuScene
 
             _playButton.onClick.AddListener(() =>
             {
-                _creditsButton.onClick.RemoveListener(OnCreditsButtonClicked);
                 _exitButton.onClick.RemoveListener(OnExitButtonClicked);
 
                 onClickPlay.Invoke();
@@ -47,10 +44,7 @@ namespace MainMenuScene
             return loadConfig;
         }
 
-        private void OnCreditsButtonClicked()
-        {
-            _mainMenuScreens.ShowScreen(MainMenuScreens.ScreenType.Credits);
-        }
+
 
         private void OnExitButtonClicked()
         {
@@ -66,7 +60,6 @@ namespace MainMenuScene
         public enum ScreenType
         {
             MainScreen,
-            Credits
         }
 
         [SerializeField] private GameObject _gameScreen;
@@ -87,9 +80,7 @@ namespace MainMenuScene
                 case ScreenType.MainScreen:
                     _currentOpenScreen = _gameScreen;
                     break;
-                case ScreenType.Credits:
-                    _currentOpenScreen = _creditsScreen;
-                    break;
+
                 default:
                     break;
             }
