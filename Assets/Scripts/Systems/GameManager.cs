@@ -115,16 +115,6 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         LoadGameFromMainGame();
     }
 
-    public void LoseGame()
-    {
-
-    }
-
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
-
 #if !UNITY_EDITOR && UNITY_WEBGL
     [System.Runtime.InteropServices.DllImport("__Internal")]
     private static extern bool IsMobile();

@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,7 +15,6 @@ namespace MainMenuScene
         [SerializeField] private MainMenuScreens _mainMenuScreens;
 
         [SerializeField] private Button _playButton;
-        [SerializeField] private Button _exitButton;
 
 
         public LoadConfig LoadUpScreen(Action onClickPlay)
@@ -28,29 +25,17 @@ namespace MainMenuScene
             {
                 gameObject.SetActive(true);
 
-                _exitButton.onClick.AddListener(OnExitButtonClicked);
-
                 _mainMenuScreens.ShowScreen(MainMenuScreens.ScreenType.MainScreen);
             };
 
 
             _playButton.onClick.AddListener(() =>
             {
-                _exitButton.onClick.RemoveListener(OnExitButtonClicked);
-
                 onClickPlay.Invoke();
             });
 
             return loadConfig;
         }
-
-
-
-        private void OnExitButtonClicked()
-        {
-            GameManager.instance.ExitGame();
-        }
-
     }
 
 
