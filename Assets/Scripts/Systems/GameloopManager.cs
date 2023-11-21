@@ -378,6 +378,8 @@ public class ExplosionBarTracker
 
     public void IncreaseValue(float amount)
     {
+        if (IsFull()) return;
+
         _currentExplosionBarValue += amount;
         if (_currentExplosionBarValue > _maxExplosionBarValue)
         {
@@ -393,6 +395,11 @@ public class ExplosionBarTracker
     public float GetRatio()
     {
         return _currentExplosionBarValue / _maxExplosionBarValue;
+    }
+
+    public bool IsFull()
+    {
+        return _currentExplosionBarValue >= _maxExplosionBarValue;
     }
 
     public void ResetExplosionBar()
