@@ -100,6 +100,18 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     }
 
 
+    public void UpdateManagerOfLoseGame()
+    {
+        _turretActionsController.SwitchToActions(PlayerStates.Lose);
+
+        var loseScreen = GameUI.instance.LoadLoseScreen();
+        loseScreen.OpenScreen(() =>
+        {
+
+        });
+    }
+
+
 
     public void RestartScene()
     {

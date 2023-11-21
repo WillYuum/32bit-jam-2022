@@ -219,11 +219,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         BehavioralController.instance.Reset();
 
-        var loseScreen = GameUI.instance.LoadLoseScreen();
-        loseScreen.OpenScreen(() =>
-        {
-
-        });
+        GameManager.instance.UpdateManagerOfLoseGame();
 
         enabled = false;
     }
