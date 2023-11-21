@@ -1,5 +1,6 @@
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 public class Dasher : EnemyCore<Dasher>
 {
@@ -9,7 +10,7 @@ public class Dasher : EnemyCore<Dasher>
     private float _angleToAttackTarget = 0.4f;
     private float _delayToAttack = 1.45f;
 
-    private Vector2 _dashToPosition;
+    private Vector3 _dashToPosition;
 
     private float _explodeRange = 1.5f;
 
@@ -19,7 +20,7 @@ public class Dasher : EnemyCore<Dasher>
 
     void Update()
     {
-        if (_dashToPosition != Vector2.zero)
+        if (_dashToPosition != Vector3.zero)
         {
             RotateTowardsTarget(_dashToPosition);
             MoveTowardsTarget(_dashToPosition);
@@ -109,12 +110,11 @@ public class Dasher : EnemyCore<Dasher>
 
     public void MoveTowardsTarget(Vector2 target)
     {
-        // print("Moving towards target");
         transform.position = Vector2.MoveTowards(transform.position, target, _moveSpeed * Time.deltaTime);
         _moveSpeed += 0.05f;
 
-
-        if (transform.position == (Vector3)target)
+        bool isNearFish = Vector2.Distance(transform.position, target) < Mathf.Epsilon;
+        if (isNearFish)
         {
             Explode();
         }

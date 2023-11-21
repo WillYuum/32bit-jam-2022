@@ -88,7 +88,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            InvokeLoseGame();
+            InvokeFishTakeDamage(999);
         }
 
 
@@ -219,11 +219,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         BehavioralController.instance.Reset();
 
-        var loseScreen = GameUI.instance.LoadLoseScreen();
-        loseScreen.OpenScreen(() =>
-        {
-
-        });
+        GameManager.instance.UpdateManagerOfLoseGame();
 
         enabled = false;
     }
@@ -378,6 +374,8 @@ public class ExplosionBarTracker
 
     public void IncreaseValue(float amount)
     {
+        if (IsFull()) return;
+
         _currentExplosionBarValue += amount;
         if (_currentExplosionBarValue > _maxExplosionBarValue)
         {
@@ -393,6 +391,11 @@ public class ExplosionBarTracker
     public float GetRatio()
     {
         return _currentExplosionBarValue / _maxExplosionBarValue;
+    }
+
+    public bool IsFull()
+    {
+        return _currentExplosionBarValue >= _maxExplosionBarValue;
     }
 
     public void ResetExplosionBar()

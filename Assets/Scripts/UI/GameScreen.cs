@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using System;
-using System.Runtime.CompilerServices;
 
 public class GameScreen : MonoBehaviour
 {
@@ -84,5 +83,16 @@ public class GameScreen : MonoBehaviour
     private void UpdateMomentumBar(float ratio)
     {
         _momentumBar.value = ratio;
+    }
+
+
+    public void EnableTapOnButton(Action cb)
+    {
+        _bigBoomCanvas.EnableTapOnButton(cb);
+    }
+
+    public void DisableTapOnButton()
+    {
+        _bigBoomCanvas.DisableTapOnButton();
     }
 }

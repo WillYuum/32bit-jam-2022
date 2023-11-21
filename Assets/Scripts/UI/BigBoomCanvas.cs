@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +7,15 @@ public class BigBoomCanvas : MonoBehaviour
 {
     [SerializeField] private GameObject _boomImage;
     [SerializeField] private RectMask2D _explosionSlider;
+    [SerializeField] private Button _triggerBoomButton;
+
+    private Vector2 _boomImageOriginalScale;
+
+
+    private void Awake()
+    {
+        _boomImageOriginalScale = _boomImage.transform.localScale;
+    }
 
     public void Toggle(bool toggle)
     {
@@ -27,6 +35,9 @@ public class BigBoomCanvas : MonoBehaviour
 
         if (ratio >= 1)
         {
+            transform.DOKill();
+
+            _boomImage.transform.localScale = _boomImageOriginalScale;
             _boomImage.SetActive(true);
             _boomImage.transform.DOShakeScale(0.5f, 0.5f, 10, 90, false);
         }
@@ -36,5 +47,17 @@ public class BigBoomCanvas : MonoBehaviour
         }
     }
 
+    public void EnableTapOnButton(Action cb)
+    {
+        DisableTapOnButton();
+        _triggerBoomButton.onClick.AddListener(() =>
+        {
+            cb.Invoke();
+        });
+    }
 
+    public void DisableTapOnButton()
+    {
+        _triggerBoomButton.onClick.RemoveAllListeners();
+    }
 }

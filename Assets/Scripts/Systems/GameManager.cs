@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using SpawnManagerMod.Configs;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,7 +11,7 @@ public enum GameScenes
     Game,
 }
 
-public enum GameFlowState
+public enum PlayerStates
 {
     MainMenu,
     PickShootType,
@@ -64,7 +65,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         GameObject pickScreenLogicObject = _pickShootTypePrefab.CreateGameObject(Vector3.zero, Quaternion.identity);
         PickShootType.LoadConfig loadConfig = pickScreenLogicObject.GetComponent<PickShootType>().Load();
 
-        _turretActionsController.SwitchToActions(GameFlowState.PickShootType);
+        _turretActionsController.SwitchToActions(PlayerStates.PickShootType);
         var pickShooTypeUI = GameUI.instance.LoadPickShotTypeScreen();
 
 
@@ -75,7 +76,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
             pickShooTypeUI.StartCountDown(() =>
             {
                 var gameScreen = GameUI.instance.LoadGameScreen();
-                _turretActionsController.SwitchToActions(GameFlowState.Game);
+                _turretActionsController.SwitchToActions(PlayerStates.Game);
                 GameloopManager.instance.StartGameLoop(new StartGameLoopStruct
                 {
                     SelectTypeShot = shootType
@@ -92,10 +93,22 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
             GameManager.instance.SwitchToScene(GameScenes.Game, EnterPickShootTypeState);
         }
 
-        _turretActionsController.SwitchToActions(GameFlowState.MainMenu);
+        _turretActionsController.SwitchToActions(PlayerStates.MainMenu);
 
         var mainMenuActions = GameObject.FindObjectOfType<MainMenuScene.MainMenu>().LoadUpScreen(onClickPlay);
         mainMenuActions.OpenScreen();
+    }
+
+
+    public void UpdateManagerOfLoseGame()
+    {
+        _turretActionsController.SwitchToActions(PlayerStates.Lose);
+
+        var loseScreen = GameUI.instance.LoadLoseScreen();
+        loseScreen.OpenScreen(() =>
+        {
+
+        });
     }
 
 
@@ -114,14 +127,19 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         LoadGameFromMainGame();
     }
 
-    public void LoseGame()
-    {
+#if !UNITY_EDITOR && UNITY_WEBGL
+    [System.Runtime.InteropServices.DllImport("__Internal")]
+    private static extern bool IsMobile();
+#endif
 
-    }
-
-    public void ExitGame()
+    public bool PlayedOnMobileBrowser()
     {
-        Application.Quit();
+#if !UNITY_EDITOR && UNITY_WEBGL
+        print("isMoble: " + (IsMobile()));
+        return IsMobile();
+#else
+        return false;
+#endif
     }
 
 
