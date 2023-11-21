@@ -9,6 +9,14 @@ public class BigBoomCanvas : MonoBehaviour
     [SerializeField] private RectMask2D _explosionSlider;
     [SerializeField] private Button _triggerBoomButton;
 
+    private Vector2 _boomImageOriginalScale;
+
+
+    private void Awake()
+    {
+        _boomImageOriginalScale = _boomImage.transform.localScale;
+    }
+
     public void Toggle(bool toggle)
     {
         gameObject.SetActive(toggle);
@@ -27,6 +35,9 @@ public class BigBoomCanvas : MonoBehaviour
 
         if (ratio >= 1)
         {
+            transform.DOKill();
+
+            _boomImage.transform.localScale = _boomImageOriginalScale;
             _boomImage.SetActive(true);
             _boomImage.transform.DOShakeScale(0.5f, 0.5f, 10, 90, false);
         }
