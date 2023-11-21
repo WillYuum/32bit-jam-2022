@@ -88,7 +88,7 @@ public class GameloopManager : MonoBehaviourSingleton<GameloopManager>
 
         if (Input.GetKeyDown(KeyCode.L))
         {
-            InvokeLoseGame();
+            InvokeFishTakeDamage(999);
         }
 
 
