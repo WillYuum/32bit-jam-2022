@@ -19,6 +19,7 @@ public class FishMoveLogic
 
         _turretActions = turretActions;
 
+
         bool isMobile = GameManager.instance.PlayedOnMobileBrowser();
 
         // #if UNITY_EDITOR
@@ -32,6 +33,10 @@ public class FishMoveLogic
             InputHandler mobileInputHandler = new();
 
             Vector2 leftSideScreen = new Vector2(Screen.width / 2, 0);
+
+            bool isGoingClockWise = mobileInputHandler.ClickedOnLeftSide();
+            SetMoveDirection(isGoingClockWise ? TurretMoveDirection.ClockWise : TurretMoveDirection.AntiClockWise);
+
             UpdateAction = () =>
             {
 
@@ -59,6 +64,8 @@ public class FishMoveLogic
         }
         else
         {
+            bool isGoingClockWise = Input.GetKeyDown(KeyCode.A);
+            SetMoveDirection(isGoingClockWise ? TurretMoveDirection.ClockWise : TurretMoveDirection.AntiClockWise);
             UpdateAction = () =>
             {
                 if (Input.GetKeyDown(KeyCode.A))
@@ -83,6 +90,7 @@ public class FishMoveLogic
             };
         }
     }
+
 
 
     public void Update()
