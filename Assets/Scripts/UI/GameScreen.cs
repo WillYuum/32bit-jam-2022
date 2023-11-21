@@ -44,8 +44,6 @@ public class GameScreen : MonoBehaviour
             _bigBoomCanvas.UpdateExplosionBar();
         };
 
-        UpdateHighScoreOnStart();
-
         GameloopManager.instance.OnMomentumChange += UpdateMomentumBar;
 
         return new LoadConfig()
